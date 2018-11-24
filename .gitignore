@@ -1,5 +1,7 @@
-/*.sln
-/*.vcxproj*
+*.sln
+*.vcxproj
+*.vcxproj.user
+
 
 /bin/*
 /bin-int/*
