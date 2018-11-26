@@ -3,20 +3,25 @@
 
 #include "../Buffer.h"
 
-// TODO: Define the class
-
 namespace bluefir::graphics
 {
 	static unsigned int active_ubo = 0;
 
+	// UniformBuffer assumes there are only 4x4 matrices
+	// in the location std140 of the shader.
 	class UniformBuffer : public GLBuffer
 	{
 	public:
-		UniformBuffer();
-		~UniformBuffer();
+		UniformBuffer(unsigned int buffer_size);
+		virtual ~UniformBuffer();
 
 		void Bind() const override;
 		void UnBind() const override;
+
+		void SetUniform(unsigned int offset, unsigned int data_size, const void* data) const;
+	
+	private:
+		unsigned int buffer_size_;
 	};
 
 }

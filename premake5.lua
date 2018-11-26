@@ -33,12 +33,14 @@ project "BlueFir"
 	
 	includedirs
 	{
-		"Base/src"
+		"Base/src",
+		"Graphics/src"
 	}
 	
 	links
 	{
-		"Base"
+		"Base",
+		"Graphics"
 	}
 	
 	filter "system:windows"
@@ -143,18 +145,22 @@ project "Graphics"
 	includedirs
 	{
 		"Base/src",
-		"Vendor/glew-2.1.0/include/"
+		"Vendor/glew-2.1.0/include/",
+		"Vendor/SDL2-2.0.8/include/"
 	}
 	
 	libdirs
 	{
-		"Vendor/glew-2.1.0/lib/x64/"
+		"Vendor/glew-2.1.0/lib/x64/",
+		"Vendor/SDL2-2.0.8/lib/x64/"
 	}
 	
 	links
 	{
 		"Base",
-		"glew32"
+		"glew32",
+		"OpenGL32",
+		"SDL2"
 	}
 	
 	filter "system:windows"

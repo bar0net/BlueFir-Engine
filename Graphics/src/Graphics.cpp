@@ -2,9 +2,65 @@
 
 #include "GL/glew.h"
 #include "GL/wglew.h"
+#include "SDL.h"
 
 #include "LogSystem.h"
 
+
+bluefir::graphics::WindowData* bluefir::graphics::Graphics::StartWindow(const char * title, unsigned int width, unsigned int height)
+{
+	assert(title);
+	WindowData* data = new WindowData; 
+
+	if (SDL_Init(SDL_INIT_VIDEO) != 0) return data;
+
+	Uint32 flags = SDL_WINDOW_RESIZABLE;
+	flags |= SDL_WINDOW_OPENGL;
+
+	data->window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, flags);
+	data->surface = SDL_GetWindowSurface(data->window);
+
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+
+	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+
+	data->context = SDL_GL_CreateContext(data->window);
+	data->valid = data->context && data->surface && data->window;
+
+	return data;
+}
+
+void bluefir::graphics::Graphics::CreateViewport(unsigned int width, unsigned int height, Color clear_color, float depth)
+{
+	glewInit();
+	wglewInit();
+
+	GLCall(glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST));
+	GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+	GLCall(glEnable(GL_DEPTH_TEST));
+	GLCall(glEnable(GL_CULL_FACE));
+	GLCall(glFrontFace(GL_CCW));
+	GLCall(glEnable(GL_TEXTURE_2D));
+
+	GLCall(glClearDepth(1.0F));
+	ChangeClearColor(0.3F, 0.3F, 0.3F, 1.0F);
+
+	GLCall(glViewport(0, 0, width, height));
+}
+
+void bluefir::graphics::Graphics::ClearViewport()
+{
+	GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+}
+
+void bluefir::graphics::Graphics::ChangeClearColor(float r, float g, float b, float a)
+{
+	GLCall(glClearColor(r, g, b, a));
+}
 
 void bluefir::graphics::Graphics::GLClearErrors()
 {
@@ -62,8 +118,8 @@ bool bluefir::graphics::Graphics::GLLogCall(const char * function, const char * 
 		s += std::to_string((int)error);
 		break;
 	}
-	s.append(">");
 
 	LOGERROR(s.c_str());
+	s.clear();
 	return false;
 }

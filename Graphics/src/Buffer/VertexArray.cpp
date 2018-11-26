@@ -8,10 +8,10 @@
 
 bluefir::graphics::VertexArray::VertexArray(const VertexBuffer & vbo, const BufferLayout & layout)
 {
-	GLCall(glGenVertexArrays(1, &idx));
+	GLCall(glGenVertexArrays(1, &buffer_id_));
 	
-	GLCall(glBindVertexArray(idx));
-	active_vao = idx;
+	GLCall(glBindVertexArray(buffer_id_));
+	active_vao = buffer_id_;
 
 	vbo.Bind();
 
@@ -29,28 +29,28 @@ bluefir::graphics::VertexArray::VertexArray(const VertexBuffer & vbo, const Buff
 
 bluefir::graphics::VertexArray::~VertexArray()
 {
-	if (idx == 0) return;
+	if (buffer_id_ == 0) return;
 
-	if (active_vao == idx)
+	if (active_vao == buffer_id_)
 	{
 		GLCall(glBindVertexArray(0));
 		active_vao = 0U;
 	}
 
-	GLCall(glDeleteVertexArrays(1, &idx));
+	GLCall(glDeleteVertexArrays(1, &buffer_id_));
 }
 
 void bluefir::graphics::VertexArray::Bind() const
 {
-	if (active_vao == idx) return;
+	if (active_vao == buffer_id_) return;
 
-	GLCall(glBindVertexArray(idx));
-	active_vao = idx;
+	GLCall(glBindVertexArray(buffer_id_));
+	active_vao = buffer_id_;
 }
 
 void bluefir::graphics::VertexArray::UnBind() const
 {
-	if (active_vao != idx ) return;
+	if (active_vao != buffer_id_) return;
 
 	GLCall(glBindVertexArray(0));
 	active_vao = 0U;

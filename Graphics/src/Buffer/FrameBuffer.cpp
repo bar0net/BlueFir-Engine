@@ -5,36 +5,36 @@
 
 bluefir::graphics::FrameBuffer::FrameBuffer()
 {
-	GLCall(glGenFramebuffers(1, &idx));
+	GLCall(glGenFramebuffers(1, &buffer_id_));
 
-	GLCall(glBindFramebuffer(GL_FRAMEBUFFER, idx));
-	active_fbo = idx;
+	GLCall(glBindFramebuffer(GL_FRAMEBUFFER, buffer_id_));
+	active_fbo = buffer_id_;
 }
 
 bluefir::graphics::FrameBuffer::~FrameBuffer()
 {
-	if (idx == 0) return;
+	if (buffer_id_ == 0) return;
 
-	if (active_fbo == idx)
+	if (active_fbo == buffer_id_)
 	{
 		GLCall(glBindFramebuffer(GL_FRAMEBUFFER, 0));
 		active_fbo = 0;
 	}
 
-	GLCall(glDeleteBuffers(1, &idx));
+	GLCall(glDeleteBuffers(1, &buffer_id_));
 }
 
 void bluefir::graphics::FrameBuffer::Bind() const
 {
-	if (active_fbo == idx) return;
+	if (active_fbo == buffer_id_) return;
 
-	GLCall(glBindFramebuffer(GL_FRAMEBUFFER, idx));
-	active_fbo = idx;
+	GLCall(glBindFramebuffer(GL_FRAMEBUFFER, buffer_id_));
+	active_fbo = buffer_id_;
 }
 
 void bluefir::graphics::FrameBuffer::UnBind() const
 {
-	if (active_fbo != idx) return;
+	if (active_fbo != buffer_id_) return;
 
 	GLCall(glBindFramebuffer(GL_FRAMEBUFFER, 0));
 	active_fbo = 0;

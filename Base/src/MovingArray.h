@@ -8,33 +8,37 @@ namespace bluefir::base
 	template <class T>
 	class MovingArray
 	{
-	public:
-		MovingArray(unsigned int size, T default_value) : size(size)
-		{
-			values = new T[size];
-			std::memset(values, default_value, size * sizeof(T));
-		}
+		static_assert(std::is_arithmetic_v<T>);
 
-		virtual ~MovingArray() { delete[] values; values = nullptr; }
+	public:
+		MovingArray(unsigned int size, T default_value) : size_(size)
+		{
+			values_ = new T[size];
+			std::memset(values_, default_value, size * sizeof(T));
+		}
+		MovingArray(MovingArray const&) = delete;
+		void operator=(MovingArray const&) = delete;
+
+		virtual ~MovingArray() { delete[] values_; values_ = nullptr; }
 
 		T& operator[](unsigned int x)
 		{
-			if (x < idx) return values[idx - x - 1];
-			else return values[size + idx - x - 1];
+			if (x < idx_) return values_[idx_ - x - 1];
+			else return values_[size_ + idx_ - x - 1];
 		}
 
 		void Push(T x)
 		{
-			values[idx] = x;
-			if (++idx == size) idx = 0U;
+			values_[idx_] = x;
+			if (++idx_ == size_) idx_ = 0U;
 		}
 
-		float Get(void* data, int x) { return (float)(*(MovingArray*)data)[x]; }
+		float Get(void* data, int x) { return (float)(* static_cast<MovingArray*>(data) )[x]; }
 
 	private:
-		T* values = nullptr;
-		unsigned int idx = 0U;
-		unsigned int size = 0U;
+		T* values_ = nullptr;
+		unsigned int idx_ = 0U;
+		unsigned int size_ = 0U;
 	};
 }
 

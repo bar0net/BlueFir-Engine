@@ -9,13 +9,13 @@ namespace bluefir::graphics
 	{
 	public:
 		GLBuffer() {}
-		virtual ~GLBuffer() = 0;
+		virtual ~GLBuffer() {};
 
 		virtual void Bind() const	= 0;
 		virtual void UnBind() const = 0;
 
 	protected:
-		unsigned int idx = 0U;
+		unsigned int buffer_id_ = 0U;
 	};
 }
 

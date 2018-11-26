@@ -14,8 +14,8 @@ namespace bluefir::base
 		unsigned int Pause();
 		unsigned int Stop();
 
-		unsigned int start_time = 0U;
-		unsigned int end_time = 0U;
+		unsigned int start_time_ = 0U;
+		unsigned int end_time_ = 0U;
 	};
 
 
@@ -30,8 +30,8 @@ namespace bluefir::base
 		float Pause();
 		float Stop();
 
-		unsigned long long int start_time = 0U;
-		unsigned long long int end_time = 0U;
+		unsigned long long int start_time_ = 0U;
+		unsigned long long int end_time_ = 0U;
 	};
 }
 

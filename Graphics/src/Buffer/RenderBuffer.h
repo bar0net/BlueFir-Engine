@@ -15,7 +15,7 @@ namespace bluefir::graphics
 		void Bind() const override;
 		void UnBind() const override;
 
-		unsigned int ID() { return idx; }
+		unsigned int ID() { return buffer_id_; }
 
 		void SetStorage(unsigned int width, unsigned int height, unsigned int component);
 	};

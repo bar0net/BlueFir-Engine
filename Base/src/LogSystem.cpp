@@ -11,7 +11,7 @@
 
 void bluefir::base::LogSystem::Log(LogLevel level, const char * file, int line, const char *message ...)
 {
-	if (level < this->level) return;
+	if (level < this->level_) return;
 	std::string s = "";
 
 	switch (level)
@@ -60,8 +60,10 @@ void bluefir::base::LogSystem::Log(LogLevel level, const char * file, int line, 
 			break;
 
 		case 'f':
-			double x = va_arg(args, double);
-			s = s.substr(0, i) + std::to_string(x) + s.substr(i + 2);
+			s = s.substr(0, i) + std::to_string(va_arg(args, double)) + s.substr(i + 2);
+			break;
+
+		default:
 			break;
 		}
 	}

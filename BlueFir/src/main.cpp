@@ -1,7 +1,10 @@
 #include "LogSystem.h"
 #include "FileSystem.h"
-#include "Chrono.h"
-#include "MovingArray.h"
+
+#include "Graphics.h"
+#include "Shader.h"
+
+#include "Uniforms/UniformBlock.h"
 
 #include <iostream>
 
@@ -12,44 +15,39 @@
 
 #endif
 
+
 int main(int argc, const char* argv[])
 {
+	bluefir::graphics::WindowData* data = bluefir::graphics::Graphics::StartWindow("x", 1280, 720);
+
 	{
-		bluefir::base::Chrono chrono;
-		bluefir::base::uChrono uchrono;
+		LOGINFO("DEFAULT.VS");
+		const char* v = bluefir::base::FileSystem::ReadFile("default.vs");
 
-		chrono.Start();
-		uchrono.Start();
+		LOGINFO("DEFAULT.FS");
+		const char* f = bluefir::base::FileSystem::ReadFile("default.fs");
 
-		LOGINFO("Logging test");
+		LOGINFO("LOAD SHADER");
+		bluefir::graphics::Graphics::CreateViewport(1280, 720, bluefir::graphics::Color(), 1.F);
+		bluefir::graphics::Shader* s = new bluefir::graphics::Shader(v, f);
 
-		for (size_t i = 0; i < 10; i++)
-		{
-			const char* data = bluefir::base::FileSystem::ReadFile("test.txt");
-			LOGINFO("Contents: %s", data);
-			delete[] data;
-		}
-		LOGINFO("uChrono: %f", uchrono.Pause());
-		LOGINFO("Chrono: %i", chrono.Pause());
+		bluefir::graphics::UniformBlock<char>* block = new bluefir::graphics::UniformBlock<char>(0,0,0,0, nullptr);
+		block->Set(v);
 
-		bluefir::base::MovingArray<int> m(20, 0);
-		for (int i = 0; i < 25; ++i)
-		{
-			m.Push(i);
-			for (int j = 0; j < 20; j++)
-			{
-				std::cout << m[j] << " ";
-			}
-			std::cout << std::endl;
-		}
-
-		LOGINFO("uChrono: %fms", uchrono.Stop());
-		LOGINFO("Chrono: %ims", chrono.Stop());
+		LOGINFO("DONE");
+		delete block;
+		delete s; s = nullptr;
+		delete v; v = nullptr;
+		delete f; f = nullptr;
+		delete data;
 	}
+
 
 	#if (BF_DEBUG)
 		bluefir::base::LogSystem::getInstance().Clear();
 		_CrtDumpMemoryLeaks();
 		std::cin.get();
 	#endif
+
+	return 0;
 }

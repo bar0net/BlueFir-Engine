@@ -24,7 +24,7 @@ namespace bluefir::base
 	struct LogData
 	{
 	public:
-		LogData(LogLevel type, std::string message) : type(type), message(message) {}
+		LogData(LogLevel type, const std::string& message) : type(type), message(message) {}
 
 		LogLevel type = LogLevel::None;
 		std::string message;
@@ -38,7 +38,7 @@ namespace bluefir::base
 		LogSystem(LogSystem const&) = delete;
 		void operator=(LogSystem const&) = delete;
 
-		void SetLevel(LogLevel level) { this->level = level; }
+		void SetLevel(LogLevel level) { this->level_ = level; }
 		void Log(LogLevel level, const char* file, int line, const char* message...);
 		void Clear() { history.clear(); }
 
@@ -50,7 +50,7 @@ namespace bluefir::base
 		std::list<LogData> history;
 
 	private:
-		LogLevel level = LogLevel::Debug;
+		LogLevel level_ = LogLevel::Debug;
 	};
 }
 

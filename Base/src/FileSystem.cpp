@@ -1,5 +1,7 @@
 #include "FileSystem.h"
 
+#include "LogSystem.h"
+
 #if (BF_DEBUG)
 	#include <assert.h>
 	#define ASSERT(x) assert(x)
@@ -14,6 +16,7 @@ const char* bluefir::base::FileSystem::ReadFile(const char* filename)
 {
 	ASSERT(filename);
 
+	LOGINFO("Read file: %s", filename);
 	char* data = nullptr;
 	FILE* file = nullptr;
 	fopen_s(&file, filename, "rb");
