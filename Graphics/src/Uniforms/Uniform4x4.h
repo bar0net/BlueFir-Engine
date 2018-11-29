@@ -12,7 +12,7 @@ namespace bluefir::graphics
 
 	public:
 		Uniform4x4(int location, int size, unsigned int count)
-			: UniformedTyped(location, size, count) { }
+			: UniformedTyped(location, size, count, UniformType::MAT4, UniformPrimitive::NONE) { }
 
 		virtual void Set(int location, const void* data) const override { LOGERROR("Unsupported uniform type."); }
 	};
@@ -22,7 +22,7 @@ namespace bluefir::graphics
 	{
 	public:
 		Uniform4x4<float>::Uniform4x4(int location, int size, unsigned int count)
-			: UniformedTyped(location, size, count) { }
+			: UniformedTyped(location, size, count, UniformType::MAT4, UniformPrimitive::FLOAT) { }
 
 		virtual void Set(const void* data) const override
 		{

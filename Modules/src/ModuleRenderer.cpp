@@ -26,6 +26,8 @@ bluefir::modules::UpdateState bluefir::modules::ModuleRenderer::PreUpdate()
 
 bool bluefir::modules::ModuleRenderer::Render()
 {
+	//TODO: Render all draw calls
+
 	graphics::Graphics::SwapWindow(window_data_);
 
 	return true;
@@ -38,6 +40,11 @@ bool bluefir::modules::ModuleRenderer::CleanUp()
 	delete window_data_; window_data_ = nullptr;
 
 	return true;
+}
+
+void bluefir::modules::ModuleRenderer::Draw(const bluefir::graphics::Mesh & mesh)
+{
+	draw_calls_.emplace(mesh);
 }
 
 

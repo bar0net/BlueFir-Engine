@@ -38,6 +38,7 @@ namespace bluefir::graphics
 		static void ChangeClearColor(float clear_color[4]);
 		static void GLClearErrors();
 		static bool GLLogCall(const char* function, const char* file, int line);
+		static void Draw(); // TODO: Define Draw
 	};
 }
 

@@ -206,11 +206,11 @@ void bluefir::graphics::Shader::RegisterUniformBlock(const char * name, int type
 	switch (type)
 	{
 	case (GL_FLOAT_VEC4):
-		uniforms_[std::string(name)] = new UniformBlock<float>(location, offset, size, count, ubo);
+		uniforms_[std::string(name)] = new UniformBlock<float>(location, offset, size, count, ubo, UniformType::VEC4);
 		break;
 
 	case(GL_FLOAT_MAT4):
-		uniforms_[std::string(name)] = new UniformBlock<float>(location, offset, size, count, ubo);
+		uniforms_[std::string(name)] = new UniformBlock<float>(location, offset, size, count, ubo, UniformType::MAT4);
 		break;
 
 	default:

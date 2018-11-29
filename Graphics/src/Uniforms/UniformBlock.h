@@ -4,6 +4,8 @@
 #include "../Uniform.h"
 #include "../Buffer/UniformBuffer.h"
 
+// TODO: SEND TYPE?
+
 namespace bluefir::graphics
 {
 	template <class T>
@@ -12,8 +14,8 @@ namespace bluefir::graphics
 		static_assert(std::is_fundamental_v<T>);
 
 	public:
-		UniformBlock(int location, int offset, int size, unsigned int count, const UniformBuffer* ubo)
-			: UniformedTyped(location, size, count), offset_(offset), ubo_(ubo) { block_ = true; }
+		UniformBlock(int location, int offset, int size, unsigned int count, const UniformBuffer* ubo, UniformType type)
+			: UniformedTyped(location, size, count, type, UniformPrimitive::NONE), offset_(offset), ubo_(ubo) { block_ = true; }
 
 		virtual void Set(const void* data) const override { LOGERROR("Unsupported uniform type."); }
 
@@ -25,8 +27,8 @@ namespace bluefir::graphics
 	class UniformBlock<int> : public UniformedTyped<int>
 	{
 	public:
-		UniformBlock<int>::UniformBlock(int location, int offset, int size, unsigned int count, const UniformBuffer* ubo)
-			: UniformedTyped(location, size, count), offset_(offset), ubo_(ubo) { block_ = true; }
+		UniformBlock<int>::UniformBlock(int location, int offset, int size, unsigned int count, const UniformBuffer* ubo, UniformType type)
+			: UniformedTyped(location, size, count, type, UniformPrimitive::INT), offset_(offset), ubo_(ubo) { block_ = true; }
 
 		virtual void Set(const void* data) const override
 		{
@@ -42,8 +44,8 @@ namespace bluefir::graphics
 	class UniformBlock<float> : public UniformedTyped<float>
 	{
 	public:
-		UniformBlock<float>::UniformBlock(int location, int offset, int size, unsigned int count, const UniformBuffer* ubo)
-			: UniformedTyped(location, size, count), offset_(offset), ubo_(ubo) { block_ = true; }
+		UniformBlock<float>::UniformBlock(int location, int offset, int size, unsigned int count, const UniformBuffer* ubo, UniformType type)
+			: UniformedTyped(location, size, count, type, UniformPrimitive::INT), offset_(offset), ubo_(ubo) { block_ = true; }
 
 		virtual void Set(const void* data) const override
 		{
