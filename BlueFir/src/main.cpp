@@ -1,10 +1,7 @@
 #include "LogSystem.h"
-#include "FileSystem.h"
+#include "Chrono.h"
 
-#include "Graphics.h"
-#include "Shader.h"
-
-#include "Uniforms/UniformBlock.h"
+#include "ModuleRenderer.h"
 
 #include <iostream>
 
@@ -18,32 +15,25 @@
 
 int main(int argc, const char* argv[])
 {
-	bluefir::graphics::WindowData* data = bluefir::graphics::Graphics::StartWindow("x", 1280, 720);
+	bluefir::modules::ModuleRenderer* renderer = new bluefir::modules::ModuleRenderer();
+	bluefir::base::Chrono c;
+	c.Start();
 
+	renderer->Init();
+
+	while (c.Pause() < 20000)
 	{
-		LOGINFO("DEFAULT.VS");
-		const char* v = bluefir::base::FileSystem::ReadFile("default.vs");
+		renderer->PreUpdate();
+		
 
-		LOGINFO("DEFAULT.FS");
-		const char* f = bluefir::base::FileSystem::ReadFile("default.fs");
-
-		LOGINFO("LOAD SHADER");
-		bluefir::graphics::Graphics::CreateViewport(1280, 720, bluefir::graphics::Color(), 1.F);
-		bluefir::graphics::Shader* s = new bluefir::graphics::Shader(v, f);
-
-		bluefir::graphics::UniformBlock<char>* block = new bluefir::graphics::UniformBlock<char>(0,0,0,0, nullptr);
-		block->Set(v);
-
-		LOGINFO("DONE");
-		delete block;
-		delete s; s = nullptr;
-		delete v; v = nullptr;
-		delete f; f = nullptr;
-		delete data;
+		renderer->Render();
 	}
 
+	renderer->CleanUp();
+	c.Stop();
 
 	#if (BF_DEBUG)
+	LOGINFO("End of main.");
 		bluefir::base::LogSystem::getInstance().Clear();
 		_CrtDumpMemoryLeaks();
 		std::cin.get();

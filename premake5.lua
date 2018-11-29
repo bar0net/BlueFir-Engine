@@ -34,13 +34,17 @@ project "BlueFir"
 	includedirs
 	{
 		"Base/src",
-		"Graphics/src"
+		"Graphics/src",
+		"Core/src",
+		"Modules/src"
 	}
 	
 	links
 	{
 		"Base",
-		"Graphics"
+		"Graphics",
+		"Core",
+		"Modules"
 	}
 	
 	filter "system:windows"
@@ -185,3 +189,120 @@ project "Graphics"
 	filter "configurations:Release"
 		defines "BF_RELEASE"
 		optimize "On"
+		
+-- ===================================================================================
+-- =============================== PROJECT MODULES ===================================
+-- ===================================================================================
+project "Modules"
+	location "Modules"
+	kind "StaticLib"
+	language "C++"
+	
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+	debugdir "files/"
+	
+	files
+	{
+		"%{prj.name}/src/**.h",
+		"%{prj.name}/src/**.cpp"
+	}
+	
+	includedirs
+	{
+		"Base/src",
+		"Graphics/src"
+	}
+	
+	libdirs
+	{
+	
+	}
+	
+	links
+	{
+		"Base",
+		"Graphics"
+	}
+	
+	filter "system:windows"
+		cppdialect "C++17"
+		staticruntime "On"
+		systemversion "latest"
+		
+		defines
+		{
+			"BF_PLATFORM_WINDOWS"
+		}
+		
+		
+	filter "configurations:Debug"
+		defines "BF_DEBUG"
+		symbols "On"
+		
+	filter "configurations:Development"
+		defines "BF_Development"
+		optimize "On"
+		
+	filter "configurations:Release"
+		defines "BF_RELEASE"
+		optimize "On"
+		
+-- ===================================================================================
+-- ================================== PROJECT CORE ===================================
+-- ===================================================================================
+project "Core"
+	location "Core"
+	kind "StaticLib"
+	language "C++"
+	
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+	debugdir "files/"
+	
+	files
+	{
+		"%{prj.name}/src/**.h",
+		"%{prj.name}/src/**.cpp"
+	}
+	
+	includedirs
+	{
+		"Base/src",
+		"Modules/src"
+	}
+	
+	libdirs
+	{
+	
+	}
+	
+	links
+	{
+		"Base",
+		"Modules"
+	}
+	
+	filter "system:windows"
+		cppdialect "C++17"
+		staticruntime "On"
+		systemversion "latest"
+		
+		defines
+		{
+			"BF_PLATFORM_WINDOWS"
+		}
+		
+		
+	filter "configurations:Debug"
+		defines "BF_DEBUG"
+		symbols "On"
+		
+	filter "configurations:Development"
+		defines "BF_Development"
+		optimize "On"
+		
+	filter "configurations:Release"
+		defines "BF_RELEASE"
+		optimize "On"
+		

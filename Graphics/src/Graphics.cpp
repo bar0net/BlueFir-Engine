@@ -34,7 +34,22 @@ bluefir::graphics::WindowData* bluefir::graphics::Graphics::StartWindow(const ch
 	return data;
 }
 
-void bluefir::graphics::Graphics::CreateViewport(unsigned int width, unsigned int height, Color clear_color, float depth)
+void bluefir::graphics::Graphics::SwapWindow(WindowData * data)
+{
+	ASSERT(data);
+	SDL_GL_SwapWindow(data->window);
+}
+
+void bluefir::graphics::Graphics::DestroyWindow(WindowData * data)
+{
+	ASSERT(data);
+
+	SDL_GL_DeleteContext(data->context);
+	SDL_DestroyWindow(data->window);
+	SDL_Quit();
+}
+
+void bluefir::graphics::Graphics::CreateViewport(unsigned int width, unsigned int height, float clear_color[4], float depth)
 {
 	glewInit();
 	wglewInit();
@@ -47,7 +62,7 @@ void bluefir::graphics::Graphics::CreateViewport(unsigned int width, unsigned in
 	GLCall(glEnable(GL_TEXTURE_2D));
 
 	GLCall(glClearDepth(1.0F));
-	ChangeClearColor(0.3F, 0.3F, 0.3F, 1.0F);
+	GLCall(glClearColor(clear_color[0], clear_color[1], clear_color[2], clear_color[3]));
 
 	GLCall(glViewport(0, 0, width, height));
 }
@@ -60,6 +75,11 @@ void bluefir::graphics::Graphics::ClearViewport()
 void bluefir::graphics::Graphics::ChangeClearColor(float r, float g, float b, float a)
 {
 	GLCall(glClearColor(r, g, b, a));
+}
+
+void bluefir::graphics::Graphics::ChangeClearColor(float clear_color[4])
+{
+	GLCall(glClearColor(clear_color[0], clear_color[1], clear_color[2], clear_color[3]));
 }
 
 void bluefir::graphics::Graphics::GLClearErrors()

@@ -33,7 +33,7 @@ namespace bluefir::base
 			if (++idx_ == size_) idx_ = 0U;
 		}
 
-		float Get(void* data, int x) { return (float)(* static_cast<MovingArray*>(data) )[x]; }
+		static float Get(void* data, int idx) { return (float)(* static_cast<MovingArray*>(data) )[idx]; }
 
 	private:
 		T* values_ = nullptr;
