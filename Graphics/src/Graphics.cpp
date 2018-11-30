@@ -143,3 +143,8 @@ bool bluefir::graphics::Graphics::GLLogCall(const char * function, const char * 
 	s.clear();
 	return false;
 }
+
+void bluefir::graphics::Graphics::Draw(unsigned int count)
+{
+	GLCall(glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, 0));
+}

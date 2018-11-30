@@ -1,10 +1,10 @@
 #include "TestScene.h"
 
-#include "ModelManager.h"
+#include "Mesh.h"
 
 bluefir::modules::UpdateState bluefir::modules::TestScene::Update()
 {
-	this->cube = graphics::ModelManager::Cube();
+	this->cube = graphics::StandardModels::Cube();
 
 
 

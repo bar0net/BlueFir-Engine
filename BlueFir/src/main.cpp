@@ -1,7 +1,11 @@
 #include "LogSystem.h"
 #include "Chrono.h"
+#include "FileSystem.h"
 
 #include "ModuleRenderer.h"
+#include "Shader.h"
+
+#include "Mesh.h"
 
 #include <iostream>
 
@@ -21,16 +25,22 @@ int main(int argc, const char* argv[])
 
 	renderer->Init();
 
-	while (c.Pause() < 20000)
+	const char* vShader = bluefir::base::FileSystem::ReadFile("triangle.vs");
+	const char* fShader = bluefir::base::FileSystem::ReadFile("default.fs");
+	bluefir::graphics::Shader* shader = new bluefir::graphics::Shader(vShader, fShader);
+
+	bluefir::graphics::Mesh* mesh = bluefir::graphics::StandardModels::Triangle();
+	while (c.Pause() < 5000)
 	{
 		renderer->PreUpdate();
-		
+		renderer->Draw(*mesh, *shader);
 
 		renderer->Render();
 	}
 
 	renderer->CleanUp();
 	c.Stop();
+	delete shader;
 
 	#if (BF_DEBUG)
 	LOGINFO("End of main.");

@@ -3,9 +3,13 @@
 
 #include "Module.h"
 
+namespace bluefir::graphics
+{
+	struct Mesh;
+}
+
 namespace bluefir::modules
 {
-	struct graphics::Model;
 
 	class TestScene : public Module
 	{
@@ -13,7 +17,7 @@ namespace bluefir::modules
 		UpdateState Update() override;
 		bool CleanUp() override;
 
-		const graphics::Model* cube;
+		bluefir::graphics::Mesh* cube;
 	};
 
 }

@@ -14,6 +14,7 @@ namespace bluefir::graphics
 {
 	struct WindowData;
 	struct Mesh;
+	class Shader;
 }
 
 namespace bluefir::modules
@@ -21,6 +22,7 @@ namespace bluefir::modules
 	struct DrawCall
 	{
 		const bluefir::graphics::Mesh* mesh = nullptr;
+		const bluefir::graphics::Shader* shader = nullptr;
 	};
 
 	class ModuleRenderer : public Module
@@ -33,7 +35,7 @@ namespace bluefir::modules
 		virtual bool CleanUp() override;
 
 		// Specific Methods
-		void Draw(const bluefir::graphics::Mesh& mesh);
+		void Draw(const bluefir::graphics::Mesh& mesh, const bluefir::graphics::Shader& shader);
 
 	private:
 		unsigned int width_ = 1280U;

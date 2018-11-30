@@ -5,6 +5,27 @@
 #include "Buffer/IndexBuffer.h"
 #include "BufferLayout.h"
 
+bluefir::graphics::Mesh * bluefir::graphics::StandardModels::Triangle()
+{
+	std::vector<float> vertices = {
+		 0.0F,  1.0F,  0.0F,
+		-1.0F, -1.0F,  0.0F,
+		 1.0F, -1.0F,  0.0F,
+	};
+
+	std::vector<unsigned int> indices = {
+		0U, 1U, 2U
+	};
+
+	BufferLayout layout;
+	layout.Push<float>(3);
+
+	Mesh* model = new Mesh(vertices, indices, layout);
+	model->Build();
+
+	return model;
+}
+
 bluefir::graphics::Mesh* bluefir::graphics::StandardModels::Cube()
 {
 	std::vector<float> vertices = {
@@ -37,12 +58,13 @@ bluefir::graphics::Mesh* bluefir::graphics::StandardModels::Cube()
 	layout.Push<float>(3);
 
 	Mesh* model = new Mesh(vertices, indices, layout);
+	model->Build();
 
 	return model;
 }
 
 bluefir::graphics::Mesh::Mesh(const std::vector<float>& vertices, const std::vector<unsigned int>& indices, const BufferLayout & layout)
-	: vertices_(vertices), indices_(indices), layout_(layout)
+	: vertices_(vertices), indices_(indices), layout_(&layout)
 {
 	// TODO: Check the constructor is working properly
 }
@@ -69,14 +91,16 @@ void bluefir::graphics::Mesh::Build()
 	ibo_ = new IndexBuffer(&indices_);
 }
 
-void bluefir::graphics::Mesh::Bind()
+void bluefir::graphics::Mesh::Bind() const
 {
+	ASSERT(vao_ && ibo_);
 	vao_->Bind();
 	ibo_->Bind();
 }
 
-void bluefir::graphics::Mesh::UnBind()
+void bluefir::graphics::Mesh::UnBind() const
 {
+	ASSERT(vao_ && ibo_);
 	ibo_->UnBind();
 	vao_->UnBind();
 }

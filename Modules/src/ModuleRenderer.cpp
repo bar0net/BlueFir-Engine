@@ -1,5 +1,9 @@
 #include "ModuleRenderer.h"
 
+#include "Shader.h"
+#include "Mesh.h"
+#include "Graphics.h"
+
 bool bluefir::modules::ModuleRenderer::Init()
 {
 	window_data_ = graphics::Graphics::StartWindow("BlueFir Engine", width_, height_);
@@ -27,7 +31,17 @@ bluefir::modules::UpdateState bluefir::modules::ModuleRenderer::PreUpdate()
 bool bluefir::modules::ModuleRenderer::Render()
 {
 	//TODO: Render all draw calls
+	while (!draw_calls_.empty())
+	{
+		DrawCall dc = draw_calls_.front();
+		dc.shader->Bind();
+		dc.mesh->Bind();
+		bluefir::graphics::Graphics::Draw(dc.mesh->indices_.size());
 
+		draw_calls_.pop();
+	}
+
+	// Swap windows
 	graphics::Graphics::SwapWindow(window_data_);
 
 	return true;
@@ -42,9 +56,12 @@ bool bluefir::modules::ModuleRenderer::CleanUp()
 	return true;
 }
 
-void bluefir::modules::ModuleRenderer::Draw(const bluefir::graphics::Mesh & mesh)
+void bluefir::modules::ModuleRenderer::Draw(const bluefir::graphics::Mesh & mesh, const bluefir::graphics::Shader& shader)
 {
-	draw_calls_.emplace(mesh);
+	DrawCall c;
+	c.mesh = &mesh;
+	c.shader = &shader;
+	draw_calls_.push(c);
 }
 
 

@@ -16,13 +16,13 @@ namespace bluefir::graphics
 		Mesh(const std::vector<float>& vertices, const std::vector<unsigned int>& indices, const BufferLayout& layout);
 		virtual ~Mesh();
 		void Build();
-		void Bind();
-		void UnBind();
+		void Bind() const;
+		void UnBind() const;
 
 	public:
 		std::vector<float> vertices_;
 		std::vector<unsigned int> indices_;
-		const BufferLayout layout_;
+		const BufferLayout* layout_;
 
 	private:
 		VertexBuffer * vbo_ = nullptr;
@@ -35,6 +35,7 @@ namespace bluefir::graphics
 	static class StandardModels
 	{
 	public:
+		static Mesh* Triangle();
 		static Mesh* Cube();
 	};
 }
