@@ -25,8 +25,8 @@ namespace bluefir::graphics
 		const BufferLayout* layout_;
 
 	private:
-		VertexBuffer * vbo_ = nullptr;
-		IndexBuffer * ibo_ = nullptr;
+		VertexBuffer* vbo_ = nullptr;
+		IndexBuffer* ibo_ = nullptr;
 		VertexArray* vao_ = nullptr;
 
 		//Material* material;

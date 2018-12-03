@@ -15,6 +15,7 @@ bluefir::graphics::UniformBuffer::UniformBuffer(unsigned int buffer_size) : buff
 
 bluefir::graphics::UniformBuffer::~UniformBuffer()
 {
+	UnBind();
 	GLCall(glDeleteBuffers(1, &buffer_id_));
 }
 

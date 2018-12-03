@@ -65,22 +65,24 @@ bluefir::graphics::Shader::Shader(const char * vertex_shader, const char * fragm
 
 bluefir::graphics::Shader::~Shader()
 {
-	// Delete Uniforms from Map
-	for (auto it = uniforms_.begin(); it != uniforms_.end(); ++it)
-		delete it->second;
-	uniforms_.clear();
+	if (active_shader == program_)
+	{
+		GLCall(glUseProgram(0));
+		active_shader = 0;
+	}
 
 	// Delete UniformBlock buffers
 	for (auto it = uniform_buffers_.begin(); it != uniform_buffers_.end(); ++it)
 		delete *it;
 	uniform_buffers_.clear();
 
+	// Delete Uniforms from Map
+	for (auto it = uniforms_.begin(); it != uniforms_.end(); ++it)
+		delete it->second;
+
+	uniforms_.clear();
+
 	// Delete program
-	if (active_shader == program_)
-	{
-		GLCall(glUseProgram(0));
-		active_shader = 0;
-	}
 	GLCall(glDeleteProgram(program_));
 }
 
@@ -217,6 +219,14 @@ void bluefir::graphics::Shader::RegisterUniformBlock(const char * name, int type
 		LOGERROR("Unsupported type for uniform %s (type: %i)", name, type);
 		break;
 	}
+}
+
+bool bluefir::graphics::Shader::SetUniform(std::string name, const void * data)
+{
+	if (uniforms_.find(name) == uniforms_.end()) return false;
+
+	Bind();
+	uniforms_[name]->Set(data);
 }
 
 unsigned int bluefir::graphics::Shader::CompileShader(const char * text, int type)

@@ -84,6 +84,15 @@ void bluefir::graphics::Graphics::ChangeClearColor(float clear_color[4])
 
 void bluefir::graphics::Graphics::GLClearErrors()
 {
+#if BF_DEBUG
+	GLenum error = glGetError();
+#if BF_PLATFORM_WINDOWS
+	if (error != GL_NO_ERROR) __debugbreak();
+#else
+	ASSERT(error == GL_NO_ERROR);
+#endif // !Windows
+#endif // !debug
+
 	while (glGetError() != GL_NO_ERROR);
 }
 

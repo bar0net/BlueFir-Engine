@@ -11,7 +11,7 @@ namespace bluefir::base
 		virtual ~Chrono() {}
 
 		void Start();
-		unsigned int Pause();
+		unsigned int Pause() const;
 		unsigned int Stop();
 
 		unsigned int start_time_ = 0U;
@@ -27,7 +27,7 @@ namespace bluefir::base
 		virtual ~uChrono() {}
 
 		void Start();
-		float Pause();
+		float Pause() const;
 		float Stop();
 
 		unsigned long long int start_time_ = 0U;

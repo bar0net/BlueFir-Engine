@@ -82,6 +82,12 @@ bluefir::graphics::Mesh::~Mesh()
 		delete ibo_;
 		ibo_ = nullptr;
 	}
+
+	if (vao_ != nullptr)
+	{
+		delete vao_;
+		vao_ = nullptr;
+	}
 }
 
 void bluefir::graphics::Mesh::Build()

@@ -13,7 +13,7 @@ void bluefir::base::Chrono::Start()
 	start_time_ = SDL_GetTicks();
 }
 
-unsigned int bluefir::base::Chrono::Pause()
+unsigned int bluefir::base::Chrono::Pause() const
 {
 	if (end_time_ == 0U)	return SDL_GetTicks() - start_time_;
 	else return end_time_;
@@ -37,7 +37,7 @@ void bluefir::base::uChrono::Start()
 	start_time_ = SDL_GetPerformanceCounter();
 }
 
-float bluefir::base::uChrono::Pause()
+float bluefir::base::uChrono::Pause() const
 {
 	if (end_time_ == 0U) return (float)(SDL_GetPerformanceCounter() - start_time_) * 1000.0F / (float)frequency;
 	else return end_time_ * 1000.0F / (float)frequency;

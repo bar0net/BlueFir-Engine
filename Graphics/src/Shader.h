@@ -26,6 +26,7 @@ namespace bluefir::graphics
 		void Bind() const;
 		void UnBind() const;
 
+		bool SetUniform(std::string name, const void* data);
 
 	private:
 		void ParseUniforms();
@@ -34,8 +35,8 @@ namespace bluefir::graphics
 		void RegisterUniform(const char* name, int type, int location, int size, unsigned int count);
 		void RegisterUniformBlock(const char* name, int type, int location, int size, unsigned int count, unsigned int offset, const UniformBuffer* ubo);
 
-		static unsigned int CompileShader(const char * text, int type);
 
+		static unsigned int CompileShader(const char * text, int type);
 
 	private:
 		unsigned int program_ = 0;

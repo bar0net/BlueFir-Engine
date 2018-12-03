@@ -29,18 +29,25 @@ int main(int argc, const char* argv[])
 	const char* fShader = bluefir::base::FileSystem::ReadFile("default.fs");
 	bluefir::graphics::Shader* shader = new bluefir::graphics::Shader(vShader, fShader);
 
+	float color[4] = { 0.2F, 0.4F, 0.8F, 1.0F };
+	shader->SetUniform("albedo", &color);
+
 	bluefir::graphics::Mesh* mesh = bluefir::graphics::StandardModels::Triangle();
 	while (c.Pause() < 5000)
 	{
 		renderer->PreUpdate();
 		renderer->Draw(*mesh, *shader);
-
 		renderer->Render();
 	}
 
+	delete mesh;
+	delete shader;
 	renderer->CleanUp();
 	c.Stop();
-	delete shader;
+
+	delete vShader;
+	delete fShader;
+	delete renderer;
 
 	#if (BF_DEBUG)
 	LOGINFO("End of main.");
