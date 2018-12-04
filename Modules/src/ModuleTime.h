@@ -9,8 +9,9 @@ namespace bluefir::modules
 	class ModuleTime : public Module 
 	{
 	public:
-		bool Init() override			 { chrono.Start(); }
+		bool Init() override			 { chrono.Start(); return true; }
 		UpdateState PreUpdate() override { real_last_ = chrono.Pause(); return UpdateState::Update_Continue; }
+		bool CleanUp() override			 { chrono.Stop(); return true; }
 
 		// Real
 		float RealTime() const		{ return (float)chrono.Pause() / 1000.0F; }

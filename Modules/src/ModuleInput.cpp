@@ -2,10 +2,22 @@
 
 #include "SDL.h"
 
+#include "BlueFir.h"
+#include "ModuleRenderer.h"
+
 bluefir::modules::ModuleInput::ModuleInput()
 {
-	memset(&keyboard_, 0, KEY_COUNT * sizeof(KeyState));
-	memset(&mouse_, 0, MOUSE_KEY_COUNT * sizeof(KeyCode));
+	keyboard_ = new KeyState[KEY_COUNT];
+	mouse_ = new KeyState[MOUSE_KEY_COUNT];
+
+	memset(keyboard_, 0, KEY_COUNT * sizeof(KeyState));
+	memset(mouse_, 0, MOUSE_KEY_COUNT * sizeof(KeyCode));
+}
+
+bluefir::modules::ModuleInput::~ModuleInput()
+{
+	delete[] keyboard_;
+	delete[] mouse_;
 }
 
 bool bluefir::modules::ModuleInput::Init()
@@ -25,8 +37,9 @@ bool bluefir::modules::ModuleInput::Init()
 bluefir::modules::UpdateState bluefir::modules::ModuleInput::PreUpdate()
 {
 	UpdateKeyboardState();
+	UpdateState ret = ParseEvents();
 	UpdateMouseState();
-	return ParseEvents();
+	return ret;
 }
 
 bool bluefir::modules::ModuleInput::CleanUp()
@@ -77,34 +90,37 @@ void bluefir::modules::ModuleInput::UpdateMouseState()
 bluefir::modules::UpdateState bluefir::modules::ModuleInput::ParseEvents()
 {
 	static SDL_Event event;
-	switch (event.type)
+	while (SDL_PollEvent(&event))
 	{
-	case SDL_QUIT:
-		return UpdateState::Update_End;
-		break;
+		switch (event.type)
+		{
+		case SDL_QUIT:
+			return UpdateState::Update_End;
+			break;
 
-	case SDL_MOUSEBUTTONDOWN:
-		if (event.button.button == SDL_BUTTON_LEFT)			mouse_[(int)MouseButton::MOUSE_LEFT] = KeyState::DOWN;
-		else if (event.button.button == SDL_BUTTON_RIGHT)	mouse_[(int)MouseButton::MOUSE_RIGHT] = KeyState::DOWN;
-		else if (event.button.button == SDL_BUTTON_MIDDLE)	mouse_[(int)MouseButton::MOUSE_MIDDLE] = KeyState::DOWN;
-		break;
+		case SDL_MOUSEBUTTONDOWN:
+			if (event.button.button == SDL_BUTTON_LEFT)			mouse_[(int)MouseButton::MOUSE_LEFT] = KeyState::DOWN;
+			else if (event.button.button == SDL_BUTTON_RIGHT)	mouse_[(int)MouseButton::MOUSE_RIGHT] = KeyState::DOWN;
+			else if (event.button.button == SDL_BUTTON_MIDDLE)	mouse_[(int)MouseButton::MOUSE_MIDDLE] = KeyState::DOWN;
+			break;
 
-	case SDL_MOUSEBUTTONUP:
-		if (event.button.button == SDL_BUTTON_LEFT)			mouse_[(int)MouseButton::MOUSE_LEFT] = KeyState::UP;
-		else if (event.button.button == SDL_BUTTON_RIGHT)	mouse_[(int)MouseButton::MOUSE_RIGHT] = KeyState::UP;
-		else if (event.button.button == SDL_BUTTON_MIDDLE)	mouse_[(int)MouseButton::MOUSE_MIDDLE] = KeyState::UP;
-		break;
+		case SDL_MOUSEBUTTONUP:
+			if (event.button.button == SDL_BUTTON_LEFT)			mouse_[(int)MouseButton::MOUSE_LEFT] = KeyState::UP;
+			else if (event.button.button == SDL_BUTTON_RIGHT)	mouse_[(int)MouseButton::MOUSE_RIGHT] = KeyState::UP;
+			else if (event.button.button == SDL_BUTTON_MIDDLE)	mouse_[(int)MouseButton::MOUSE_MIDDLE] = KeyState::UP;
+			break;
 
-	case SDL_MOUSEWHEEL:
-		mouse_wheel_ = event.wheel.y;
+		case SDL_MOUSEWHEEL:
+			mouse_wheel_ = event.wheel.y;
+			break;
 
-	case SDL_WINDOWEVENT:
-		// TODO: Call Module Renderer ResizeEvent();
-		if (event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) int a = 0;
-		break;
+		case SDL_WINDOWEVENT:
+			if (event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) App->renderer->ResizeEvent((unsigned int)event.window.windowID);
+			break;
 
-	default:
-		break;
+		default:
+			break;
+		}
 	}
 
 	return UpdateState::Update_Continue;

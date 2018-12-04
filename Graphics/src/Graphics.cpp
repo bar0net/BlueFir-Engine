@@ -29,8 +29,8 @@ bluefir::graphics::WindowData* bluefir::graphics::Graphics::StartWindow(const ch
 	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
 
 	data->context = SDL_GL_CreateContext(data->window);
-	data->valid = data->context && data->surface && data->window;
 
+	data->valid = data->context && data->surface && data->window;
 	return data;
 }
 
@@ -49,6 +49,16 @@ void bluefir::graphics::Graphics::DestroyWindow(WindowData * data)
 	SDL_Quit();
 }
 
+unsigned int bluefir::graphics::Graphics::GetWindowID(WindowData * data)
+{
+	return (unsigned int)SDL_GetWindowID(data->window);
+}
+
+void bluefir::graphics::Graphics::GetWindowSize(WindowData * data, int & width, int & height)
+{
+	SDL_GetWindowSize(data->window, &width, &height);
+}
+
 void bluefir::graphics::Graphics::CreateViewport(unsigned int width, unsigned int height, float clear_color[4], float depth)
 {
 	glewInit();
@@ -64,6 +74,11 @@ void bluefir::graphics::Graphics::CreateViewport(unsigned int width, unsigned in
 	GLCall(glClearDepth(1.0F));
 	GLCall(glClearColor(clear_color[0], clear_color[1], clear_color[2], clear_color[3]));
 
+	GLCall(glViewport(0, 0, width, height));
+}
+
+void bluefir::graphics::Graphics::ChangeViewportSize(int width, int height)
+{
 	GLCall(glViewport(0, 0, width, height));
 }
 

@@ -26,17 +26,17 @@ namespace bluefir::graphics
 		void* context = nullptr;
 	};
 
-	static class Graphics
+	class Graphics
 	{
 	public:
 		static WindowData* StartWindow(const char* title, unsigned int width, unsigned int height);
 		static void SwapWindow(WindowData* data);
 		static void DestroyWindow(WindowData* data);
-		static unsigned int GetWindowID(WindowData* data) { return (unsigned int)SDL_GetWindowID(data->window); }
-		static void GetWindowSize(WindowData* data, int& width, int& height) { SDL_GetWindowSize(data->window, &width, &height); }
+		static unsigned int GetWindowID(WindowData* data);
+		static void GetWindowSize(WindowData* data, int& width, int& height);
 
 		static void CreateViewport(unsigned int width, unsigned int height, float clear_color[4], float depth);
-		static void ChangeViewportSize(int width, int height) { GLCall(glViewport(0, 0, width, height)); }
+		static void ChangeViewportSize(int width, int height);
 		static void ClearViewport();
 
 		static void ChangeClearColor(float r, float g, float b, float a);
@@ -46,6 +46,10 @@ namespace bluefir::graphics
 		static bool GLLogCall(const char* function, const char* file, int line);
 
 		static void Draw(unsigned int count); // TODO: Define Draw
+
+	private:
+		Graphics() = delete;
+		~Graphics() = delete;
 	};
 }
 

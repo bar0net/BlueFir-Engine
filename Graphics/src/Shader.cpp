@@ -227,6 +227,7 @@ bool bluefir::graphics::Shader::SetUniform(std::string name, const void * data)
 
 	Bind();
 	uniforms_[name]->Set(data);
+	return true;
 }
 
 unsigned int bluefir::graphics::Shader::CompileShader(const char * text, int type)

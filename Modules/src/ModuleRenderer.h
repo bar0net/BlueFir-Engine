@@ -31,7 +31,7 @@ namespace bluefir::modules
 		// Flow Methods
 		virtual bool Init() override;
 		virtual UpdateState PreUpdate() override;
-		bool Render();
+		UpdateState Render();
 		virtual bool CleanUp() override;
 
 		// Specific Methods

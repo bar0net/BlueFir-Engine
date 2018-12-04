@@ -38,13 +38,12 @@ namespace bluefir::modules
 	{
 	public:
 		ModuleInput();
-		virtual ~ModuleInput() {}
+		virtual ~ModuleInput();
 
 		// Flow
-		bool Init() override;
-		UpdateState PreUpdate() override;
-		UpdateState PostUpdate() override;
-		bool CleanUp() override;
+		virtual bool Init() override;
+		virtual UpdateState PreUpdate() override;
+		virtual bool CleanUp() override;
 
 		//Access
 		bool GetKeyDown(KeyCode k) const	{ return keyboard_[(int)k] == KeyState::DOWN; }
@@ -69,8 +68,8 @@ namespace bluefir::modules
 		float wheel_sensitivity = 5.0F;
 
 	private:
-		KeyState keyboard_[KEY_COUNT];
-		KeyState mouse_[MOUSE_KEY_COUNT];
+		KeyState* keyboard_;
+		KeyState* mouse_;
 		int mouse_x_ = 0;
 		int mouse_y_ = 0;
 		float mouse_deltax_ = 0.0F;

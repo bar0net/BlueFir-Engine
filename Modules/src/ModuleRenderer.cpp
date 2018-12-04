@@ -28,7 +28,7 @@ bluefir::modules::UpdateState bluefir::modules::ModuleRenderer::PreUpdate()
 	return UpdateState::Update_Continue;
 }
 
-bool bluefir::modules::ModuleRenderer::Render()
+bluefir::modules::UpdateState bluefir::modules::ModuleRenderer::Render()
 {
 	while (!draw_calls_.empty())
 	{
@@ -43,7 +43,7 @@ bool bluefir::modules::ModuleRenderer::Render()
 	// Swap windows
 	graphics::Graphics::SwapWindow(window_data_);
 
-	return true;
+	return UpdateState::Update_Continue;
 }
 
 bool bluefir::modules::ModuleRenderer::CleanUp()
