@@ -211,18 +211,20 @@ project "Modules"
 	includedirs
 	{
 		"Base/src",
-		"Graphics/src"
+		"Graphics/src",
+		"Vendor/SDL2-2.0.8/include/"
 	}
 	
 	libdirs
 	{
-	
+		"Vendor/SDL2-2.0.8/lib/x64/"	
 	}
 	
 	links
 	{
 		"Base",
-		"Graphics"
+		"Graphics",
+		"SDL2"
 	}
 	
 	filter "system:windows"

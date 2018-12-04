@@ -37,9 +37,12 @@ namespace bluefir::modules
 		// Specific Methods
 		void Draw(const bluefir::graphics::Mesh& mesh, const bluefir::graphics::Shader& shader);
 
+		// Event
+		void ResizeEvent(unsigned int ID);
+
 	private:
-		unsigned int width_ = 1280U;
-		unsigned int height_ = 720U;
+		int width_ = 1280U;
+		int height_ = 720U;
 		bool vsync_ = true;
 		float clear_color_[4] = { 0.3F, 0.3F, 0.3F, 1.0F };
 		float depth_ = 1.0F;

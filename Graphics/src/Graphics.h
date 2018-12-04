@@ -32,12 +32,19 @@ namespace bluefir::graphics
 		static WindowData* StartWindow(const char* title, unsigned int width, unsigned int height);
 		static void SwapWindow(WindowData* data);
 		static void DestroyWindow(WindowData* data);
+		static unsigned int GetWindowID(WindowData* data) { return (unsigned int)SDL_GetWindowID(data->window); }
+		static void GetWindowSize(WindowData* data, int& width, int& height) { SDL_GetWindowSize(data->window, &width, &height); }
+
 		static void CreateViewport(unsigned int width, unsigned int height, float clear_color[4], float depth);
+		static void ChangeViewportSize(int width, int height) { GLCall(glViewport(0, 0, width, height)); }
 		static void ClearViewport();
+
 		static void ChangeClearColor(float r, float g, float b, float a);
 		static void ChangeClearColor(float clear_color[4]);
+
 		static void GLClearErrors();
 		static bool GLLogCall(const char* function, const char* file, int line);
+
 		static void Draw(unsigned int count); // TODO: Define Draw
 	};
 }

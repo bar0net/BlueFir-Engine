@@ -30,7 +30,6 @@ bluefir::modules::UpdateState bluefir::modules::ModuleRenderer::PreUpdate()
 
 bool bluefir::modules::ModuleRenderer::Render()
 {
-	//TODO: Render all draw calls
 	while (!draw_calls_.empty())
 	{
 		DrawCall dc = draw_calls_.front();
@@ -62,6 +61,16 @@ void bluefir::modules::ModuleRenderer::Draw(const bluefir::graphics::Mesh & mesh
 	c.mesh = &mesh;
 	c.shader = &shader;
 	draw_calls_.push(c);
+}
+
+void bluefir::modules::ModuleRenderer::ResizeEvent(unsigned int ID)
+{
+	ASSERT(window_data_);
+
+	if (ID != graphics::Graphics::GetWindowID(window_data_)) return;
+
+	graphics::Graphics::GetWindowSize(window_data_, width_, height_);
+	graphics::Graphics::ChangeViewportSize(width_, height_);
 }
 
 
