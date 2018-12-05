@@ -40,6 +40,9 @@ namespace bluefir::modules
 		// Event
 		void ResizeEvent(unsigned int ID);
 
+		float GetWindowWidth() { return width_; }
+		float GetWindowHeight() { return height_; }
+
 	private:
 		int width_ = 1280U;
 		int height_ = 720U;
