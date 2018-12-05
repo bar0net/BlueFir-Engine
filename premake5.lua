@@ -271,7 +271,8 @@ project "Core"
 	includedirs
 	{
 		"Base/src",
-		"Modules/src"
+		"Modules/src",
+		"Math/Vendor"
 	}
 	
 	libdirs
@@ -282,7 +283,8 @@ project "Core"
 	links
 	{
 		"Base",
-		"Modules"
+		"Modules",
+		"Math"
 	}
 	
 	filter "system:windows"
@@ -307,4 +309,3 @@ project "Core"
 	filter "configurations:Release"
 		defines "BF_RELEASE"
 		optimize "On"
-		

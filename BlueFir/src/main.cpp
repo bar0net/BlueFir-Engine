@@ -24,6 +24,12 @@ enum class AppStatus
 bluefir::BlueFir* App = nullptr;
 int main(int argc, const char* argv[])
 {
+	bluefir::core::GameObject* go = new bluefir::core::GameObject();
+	float* f = new float[16];
+	go->transform->ModelMatrix(f);
+	delete[] f;
+	delete go;
+
 	LOGINFO("Begin Application.");
 	App = new bluefir::BlueFir();
 	

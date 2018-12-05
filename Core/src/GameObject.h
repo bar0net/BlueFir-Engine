@@ -13,7 +13,10 @@ namespace bluefir::core
 	class GameObject
 	{
 	public:
-		GameObject() {}
+		GameObject() 
+		{
+			components_[ComponentType::TRANSFORM].push_back(transform = new Transform());
+		}
 		virtual ~GameObject() 
 		{
 			for (auto it = components_.begin(); it != components_.end(); ++it)
@@ -28,6 +31,10 @@ namespace bluefir::core
 		template <class T>
 		T* AddComponent()
 		{
+			if (T::Type() == ComponentType::TRANSFORM)
+			{
+				return LOGERROR("Cannot create additional transforms.");
+			}
 			T* component = new T();
 			components_[T::Type()].push_back(component);
 			return component;
@@ -55,6 +62,10 @@ namespace bluefir::core
 		template <class T>
 		void RemoveComponent(T* component)
 		{
+			if (T::Type() == ComponentType::TRANSFORM)
+			{
+				return LOGERROR("Cannot delete transforms.");
+			}
 			auto it = components_.find(T::Type());
 			if (it == components_.end())
 			{
@@ -73,6 +84,9 @@ namespace bluefir::core
 				return;
 			}
 		}
+
+	public:
+		Transform * transform = nullptr;
 
 	private:
 		std::unordered_map<ComponentType, std::vector<Component*>> components_;
