@@ -1,6 +1,11 @@
 #include "BlueFir.h"
 #include "LogSystem.h"
 
+#include "Component.h"
+#include "Components/Transform.h"
+#include "Components/Camera.h"
+#include "GameObject.h"
+
 #if (BF_DEBUG)
 	#include <iostream>
 	#define _CRTDBG_MAP_ALLOC  
@@ -21,7 +26,7 @@ int main(int argc, const char* argv[])
 {
 	LOGINFO("Begin Application.");
 	App = new bluefir::BlueFir();
-
+	
 	AppStatus status = AppStatus::Start;
 
 	while (status != AppStatus::Exit)

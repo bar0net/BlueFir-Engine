@@ -6,6 +6,7 @@
 
 bool bluefir::modules::ModuleRenderer::Init()
 {
+	LOGINFO("Initializing renderer.");
 	window_data_ = graphics::Graphics::StartWindow("BlueFir Engine", width_, height_);
 
 	if (!window_data_->valid)
@@ -48,6 +49,7 @@ bluefir::modules::UpdateState bluefir::modules::ModuleRenderer::Render()
 
 bool bluefir::modules::ModuleRenderer::CleanUp()
 {
+	LOGINFO("Closing renderer.");
 	graphics::Graphics::DestroyWindow(window_data_);
 
 	delete window_data_; window_data_ = nullptr;
@@ -66,6 +68,7 @@ void bluefir::modules::ModuleRenderer::Draw(const bluefir::graphics::Mesh & mesh
 void bluefir::modules::ModuleRenderer::ResizeEvent(unsigned int ID)
 {
 	ASSERT(window_data_);
+	LOGINFO("Resize event detected.");
 
 	if (ID != graphics::Graphics::GetWindowID(window_data_)) return;
 
