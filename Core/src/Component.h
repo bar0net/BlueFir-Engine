@@ -3,6 +3,8 @@
 
 namespace bluefir::core
 {
+	class GameObject;
+
 	enum class ComponentType
 	{
 		NONE = 0,
@@ -13,7 +15,11 @@ namespace bluefir::core
 	class Component
 	{
 	public:
+		Component(const GameObject* gameObject) : gameObject_(gameObject) {};
 		virtual ~Component() {}
+
+	public:
+		const GameObject* gameObject_ = nullptr;
 	};
 }
 

@@ -5,6 +5,7 @@
 
 #include "Graphics.h"
 #include <queue>
+#include <vector>
 
 // TODO:
 // Need game object with transform to complete the draw pipeline
@@ -15,6 +16,11 @@ namespace bluefir::graphics
 	struct WindowData;
 	struct Mesh;
 	class Shader;
+}
+
+namespace bluefir::core
+{
+	class Camera;
 }
 
 namespace bluefir::modules
@@ -40,8 +46,13 @@ namespace bluefir::modules
 		// Event
 		void ResizeEvent(unsigned int ID);
 
+		// Info
 		float GetWindowWidth() { return width_; }
 		float GetWindowHeight() { return height_; }
+
+		// Components
+		void AddCamera(const core::Camera* camera);
+		void RemoveCamera(const core::Camera* camera);
 
 	private:
 		int width_ = 1280U;
@@ -52,6 +63,7 @@ namespace bluefir::modules
 
 		graphics::WindowData* window_data_ = nullptr;
 		std::queue<DrawCall> draw_calls_;
+		std::vector<const core::Camera*> cameras_;
 	};
 
 

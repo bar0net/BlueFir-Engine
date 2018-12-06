@@ -4,6 +4,10 @@
 #include "Mesh.h"
 #include "Graphics.h"
 
+#include "GameObject.h"
+#include "Components/Camera.h"
+#include "Components/Transform.h"
+
 bool bluefir::modules::ModuleRenderer::Init()
 {
 	LOGINFO("Initializing renderer.");
@@ -34,9 +38,21 @@ bluefir::modules::UpdateState bluefir::modules::ModuleRenderer::Render()
 	while (!draw_calls_.empty())
 	{
 		DrawCall dc = draw_calls_.front();
-		dc.shader->Bind();
-		dc.mesh->Bind();
-		bluefir::graphics::Graphics::Draw(dc.mesh->indices_.size());
+		float proj[16];
+		float view[16];
+		float model[16];
+
+		for (auto it = cameras_.begin(); it != cameras_.end(); ++it)
+		{
+			dc.shader->Bind();
+			dc.mesh->Bind();
+			(*it)->FrustumMatrixT(proj);
+			(*it)->gameObject_->transform_->ModelMatrixT(view);
+
+			dc.shader->SetUniform("proj", proj);
+			dc.shader->SetUniform("view", proj);
+			bluefir::graphics::Graphics::Draw(dc.mesh->indices_.size());
+		}
 
 		draw_calls_.pop();
 	}
@@ -74,6 +90,37 @@ void bluefir::modules::ModuleRenderer::ResizeEvent(unsigned int ID)
 
 	graphics::Graphics::GetWindowSize(window_data_, width_, height_);
 	graphics::Graphics::ChangeViewportSize(width_, height_);
+}
+
+void bluefir::modules::ModuleRenderer::AddCamera(const core::Camera * camera)
+{
+	ASSERT(camera);
+	LOGINFO("Registering camera to renderer.");
+
+	for (auto it = cameras_.begin(); it != cameras_.end(); ++it)
+	{
+		if (*it == camera) 
+		{
+			LOGWARNING("Renderer already has the camera registered.");
+			return;
+		}
+	}
+
+	cameras_.push_back(camera);
+}
+
+void bluefir::modules::ModuleRenderer::RemoveCamera(const core::Camera * camera)
+{
+	LOGINFO("Removing camera from renderer.");
+	for (auto it = cameras_.begin(); it != cameras_.end(); ++it)
+	{
+		if (*it == camera)
+		{
+			cameras_.erase(it);
+			return;
+		}
+	}
+	LOGWARNING("Renderer didn't have the camera registered.");
 }
 
 

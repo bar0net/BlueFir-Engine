@@ -15,7 +15,8 @@ namespace bluefir::core
 	public:
 		GameObject() 
 		{
-			components_[ComponentType::TRANSFORM].push_back(transform = new Transform());
+			transform_ = new Transform(this);
+			components_[ComponentType::TRANSFORM].push_back(transform_);
 		}
 		virtual ~GameObject() 
 		{
@@ -35,7 +36,7 @@ namespace bluefir::core
 			{
 				return LOGERROR("Cannot create additional transforms.");
 			}
-			T* component = new T();
+			T* component = new T(this);
 			components_[T::Type()].push_back(component);
 			return component;
 		}
@@ -86,7 +87,7 @@ namespace bluefir::core
 		}
 
 	public:
-		Transform * transform = nullptr;
+		Transform* transform_ = nullptr;
 
 	private:
 		std::unordered_map<ComponentType, std::vector<Component*>> components_;

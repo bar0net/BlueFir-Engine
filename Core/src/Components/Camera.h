@@ -13,7 +13,7 @@ namespace bluefir::core
 	class Camera : public Component
 	{
 	public:
-		Camera();
+		Camera(const GameObject* gameObject);
 		virtual ~Camera();
 		static ComponentType Type() { return ComponentType::CAMERA; }
 
@@ -26,10 +26,10 @@ namespace bluefir::core
 		float GetFOV() const;
 
 		// Frustum Matrix (Row Major) as an array of float[16]
-		void FrustumMatrix(float* matrix);
+		void FrustumMatrix(float* matrix) const;
 
 		//Frustum Matrix (Column Major) as an array of float[16]
-		void FrustumMatrixT(float* matrix);
+		void FrustumMatrixT(float* matrix) const;
 
 	private:
 		math::Frustum* frustum_ = nullptr;

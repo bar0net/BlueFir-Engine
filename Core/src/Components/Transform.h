@@ -13,7 +13,7 @@ namespace bluefir::core
 	class Transform : public Component
 	{
 	public:
-		Transform();
+		Transform(const GameObject* gameObject);
 		virtual ~Transform();
 		static ComponentType Type() { return ComponentType::TRANSFORM; }
 
@@ -30,6 +30,12 @@ namespace bluefir::core
 
 		// Returns the Transformation Matrix as a Column Major array of float[16]
 		void ModelMatrixT(float* matrix) const;
+
+		// Returns the Inverse of the Transformation Matrix as a Row Major array of float[16]
+		void ModelMatrixI(float* matrix) const;
+
+		// Returns the Inverse of the Transformation Matrix as a Column Major array of float[16]
+		void ModelMatrixIT(float* matrix) const;
 
 	private:
 		math::float3* position_ = nullptr;

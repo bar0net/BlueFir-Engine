@@ -221,12 +221,13 @@ void bluefir::graphics::Shader::RegisterUniformBlock(const char * name, int type
 	}
 }
 
-bool bluefir::graphics::Shader::SetUniform(std::string name, const void * data)
+bool bluefir::graphics::Shader::SetUniform(std::string name, const void * data) const
 {
-	if (uniforms_.find(name) == uniforms_.end()) return false;
+	auto it = uniforms_.find(name);
+	if (it == uniforms_.end()) return false;
 
 	Bind();
-	uniforms_[name]->Set(data);
+	it->second->Set(data);
 	return true;
 }
 

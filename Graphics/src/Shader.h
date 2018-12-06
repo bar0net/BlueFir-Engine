@@ -26,7 +26,7 @@ namespace bluefir::graphics
 		void Bind() const;
 		void UnBind() const;
 
-		bool SetUniform(std::string name, const void* data);
+		bool SetUniform(std::string name, const void* data) const;
 
 	private:
 		void ParseUniforms();

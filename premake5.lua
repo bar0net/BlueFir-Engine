@@ -212,6 +212,7 @@ project "Modules"
 	{
 		"Base/src",
 		"Graphics/src",
+		"Core/src",
 		"Vendor/SDL2-2.0.8/include/"
 	}
 	
@@ -224,6 +225,7 @@ project "Modules"
 	{
 		"Base",
 		"Graphics",
+		"Core",
 		"SDL2"
 	}
 	

@@ -3,6 +3,7 @@
 #include "Module.h"
 #include "ModuleInput.h"
 #include "ModuleRenderer.h"
+#include "ModuleScene.h"
 #include "ModuleTime.h"
 
 bluefir::BlueFir::BlueFir()
@@ -10,6 +11,7 @@ bluefir::BlueFir::BlueFir()
 	modules_.push_back(renderer = new modules::ModuleRenderer());
 	modules_.push_back(input = new modules::ModuleInput());
 	modules_.push_back(time = new modules::ModuleTime());
+	modules_.push_back(scene = new modules::ModuleScene());
 }
 
 bluefir::BlueFir::~BlueFir()
@@ -17,6 +19,7 @@ bluefir::BlueFir::~BlueFir()
 	modules_.clear();
 	delete input;		input = nullptr;
 	delete renderer;	renderer = nullptr;
+	delete scene;		scene = nullptr;
 	delete time;		time = nullptr;
 }
 
