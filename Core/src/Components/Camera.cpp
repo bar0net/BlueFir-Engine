@@ -7,7 +7,7 @@
 #include "BlueFir.h"
 #include "ModuleRenderer.h"
 
-bluefir::core::Camera::Camera()
+bluefir::core::Camera::Camera(const GameObject* gameObject) : Component(gameObject)
 {
 	frustum_ = new Frustum();
 	frustum_->nearPlaneDistance = 0.1F;

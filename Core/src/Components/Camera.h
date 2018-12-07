@@ -10,12 +10,17 @@ namespace math
 
 namespace bluefir::core
 {
+	class GameObject;
+}
+
+namespace bluefir::core
+{
 	class Camera : public Component
 	{
 	public:
-		Camera();
+		Camera(const GameObject* gameObject);
 		virtual ~Camera();
-		static ComponentType Type() { return ComponentType::CAMERA; }
+		static int Type() { return (int)ComponentType::CAMERA; }
 
 		void SetNearPlaneDistance(float value);
 		void SetFarPlaneDistance(float value);

@@ -36,7 +36,7 @@ bluefir::modules::UpdateState bluefir::modules::ModuleRenderer::Render()
 		DrawCall dc = draw_calls_.front();
 		dc.shader->Bind();
 		dc.mesh->Bind();
-		bluefir::graphics::Graphics::Draw(dc.mesh->indices_.size());
+		bluefir::graphics::Graphics::Draw((unsigned int)dc.mesh->indices_.size());
 
 		draw_calls_.pop();
 	}

@@ -7,7 +7,7 @@
 
 #define RAD2DEG 57.2957795F
 
-bluefir::core::Transform::Transform()
+bluefir::core::Transform::Transform(const GameObject* gameObject) : Component(gameObject)
 {
 	position_ = new float3(0.0F, 0.0F, 0.0F);
 	rotation_ = new math::Quat(0,0,0,0);

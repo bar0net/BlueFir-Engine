@@ -10,12 +10,18 @@ namespace math
 
 namespace bluefir::core
 {
+	class GameObject;
+}
+
+
+namespace bluefir::core
+{
 	class Transform : public Component
 	{
 	public:
-		Transform();
+		Transform(const GameObject* gameObject);
 		virtual ~Transform();
-		static ComponentType Type() { return ComponentType::TRANSFORM; }
+		static int Type() { return (int)ComponentType::TRANSFORM; }
 
 		void SetPosition(float x, float y, float z);
 		void SetRotation(float x, float y, float z);

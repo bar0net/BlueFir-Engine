@@ -265,14 +265,16 @@ project "Core"
 	files
 	{
 		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
+		"%{prj.name}/src/**.cpp",
+		
+		"%{prj.name}/Vendor/**/**.h",
+		"%{prj.name}/Vendor/**/**.cpp"
 	}
 	
 	includedirs
 	{
 		"Base/src",
 		"Modules/src",
-		"Math/Vendor"
 	}
 	
 	libdirs
@@ -283,8 +285,7 @@ project "Core"
 	links
 	{
 		"Base",
-		"Modules",
-		"Math"
+		"Modules"
 	}
 	
 	filter "system:windows"

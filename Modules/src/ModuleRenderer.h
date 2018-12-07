@@ -3,7 +3,6 @@
 
 #include "Module.h"
 
-#include "Graphics.h"
 #include <queue>
 
 // TODO:
@@ -40,8 +39,8 @@ namespace bluefir::modules
 		// Event
 		void ResizeEvent(unsigned int ID);
 
-		float GetWindowWidth() { return width_; }
-		float GetWindowHeight() { return height_; }
+		int GetWindowWidth() { return width_; }
+		int GetWindowHeight() { return height_; }
 
 	private:
 		int width_ = 1280U;
