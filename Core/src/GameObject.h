@@ -2,10 +2,13 @@
 #define BF_CORE_GAMEOBJECT
 
 #include "LogSystem.h"
+#include "BaseMacros.h"
+
 #include <unordered_map>
 #include <vector>
 
 #define TYPE_TRANSFORM 1
+
 
 namespace bluefir::core
 {
@@ -19,10 +22,21 @@ namespace bluefir::core
 		GameObject();
 		virtual ~GameObject();
 
+		void PreUpdate();
+		void Update();
+		void PostUpdate();
+
+		void SetParent(GameObject* parent);
+		const GameObject* GetParent() const { return parent_; }
+
 		template <class T> T* AddComponent();
 		template <class T> T* GetComponent() const;
 		template <class T> const std::vector<T*>* GetComponents() const;
 		template <class T> void RemoveComponent(T* component);
+
+	protected:
+		void AddChild(GameObject* child);
+		void RemoveChild(const GameObject* child);
 
 	public:
 		Transform* transform = nullptr;
@@ -30,6 +44,9 @@ namespace bluefir::core
 	private:
 		std::unordered_map<int, std::vector<Component*>> components_;
 		int id_ = 0;
+
+		GameObject* parent_ = nullptr;
+		std::vector<GameObject*> children_;
 	};
 }
 
@@ -38,9 +55,10 @@ T* bluefir::core::GameObject::AddComponent()
 {
 	if (T::Type() == TYPE_TRANSFORM)
 	{
-		return LOGERROR("Cannot create additional transforms.");
+		LOGERROR("Cannot create additional transforms.");
+		return nullptr;
 	}
-	T* component = new T();
+	T* component = new T(this);
 	components_[T::Type()].push_back(component);
 	return component;
 }

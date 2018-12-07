@@ -9,3 +9,15 @@ bluefir::core::Component::Component(const GameObject * gameObject) : gameObject_
 bluefir::core::Component::~Component()
 {
 }
+
+void bluefir::core::Component::PreUpdate()
+{
+}
+
+void bluefir::core::Component::Update()
+{
+}
+
+void bluefir::core::Component::PostUpdate()
+{
+}

@@ -67,6 +67,7 @@ bluefir::graphics::Mesh::Mesh(const std::vector<float>& vertices, const std::vec
 	: vertices_(vertices), indices_(indices), layout_(&layout)
 {
 	// TODO: Check the constructor is working properly
+	// TODO: Maybe build mesh in the constructor (?)
 }
 
 bluefir::graphics::Mesh::~Mesh()

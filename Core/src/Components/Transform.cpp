@@ -1,24 +1,44 @@
 #include "Transform.h"
 
+#include "BaseMacros.h"
 #include "../../Vendor/MathGeoLib/Math/float3.h"
 #include "../../Vendor/MathGeoLib/Math/Quat.h"
 #include "../../Vendor/MathGeoLib/Math/float4x4.h"
 #include "../../Vendor/MathGeoLib/Math/MathConstants.h"
 
+#include "../GameObject.h"
+
 #define RAD2DEG 57.2957795F
 
 bluefir::core::Transform::Transform(const GameObject* gameObject) : Component(gameObject)
 {
+	ASSERT(gameObject);
+
 	position_ = new float3(0.0F, 0.0F, 0.0F);
 	rotation_ = new math::Quat(0,0,0,0);
 	scale_ = new math::float3(1.0F, 1.0F, 1.0F);
+
+	this->model_matrix_ = new float4x4(float4x4::identity);
 }
 
 bluefir::core::Transform::~Transform()
 {
-	delete position_;	position_ = nullptr;
-	delete rotation_;	rotation_ = nullptr;
-	delete scale_;		scale_ = nullptr;
+	delete position_;		position_ = nullptr;
+	delete rotation_;		rotation_ = nullptr;
+	delete scale_;			scale_ = nullptr;
+	delete this->model_matrix_;	this->model_matrix_ = nullptr;
+}
+
+void bluefir::core::Transform::PreUpdate()
+{
+	if (gameObject_->GetParent() == nullptr)
+	{
+		model_matrix_->Set(math::float4x4::FromTRS(*position_, *rotation_, *scale_));
+	}
+	else
+	{
+		model_matrix_->Set(*(gameObject_->GetParent()->transform->model_matrix_) * math::float4x4::FromTRS(*position_, *rotation_, *scale_));
+	}
 }
 
 void bluefir::core::Transform::SetPosition(float x, float y, float z)
@@ -53,12 +73,24 @@ const float * bluefir::core::Transform::GetScale() const
 
 void bluefir::core::Transform::ModelMatrix(float* matrix) const
 {
-	float4x4 m = math::float4x4::FromTRS(*position_, *rotation_, *scale_);
-	memcpy(matrix, m.ptr(), 16 * sizeof(float));
+	ASSERT(matrix);
+	memcpy(matrix, model_matrix_->ptr(), 16 * sizeof(float));
 }
 
 void bluefir::core::Transform::ModelMatrixT(float * matrix) const
 {
-	float4x4 m = math::float4x4::FromTRS(*position_, *rotation_, *scale_).Transposed();
-	memcpy(matrix, m.ptr(), 16 * sizeof(float));
+	ASSERT(matrix);
+	memcpy(matrix, model_matrix_->Transposed().ptr(), 16 * sizeof(float));
+}
+
+void bluefir::core::Transform::ModelMatrixI(float* matrix) const
+{
+	ASSERT(matrix);
+	memcpy(matrix, model_matrix_->Inverted().ptr(), 16 * sizeof(float));
+}
+
+void bluefir::core::Transform::ModelMatrixIT(float * matrix) const
+{
+	ASSERT(matrix);
+	memcpy(matrix, model_matrix_->Inverted().Transposed().ptr(), 16 * sizeof(float));
 }

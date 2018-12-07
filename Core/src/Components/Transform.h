@@ -6,6 +6,7 @@ namespace math
 {
 	class Quat;
 	class float3;
+	class float4x4;
 }
 
 namespace bluefir::core
@@ -23,6 +24,8 @@ namespace bluefir::core
 		virtual ~Transform();
 		static int Type() { return (int)ComponentType::TRANSFORM; }
 
+		virtual void PreUpdate() override;
+
 		void SetPosition(float x, float y, float z);
 		void SetRotation(float x, float y, float z);
 		void SetScale(float x, float y, float z);
@@ -37,10 +40,20 @@ namespace bluefir::core
 		// Returns the Transformation Matrix as a Column Major array of float[16]
 		void ModelMatrixT(float* matrix) const;
 
+		// Returns the Inverse of the Transformation Matrix as a Row Major array of float[16]
+		void ModelMatrixI(float* matrix) const;
+
+		// Returns the Inverse of the Transformation Matrix as a Column Major array of float[16]
+		void ModelMatrixIT(float* matrix) const;
+		
+	protected:
+		math::float4x4* model_matrix_ = nullptr;
+
 	private:
 		math::float3* position_ = nullptr;
 		math::Quat* rotation_ = nullptr;
 		math::float3* scale_ = nullptr;
+
 	};
 }
 

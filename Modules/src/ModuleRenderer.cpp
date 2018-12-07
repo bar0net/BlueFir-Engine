@@ -4,6 +4,10 @@
 #include "Mesh.h"
 #include "Graphics.h"
 
+#include "../../Core/src/Components/Camera.h"
+#include "../../Core/src/Components/Transform.h"
+#include "../../Core/src/GameObject.h"
+
 bool bluefir::modules::ModuleRenderer::Init()
 {
 	LOGINFO("Initializing renderer.");
@@ -36,8 +40,12 @@ bluefir::modules::UpdateState bluefir::modules::ModuleRenderer::Render()
 		DrawCall dc = draw_calls_.front();
 		dc.shader->Bind();
 		dc.mesh->Bind();
-		bluefir::graphics::Graphics::Draw((unsigned int)dc.mesh->indices_.size());
-
+		for (auto it = cameras_.begin(); it != cameras_.end(); ++it)
+		{
+			float proj[16]; (*it)->FrustumMatrixT(proj);
+			float view[16]; (*it)->gameObject_->transform->ModelMatrixIT(view);
+			bluefir::graphics::Graphics::Draw((unsigned int)dc.mesh->indices_.size());
+		}
 		draw_calls_.pop();
 	}
 
@@ -50,19 +58,70 @@ bluefir::modules::UpdateState bluefir::modules::ModuleRenderer::Render()
 bool bluefir::modules::ModuleRenderer::CleanUp()
 {
 	LOGINFO("Closing renderer.");
-	graphics::Graphics::DestroyWindow(window_data_);
+	// Delete Shaders
+	for (auto it = shader_ids_.begin(); it != shader_ids_.end(); ++it)
+		delete it->second;
+	shader_ids_.clear();
+	shader_names_.clear();
 
+	// Delete Meshes
+	for (auto it = meshes_.begin(); it != meshes_.end(); ++it)
+		delete it->second;
+	meshes_.clear();
+
+	// Delete Viewport
+	graphics::Graphics::DestroyWindow(window_data_);
 	delete window_data_; window_data_ = nullptr;
 
 	return true;
 }
 
-void bluefir::modules::ModuleRenderer::Draw(const bluefir::graphics::Mesh & mesh, const bluefir::graphics::Shader& shader)
+void bluefir::modules::ModuleRenderer::Draw(const float* model_matrix, int mesh, int shader_id)
 {
+	ASSERT(model_matrix);
+
+	if (shader_id < 0) return;
+
 	DrawCall c;
-	c.mesh = &mesh;
-	c.shader = &shader;
+	c.mesh = meshes_[mesh];
+	c.shader = shader_ids_[shader_id];
 	draw_calls_.push(c);
+}
+
+int bluefir::modules::ModuleRenderer::CreateShader(const char * vShader, const char * fShader)
+{
+	ASSERT(vShader && fShader);
+	std::string name = std::string(vShader) + std::string("##") + std::string(fShader);
+
+	auto it = shader_names_.find(name);
+	if (it != shader_names_.end())
+	{
+		LOGINFO("Shader <%s> is already registered.", name);
+		return it->second;
+	}
+
+	bluefir::graphics::Shader* shader = new bluefir::graphics::Shader(vShader, fShader);
+	if (!shader->valid)
+	{
+		LOGERROR("Could not create the shader <%s>.", name);
+		delete shader; shader = nullptr;
+		return -1;
+	}
+
+	shader_names_[name] = shader_counter_;
+	shader_ids_[shader_counter_] = shader;
+	++shader_counter_;
+
+	return (shader_counter_ - 1);
+}
+
+int bluefir::modules::ModuleRenderer::CreateMesh(const std::vector<float>& vertices, const std::vector<unsigned int>& indices, const graphics::BufferLayout & layout)
+{
+	meshes_[mesh_counter_] = new graphics::Mesh(vertices, indices, layout);
+	meshes_[mesh_counter_]->Build();
+	++mesh_counter_;
+
+	return mesh_counter_ - 1;
 }
 
 void bluefir::modules::ModuleRenderer::ResizeEvent(unsigned int ID)
@@ -74,6 +133,36 @@ void bluefir::modules::ModuleRenderer::ResizeEvent(unsigned int ID)
 
 	graphics::Graphics::GetWindowSize(window_data_, width_, height_);
 	graphics::Graphics::ChangeViewportSize(width_, height_);
+}
+
+void bluefir::modules::ModuleRenderer::AddCamera(const core::Camera * camera)
+{
+	ASSERT(camera);
+	for (auto it = cameras_.begin(); it != cameras_.end(); ++it)
+	{
+		if (*it == camera)
+		{
+			LOGWARNING("Camera already registered.");
+			return;
+		}
+	}
+
+	cameras_.push_back(camera);
+}
+
+void bluefir::modules::ModuleRenderer::RemoveCamera(const core::Camera * camera)
+{
+	ASSERT(camera);
+	for (auto it = cameras_.begin(); it != cameras_.end(); ++it)
+	{
+		if (*it == camera)
+		{
+			cameras_.erase(it);
+			return;
+		}
+	}
+
+	LOGWARNING("Trying to remove a camera that is not registered in the module.");
 }
 
 

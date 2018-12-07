@@ -2,6 +2,7 @@
 #define BF_MODULE_H
 
 #include "LogSystem.h"
+#include "BaseMacros.h"
 
 namespace bluefir::modules
 {

@@ -18,6 +18,10 @@ namespace bluefir::core
 		Component(const GameObject* gameObject);
 		virtual ~Component();
 
+		virtual void PreUpdate();
+		virtual void Update();
+		virtual void PostUpdate();
+
 		const GameObject* gameObject_ = nullptr;
 	};
 }

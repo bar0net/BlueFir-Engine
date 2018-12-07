@@ -32,11 +32,14 @@ namespace bluefir::graphics
 		//Material* material;
 	};
 
-	static class StandardModels
+	class StandardModels
 	{
 	public:
 		static Mesh* Triangle();
 		static Mesh* Cube();
+
+	private:
+		StandardModels() = delete;
 	};
 }
 

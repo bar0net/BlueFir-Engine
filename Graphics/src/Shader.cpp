@@ -52,6 +52,7 @@ bluefir::graphics::Shader::Shader(const char * vertex_shader, const char * fragm
 	if (vertex_id != 0) GLCall(glDeleteShader(vertex_id));
 	if (fragment_id != 0) GLCall(glDeleteShader(fragment_id));
 
+	valid = true;
 
 #if(BF_DEBUG)
 	// Show the contents of the uniforms_ attribute for debugging purpouses.

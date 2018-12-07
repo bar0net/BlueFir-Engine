@@ -2,15 +2,11 @@
 
 #include "LogSystem.h"
 
-#if (BF_DEBUG)
-	#include <assert.h>
-	#define ASSERT(x) assert(x)
-#else
-	#define ASSERT(X)
-#endif
-
+// TODO: Migrate to PhysFX
 #include <stdio.h>
 #include <stdlib.h>
+
+#include "BaseMacros.h"
 
 const char* bluefir::base::FileSystem::ReadFile(const char* filename)
 {

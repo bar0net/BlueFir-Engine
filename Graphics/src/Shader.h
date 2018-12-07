@@ -38,6 +38,9 @@ namespace bluefir::graphics
 
 		static unsigned int CompileShader(const char * text, int type);
 
+	public:
+		bool valid = false;
+
 	private:
 		unsigned int program_ = 0;
 		std::unordered_map<std::string, Uniform*> uniforms_;
