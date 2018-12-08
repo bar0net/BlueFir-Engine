@@ -17,7 +17,7 @@
 namespace bluefir::graphics
 {
 	struct WindowData;
-	struct Mesh;
+	class Mesh;
 	class Shader;
 	class BufferLayout;
 }
@@ -25,6 +25,11 @@ namespace bluefir::graphics
 namespace bluefir::core
 {
 	class Camera;
+}
+
+namespace bluefir::editor
+{
+	class PanelRenderer;
 }
 
 namespace bluefir::modules
@@ -57,9 +62,12 @@ namespace bluefir::modules
 		void ResizeEvent(unsigned int ID);
 
 		// Accesors
+		inline const graphics::WindowData* GetWindowData() const { return window_data_; }
 		inline int GetWindowWidth() const { return width_; }
 		inline int GetWindowHeight() const { return height_; }
-		inline const graphics::WindowData* GetWindowData() const { return window_data_; }
+		inline float* GetClearColor() const { return (float*)clear_color_; }
+		inline void SetClearColor(float r, float g, float b, float a) { clear_color_[0] = r; clear_color_[1] = g; clear_color_[2] = b; clear_color_[3] = a;	UpdateClearColor(); }
+		void UpdateClearColor();
 
 		void AddCamera(const core::Camera* camera);
 		void RemoveCamera(const core::Camera* camera);
@@ -82,6 +90,8 @@ namespace bluefir::modules
 
 		int mesh_counter_ = 0;
 		std::unordered_map<int, graphics::Mesh*> meshes_;
+
+		friend class bluefir::editor::PanelRenderer;
 	};
 }
 #endif // !BF_MODULE_RENDERER

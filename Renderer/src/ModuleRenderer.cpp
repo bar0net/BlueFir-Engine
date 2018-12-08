@@ -11,6 +11,8 @@
 
 #include "GameObject.h"
 
+#define BF_REND_SEPARATOR "__"
+
 bool bluefir::modules::ModuleRenderer::Init()
 {
 	LOGINFO("Initializing renderer.");
@@ -100,7 +102,7 @@ void bluefir::modules::ModuleRenderer::Draw(const float* model_matrix, int mesh,
 int bluefir::modules::ModuleRenderer::CreateShader(const char * vShader, const char * fShader)
 {
 	ASSERT(vShader && fShader);
-	std::string name = std::string(vShader) + std::string("##") + std::string(fShader);
+	std::string name = std::string(vShader) + std::string(BF_REND_SEPARATOR) + std::string(fShader);
 
 	auto it = shader_names_.find(name);
 	if (it != shader_names_.end())
@@ -156,6 +158,11 @@ void bluefir::modules::ModuleRenderer::ResizeEvent(unsigned int ID)
 
 	graphics::Graphics::GetWindowSize(window_data_, width_, height_);
 	graphics::Graphics::ChangeViewportSize(width_, height_);
+}
+
+void bluefir::modules::ModuleRenderer::UpdateClearColor()
+{
+	graphics::Graphics::ChangeClearColor(clear_color_);
 }
 
 void bluefir::modules::ModuleRenderer::AddCamera(const core::Camera * camera)

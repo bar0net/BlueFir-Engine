@@ -26,11 +26,10 @@ void bluefir::editor::PanelTime::Draw()
 	ImGui::Text("Execution time: %fs", modules::ModuleTime::getInstance().RealTime());
 	ImGui::Text("Running time: %fs", modules::ModuleTime::getInstance().Time());
 	ImGui::Text("Unscaled Running time: %fs", modules::ModuleTime::getInstance().UnscaledTime());
+	ImGui::Text("Time Scale: %f", modules::ModuleTime::getInstance().GetTimeScale());
 
 	ImGui::PlotLines("Delta Time", base::MovingArray<float>::Get, deltas_, (int)deltas_->Size(), 1, "", 0, 100, ImVec2(0, 50));
 	ImGui::Text("Average delta time: %fms", average_);
-
-	// TODO: Vsync
 
 	ImGui::End();
 }
