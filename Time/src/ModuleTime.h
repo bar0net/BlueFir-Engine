@@ -12,20 +12,20 @@ namespace bluefir::modules
 		static ModuleTime& getInstance() { static ModuleTime instance_; return instance_; }
 
 		bool Init() override;
-		UpdateState PreUpdate() override { real_last_ = chrono.Pause(); return UpdateState::Update_Continue; }
+		UpdateState PreUpdate() override;
 		bool CleanUp() override			 { LOGINFO("Closing timer module,"); chrono.Stop(); return true; }
 
 		// Real
 		float RealTime() const		{ return (float)chrono.Pause() / 1000.0F; }
-		float RealDeltaTime() const { return (float)(chrono.Pause() - real_last_) / 1000.0F; }
+		float RealDeltaTime() const { return (float)(delta_time_) / 1000.0F; }
 
 		// UnScaled
 		float UnscaledTime() const		{ return (float)unscaled_running_time_ / 1000.0F;  }
-		float UnscaledDeltaTime() const { return active_ ? (float)(chrono.Pause() - real_last_) / 1000.0F : 0; }
+		float UnscaledDeltaTime() const { return active_ ? (float)(delta_time_) / 1000.0F : 0; }
 
 		// Scaled
 		float Time() const		{ return (float)running_time_ / 1000.0F; }
-		float DeltaTime() const { return active_ ? (float)(chrono.Pause() - real_last_) * time_scale_ / 1000.0F : 0; };
+		float DeltaTime() const { return active_ ? (float)(delta_time_) * time_scale_ / 1000.0F : 0; };
 
 		// ----
 
@@ -43,6 +43,7 @@ namespace bluefir::modules
 		float time_scale_ = 1.0F;
 
 		unsigned int real_last_ = 0U;
+		unsigned int delta_time_ = 0U;
 		unsigned long int running_time_ = 0U;
 		unsigned long int unscaled_running_time_ = 0U;
 

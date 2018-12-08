@@ -3,6 +3,7 @@
 #include "SDL.h"
 
 #include "ModuleRenderer.h"
+#include "moduleEditor.h"
 
 bluefir::modules::ModuleInput::ModuleInput() {}
 bluefir::modules::ModuleInput::~ModuleInput() {}
@@ -88,6 +89,8 @@ bluefir::modules::UpdateState bluefir::modules::ModuleInput::ParseEvents()
 	static SDL_Event event;
 	while (SDL_PollEvent(&event))
 	{
+		ModuleEditor::getInstance().ProcessEvent(&event);
+
 		switch (event.type)
 		{
 		case SDL_QUIT:

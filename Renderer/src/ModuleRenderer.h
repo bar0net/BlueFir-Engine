@@ -59,6 +59,7 @@ namespace bluefir::modules
 		// Accesors
 		inline int GetWindowWidth() const { return width_; }
 		inline int GetWindowHeight() const { return height_; }
+		inline const graphics::WindowData* GetWindowData() const { return window_data_; }
 
 		void AddCamera(const core::Camera* camera);
 		void RemoveCamera(const core::Camera* camera);

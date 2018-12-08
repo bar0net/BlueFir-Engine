@@ -12,6 +12,7 @@ namespace bluefir
 		class ModuleRenderer;
 		class ModuleTime;
 		class ModuleScene;
+		class ModuleEditor;
 	}
 
 	class BlueFir
@@ -29,6 +30,7 @@ namespace bluefir
 		modules::ModuleRenderer* renderer = nullptr;
 		modules::ModuleTime* time = nullptr;
 		modules::ModuleScene* scene = nullptr;
+		modules::ModuleEditor* editor = nullptr;
 
 	private:
 		std::vector<modules::Module*> modules_;

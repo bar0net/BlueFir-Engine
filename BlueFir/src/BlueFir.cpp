@@ -5,6 +5,7 @@
 #include "ModuleRenderer.h"
 #include "ModuleTime.h"
 #include "ModuleScene.h"
+#include "ModuleEditor.h"
 
 bluefir::BlueFir::BlueFir()
 {
@@ -12,6 +13,7 @@ bluefir::BlueFir::BlueFir()
 	modules_.push_back(input = &modules::ModuleInput::getInstance());
 	modules_.push_back(time = &modules::ModuleTime::getInstance());
 	modules_.push_back(scene = &modules::ModuleScene::getInstance());
+	modules_.push_back(editor = &modules::ModuleEditor::getInstance());
 }
 
 bluefir::BlueFir::~BlueFir()

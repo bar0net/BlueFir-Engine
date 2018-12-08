@@ -39,7 +39,8 @@ project "BlueFir"
 		"Renderer/src",
 		"Input/src",
 		"Scene/src",
-		"Time/src"
+		"Time/src",
+		"Editor/src"
 	}
 	
 	links
@@ -50,7 +51,8 @@ project "BlueFir"
 		"Renderer",
 		"Input",
 		"Scene",
-		"Time"
+		"Time",
+		"Editor"
 	}
 	
 	filter "system:windows"
@@ -412,6 +414,7 @@ project "Input"
 		"Base/src",
 		"Core/src",
 		"Renderer/src",
+		"Editor/src",
 		"Vendor/SDL2-2.0.8/include/"
 	}
 	
@@ -425,6 +428,7 @@ project "Input"
 		"Base",
 		"Core",
 		"Renderer",
+		"Editor",
 		"SDL2"
 	}
 	
@@ -512,4 +516,81 @@ project "Time"
 		defines "BF_RELEASE"
 		optimize "On"
 		
+-- ===================================================================================
+-- ================================= PROJECT EDITOR ==================================
+-- ===================================================================================
+project "Editor"
+	location "Editor"
+	kind "StaticLib"
+	language "C++"
+	
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+	debugdir "files/"
+	
+	files
+	{
+		"%{prj.name}/src/**.h",
+		"%{prj.name}/src/**.cpp",
+		
+		"%{prj.name}/Vendor/**/**.h",
+		"%{prj.name}/Vendor/**/**.cpp"
+	}
+	
+	includedirs
+	{
+		"Base/src",
+		"Core/src",
+		"Graphics/src",
+		"Renderer/src",
+		"Time/src",
+		"Scene/src",
+		
+		"Vendor/glew-2.1.0/include/",
+		"Vendor/SDL2-2.0.8/include/"
+	}
+	
+	libdirs
+	{
+		"Vendor/glew-2.1.0/lib/x64/",
+		"Vendor/SDL2-2.0.8/lib/x64/"	
+	}
+	
+	links
+	{
+		"Base",
+		"Core",
+		"Graphics",
+		"Renderer",
+		"Time",
+		"Scene",
+		
+		"glew32",
+		"OpenGL32",
+		"SDL2"
+	}
+	
+	filter "system:windows"
+		cppdialect "C++17"
+		staticruntime "On"
+		systemversion "latest"
+		
+		defines
+		{
+			"BF_PLATFORM_WINDOWS"
+		}
+		
+		
+	filter "configurations:Debug"
+		defines "BF_DEBUG"
+		symbols "On"
+		
+	filter "configurations:Development"
+		defines "BF_Development"
+		optimize "On"
+		
+	filter "configurations:Release"
+		defines "BF_RELEASE"
+		optimize "On"		
+
 group ""
