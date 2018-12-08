@@ -3,17 +3,23 @@
 #include "../Vendor/MathGeoLib/Geometry/Frustum.h"
 #include "../Vendor/MathGeoLib/Math/MathConstants.h"
 #include "../Vendor/MathGeoLib/Math/float4x4.h"
+#include "../Vendor/MathGeoLib/Math/float3.h"
 
 #include "../ModuleRenderer.h"
 
 bluefir::core::Camera::Camera(const GameObject* gameObject) : Component(gameObject)
 {
 	frustum_ = new Frustum();
+	frustum_->pos = math::float3::zero;
+	frustum_->front = -math::float3::unitZ;
+	frustum_->up = math::float3::unitY;
+
 	frustum_->nearPlaneDistance = 0.1F;
 	frustum_->farPlaneDistance = 1000.0F;
+
 	frustum_->horizontalFov = math::pi * 60 / 180.0F;
-	frustum_->verticalFov = 2.0F * atan(tan(frustum_->horizontalFov / 2.0F) * (modules::ModuleRenderer::getInstance().GetWindowHeight() / modules::ModuleRenderer::getInstance().GetWindowWidth()));
-	frustum_->pos = { 0, 0, 0 };
+	frustum_->verticalFov = 2.0F * atan(tan(frustum_->horizontalFov / 2.0F) * ((float)modules::ModuleRenderer::getInstance().GetWindowHeight() / (float)modules::ModuleRenderer::getInstance().GetWindowWidth()));
+
 	frustum_->type = math::FrustumType::PerspectiveFrustum;
 
 	modules::ModuleRenderer::getInstance().AddCamera(this);

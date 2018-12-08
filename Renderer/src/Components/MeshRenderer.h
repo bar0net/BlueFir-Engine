@@ -16,6 +16,7 @@ namespace bluefir::core
 	public:
 		MeshRenderer(const GameObject* gameObject);
 		virtual ~MeshRenderer();
+		static int Type() { return (int)ComponentType::MESH_RENDERER; }
 
 		virtual void Update() override;
 		

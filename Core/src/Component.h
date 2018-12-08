@@ -9,7 +9,8 @@ namespace bluefir::core
 	{
 		NONE = 0,
 		TRANSFORM,
-		CAMERA
+		CAMERA,
+		MESH_RENDERER
 	};
 
 	class Component

@@ -3,20 +3,38 @@
 #include "GameObject.h"
 #include "Components/Camera.h"
 #include "Components/Transform.h"
+#include "ModuleRenderer.h"
+#include "Components/MeshRenderer.h"
+
 
 bluefir::modules::ModuleScene::~ModuleScene() {}
 
 bool bluefir::modules::ModuleScene::Init()
 {
-	int go = CreateEmptyGameObject();
-	gameObjects_[go]->AddComponent<core::Camera>();
-	gameObjects_[go]->transform->SetPosition(0, 0, -10);
+	int cam = CreateEmptyGameObject();
+	gameObjects_[cam]->AddComponent<core::Camera>();
+	gameObjects_[cam]->transform->SetPosition(0, 0.0F, 10.0F);
+	gameObjects_[cam]->transform->SetRotation(0, 0.0F, 0);
+
+	int cube = CreateEmptyGameObject();
+	gameObjects_[cube]->transform->SetPosition(0.0F, 0.0F, 0.0F);
+	gameObjects_[cube]->transform->SetRotation(0, 0, 0);
+	gameObjects_[cube]->transform->SetScale(0.5F, 0.5F, 1.0F);
+	core::MeshRenderer* mr = gameObjects_[cube]->AddComponent<core::MeshRenderer>();
+	int mesh_id = ModuleRenderer::getInstance().CreateMesh(graphics::ModelList::Quad);
+	mr->SetMesh(mesh_id);
+	int shader_id = ModuleRenderer::getInstance().CreateShader("triangle.vs", "default.fs");
+	mr->SetMaterial(shader_id);
 
 	return true;
 }
 
 bluefir::modules::UpdateState bluefir::modules::ModuleScene::Update()
 {
+	//static float a = 0.0F;
+	//a += 0.5F;
+	//gameObjects_[1]->transform->SetRotation(0, 0, a);
+
 	for (auto it = gameObjects_.begin(); it != gameObjects_.end(); ++it)
 		it->second->PreUpdate();
 

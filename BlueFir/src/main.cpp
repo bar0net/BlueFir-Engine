@@ -24,17 +24,8 @@ enum class AppStatus
 bluefir::BlueFir* App = nullptr;
 int main(int argc, const char* argv[])
 {
-
 	LOGINFO("Begin Application.");
 	App = new bluefir::BlueFir();
-	
-	// ====== DEBUG
-	bluefir::core::GameObject* go = new bluefir::core::GameObject();
-	float* f = new float[16];
-	go->transform->ModelMatrix(f);
-	go->AddComponent<bluefir::core::Camera>();
-	// =====
-
 	AppStatus status = AppStatus::Start;
 
 	while (status != AppStatus::Exit)
@@ -65,10 +56,6 @@ int main(int argc, const char* argv[])
 			break;
 		}
 	}
-	// === DEBUG
-	delete[] f;
-	delete go;
-	// ====
 
 	LOGINFO("Application Clear.");
 	delete App;

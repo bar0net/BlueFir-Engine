@@ -48,12 +48,13 @@ void bluefir::core::Transform::SetPosition(float x, float y, float z)
 
 void bluefir::core::Transform::SetRotation(float x, float y, float z)
 {
-	rotation_ = &Quat::FromEulerZXY(z, y, x);
+	Quat q = Quat::FromEulerZXY(z / RAD2DEG, y / RAD2DEG, x / RAD2DEG);
+	rotation_->Set(q.x, q.y, q.z, q.w);
 }
 
 void bluefir::core::Transform::SetScale(float x, float y, float z)
 {
-	scale_->Set(x / RAD2DEG, y / RAD2DEG, z / RAD2DEG);
+	scale_->Set(x, y, z);
 }
 
 const float * bluefir::core::Transform::GetPosition() const

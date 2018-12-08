@@ -8,6 +8,8 @@
 #include <unordered_map>
 #include <string>
 
+#include "StandardModels.h"
+
 // TODO:
 // Need game object with transform to complete the draw pipeline
 // Need Material class that parses uniforms to complete the draw pipeline
@@ -29,8 +31,9 @@ namespace bluefir::modules
 {
 	struct DrawCall
 	{
+		float model[16];
 		const bluefir::graphics::Mesh* mesh = nullptr;
-		const bluefir::graphics::Shader* shader = nullptr;
+		bluefir::graphics::Shader* shader = nullptr;
 	};
 
 	class ModuleRenderer : public Module
@@ -48,13 +51,14 @@ namespace bluefir::modules
 		void Draw(const float* model_matrix, int mesh_id, int shader_id);
 		int CreateShader(const char* vShader, const char* fShader);
 		int CreateMesh(const std::vector<float>& vertices, const std::vector<unsigned int>& indices, const graphics::BufferLayout& layout);
+		int CreateMesh(graphics::ModelList model);
 
 		// Event
 		void ResizeEvent(unsigned int ID);
 
 		// Accesors
-		int GetWindowWidth() { return width_; }
-		int GetWindowHeight() { return height_; }
+		inline int GetWindowWidth() const { return width_; }
+		inline int GetWindowHeight() const { return height_; }
 
 		void AddCamera(const core::Camera* camera);
 		void RemoveCamera(const core::Camera* camera);
@@ -72,7 +76,7 @@ namespace bluefir::modules
 		std::vector<const core::Camera*> cameras_;
 
 		int shader_counter_ = 0;
-		std::unordered_map<int, const graphics::Shader*> shader_ids_;
+		std::unordered_map<int, graphics::Shader*> shader_ids_;
 		std::unordered_map<std::string, int> shader_names_;
 
 		int mesh_counter_ = 0;

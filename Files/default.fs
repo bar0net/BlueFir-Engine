@@ -2,7 +2,7 @@
 
 layout(location = 0) out vec4 color;
 
-uniform vec4 albedo;
+uniform vec4 albedo = vec4(0.8, 0.1, 0.1, 1.0);
 
 void main()
 {

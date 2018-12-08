@@ -1,5 +1,7 @@
 #include "ModuleRenderer.h"
 
+#include "FileSystem.h"
+
 #include "Shader.h"
 #include "Mesh.h"
 #include "Graphics.h"
@@ -41,10 +43,14 @@ bluefir::modules::UpdateState bluefir::modules::ModuleRenderer::Render()
 		DrawCall dc = draw_calls_.front();
 		dc.shader->Bind();
 		dc.mesh->Bind();
+		dc.shader->SetUniform("model", dc.model);
 		for (auto it = cameras_.begin(); it != cameras_.end(); ++it)
 		{
+			// Remember: Proj and View must be sent as COLUMN Major!
 			float proj[16]; (*it)->FrustumMatrixT(proj);
 			float view[16]; (*it)->gameObject_->transform->ModelMatrixIT(view);
+			dc.shader->SetUniform("view", view);
+			dc.shader->SetUniform("proj", proj);
 			bluefir::graphics::Graphics::Draw((unsigned int)dc.mesh->indices_.size());
 		}
 		draw_calls_.pop();
@@ -84,6 +90,8 @@ void bluefir::modules::ModuleRenderer::Draw(const float* model_matrix, int mesh,
 	if (shader_id < 0) return;
 
 	DrawCall c;
+	//TODO: Change transference method for model matrix to reduce the number of copies!
+	memcpy(c.model, model_matrix, 16 * sizeof(float));
 	c.mesh = meshes_[mesh];
 	c.shader = shader_ids_[shader_id];
 	draw_calls_.push(c);
@@ -101,7 +109,14 @@ int bluefir::modules::ModuleRenderer::CreateShader(const char * vShader, const c
 		return it->second;
 	}
 
-	bluefir::graphics::Shader* shader = new bluefir::graphics::Shader(vShader, fShader);
+	const char* vContent = base::FileSystem::ReadFile(vShader);
+	const char* fContent = base::FileSystem::ReadFile(fShader);
+
+	bluefir::graphics::Shader* shader = new bluefir::graphics::Shader(vContent, fContent);
+
+	delete vContent; vContent = nullptr;
+	delete fContent; fContent = nullptr;
+
 	if (!shader->valid)
 	{
 		LOGERROR("Could not create the shader <%s>.", name);
@@ -123,6 +138,13 @@ int bluefir::modules::ModuleRenderer::CreateMesh(const std::vector<float>& verti
 	++mesh_counter_;
 
 	return mesh_counter_ - 1;
+}
+
+int bluefir::modules::ModuleRenderer::CreateMesh(graphics::ModelList model)
+{
+	meshes_[mesh_counter_] = graphics::StandardModels::Get(model);
+
+	return 0;
 }
 
 void bluefir::modules::ModuleRenderer::ResizeEvent(unsigned int ID)
