@@ -4,9 +4,10 @@
 #include "Mesh.h"
 #include "Graphics.h"
 
-#include "../../Core/src/Components/Camera.h"
-#include "../../Core/src/Components/Transform.h"
-#include "../../Core/src/GameObject.h"
+#include "Components/Camera.h"
+#include "Components/Transform.h"
+
+#include "GameObject.h"
 
 bool bluefir::modules::ModuleRenderer::Init()
 {

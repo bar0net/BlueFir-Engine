@@ -1,7 +1,7 @@
 #ifndef BF_CORE_COMPONENTS_MESHRENDERER
 #define BF_CORE_COMPONENTS_MESHRENDERER
 
-#include "../Component.h"
+#include "Component.h"
 
 namespace bluefir::graphics
 {

@@ -26,7 +26,6 @@ namespace bluefir::modules
 	private:
 		int gameObject_counter_ = 0;
 		std::unordered_map<int, core::GameObject*> gameObjects_;
-
 	};
 }
 

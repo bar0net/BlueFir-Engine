@@ -1,7 +1,7 @@
 #ifndef BF_CORE_COMPONENT_CAMERA
 #define BF_CORE_COMPONENT_CAMERA
 
-#include "../Component.h"
+#include "Component.h"
 
 namespace math
 {

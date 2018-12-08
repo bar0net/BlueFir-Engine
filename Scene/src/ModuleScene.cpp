@@ -20,7 +20,7 @@ bool bluefir::modules::ModuleScene::CleanUp()
 	return true;
 }
 
-int bluefir::modules::ModuleScene::CreateEmptyGameObject(const core::GameObject* parent = nullptr)
+int bluefir::modules::ModuleScene::CreateEmptyGameObject(const core::GameObject* parent)
 {
 	return 0;
 }

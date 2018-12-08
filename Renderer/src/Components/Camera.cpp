@@ -1,11 +1,11 @@
 #include "Camera.h"
 
-#include "../../Vendor/MathGeoLib/Geometry/Frustum.h"
-#include "../../Vendor/MathGeoLib/Math/MathConstants.h"
-#include "../../Vendor/MathGeoLib/Math/float4x4.h"
+#include "../Vendor/MathGeoLib/Geometry/Frustum.h"
+#include "../Vendor/MathGeoLib/Math/MathConstants.h"
+#include "../Vendor/MathGeoLib/Math/float4x4.h"
 
 #include "BlueFir.h"
-#include "ModuleRenderer.h"
+#include "../ModuleRenderer.h"
 
 bluefir::core::Camera::Camera(const GameObject* gameObject) : Component(gameObject)
 {
