@@ -2,27 +2,20 @@
 
 #include "SDL.h"
 
-#include "BlueFir.h"
 #include "ModuleRenderer.h"
 
-bluefir::modules::ModuleInput::ModuleInput()
+bluefir::modules::ModuleInput::ModuleInput() {}
+bluefir::modules::ModuleInput::~ModuleInput() {}
+
+bool bluefir::modules::ModuleInput::Init()
 {
+	LOGINFO("Initializing Input System.");
 	keyboard_ = new KeyState[KEY_COUNT];
 	mouse_ = new KeyState[MOUSE_KEY_COUNT];
 
 	memset(keyboard_, 0, KEY_COUNT * sizeof(KeyState));
 	memset(mouse_, 0, MOUSE_KEY_COUNT * sizeof(KeyCode));
-}
 
-bluefir::modules::ModuleInput::~ModuleInput()
-{
-	delete[] keyboard_;
-	delete[] mouse_;
-}
-
-bool bluefir::modules::ModuleInput::Init()
-{
-	LOGINFO("Initializing Input System.");
 	SDL_Init(0);
 	if (SDL_InitSubSystem(SDL_INIT_EVENTS) < 0)
 	{
@@ -45,6 +38,9 @@ bluefir::modules::UpdateState bluefir::modules::ModuleInput::PreUpdate()
 bool bluefir::modules::ModuleInput::CleanUp()
 {
 	LOGINFO("Closing input system.");
+	delete[] keyboard_;
+	delete[] mouse_;
+
 	SDL_QuitSubSystem(SDL_INIT_EVENTS);
 
 	return true;
@@ -115,7 +111,7 @@ bluefir::modules::UpdateState bluefir::modules::ModuleInput::ParseEvents()
 			break;
 
 		case SDL_WINDOWEVENT:
-			if (event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) App->renderer->ResizeEvent((unsigned int)event.window.windowID);
+			if (event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) modules::ModuleRenderer::getInstance().ResizeEvent((unsigned int)event.window.windowID);
 			break;
 
 		default:

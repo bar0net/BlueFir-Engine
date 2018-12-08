@@ -4,7 +4,6 @@
 #include "../Vendor/MathGeoLib/Math/MathConstants.h"
 #include "../Vendor/MathGeoLib/Math/float4x4.h"
 
-#include "BlueFir.h"
 #include "../ModuleRenderer.h"
 
 bluefir::core::Camera::Camera(const GameObject* gameObject) : Component(gameObject)
@@ -13,16 +12,16 @@ bluefir::core::Camera::Camera(const GameObject* gameObject) : Component(gameObje
 	frustum_->nearPlaneDistance = 0.1F;
 	frustum_->farPlaneDistance = 1000.0F;
 	frustum_->horizontalFov = math::pi * 60 / 180.0F;
-	frustum_->verticalFov = 2.0F * atan(tan(frustum_->horizontalFov / 2.0F) * (App->renderer->GetWindowHeight() / App->renderer->GetWindowWidth()));
+	frustum_->verticalFov = 2.0F * atan(tan(frustum_->horizontalFov / 2.0F) * (modules::ModuleRenderer::getInstance().GetWindowHeight() / modules::ModuleRenderer::getInstance().GetWindowWidth()));
 	frustum_->pos = { 0, 0, 0 };
 	frustum_->type = math::FrustumType::PerspectiveFrustum;
 
-	App->renderer->AddCamera(this);
+	modules::ModuleRenderer::getInstance().AddCamera(this);
 }
 
 bluefir::core::Camera::~Camera()
 {
-	App->renderer->RemoveCamera(this);
+	modules::ModuleRenderer::getInstance().RemoveCamera(this);
 	delete frustum_; frustum_ = nullptr;
 }
 
@@ -39,7 +38,7 @@ void bluefir::core::Camera::SetFarPlaneDistance(float value)
 void bluefir::core::Camera::SetFOV(float value, float height, float width)
 {
 	frustum_->horizontalFov = math::pi * value / 180.0F;
-	frustum_->verticalFov = 2.0F * atan(tan(frustum_->horizontalFov / 2.0F) * (App->renderer->GetWindowHeight() / App->renderer->GetWindowWidth()));
+	frustum_->verticalFov = 2.0F * atan(tan(frustum_->horizontalFov / 2.0F) * (modules::ModuleRenderer::getInstance().GetWindowHeight() / modules::ModuleRenderer::getInstance().GetWindowWidth()));
 }
 
 float bluefir::core::Camera::GetNearPlaneDistance() const

@@ -8,19 +8,19 @@
 
 bluefir::BlueFir::BlueFir()
 {
-	modules_.push_back(renderer = new modules::ModuleRenderer());
-	modules_.push_back(input = new modules::ModuleInput());
-	modules_.push_back(time = new modules::ModuleTime());
-	modules_.push_back(scene = new modules::ModuleScene()),
+	modules_.push_back(renderer = &modules::ModuleRenderer::getInstance());
+	modules_.push_back(input = &modules::ModuleInput::getInstance());
+	modules_.push_back(time = &modules::ModuleTime::getInstance());
+	modules_.push_back(scene = &modules::ModuleScene::getInstance());
 }
 
 bluefir::BlueFir::~BlueFir()
 {
 	modules_.clear();
-	delete input;		input = nullptr;
+	/*delete input;		input = nullptr;
 	delete renderer;	renderer = nullptr;
 	delete time;		time = nullptr;
-	delete scene;		scene = nullptr;
+	delete scene;		scene = nullptr;*/
 }
 
 bool bluefir::BlueFir::Start()

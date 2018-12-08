@@ -39,6 +39,7 @@ namespace bluefir::modules
 	public:
 		ModuleInput();
 		virtual ~ModuleInput();
+		static ModuleInput& getInstance() { static ModuleInput instance_; return instance_; }
 
 		// Flow
 		virtual bool Init() override;

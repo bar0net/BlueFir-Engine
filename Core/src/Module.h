@@ -17,6 +17,7 @@ namespace bluefir::modules
 	{
 	public:
 		virtual ~Module() {}
+		template <class T> static T& getInstance() { return T::getInstance(); }
 
 		virtual bool Init() { return true; }
 		virtual bool Start() { return true; }

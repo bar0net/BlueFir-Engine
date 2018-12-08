@@ -16,12 +16,13 @@ namespace bluefir::modules
 	{
 	public:
 		virtual ~ModuleScene();
+		static ModuleScene& getInstance() { static ModuleScene instance_; return instance_; }
 
 		virtual bool Init() override;
 		virtual UpdateState Update() override;
 		virtual bool CleanUp() override;
 
-		int CreateEmptyGameObject(const core::GameObject* parent = nullptr);
+		int CreateEmptyGameObject(core::GameObject* parent = nullptr);
 
 	private:
 		int gameObject_counter_ = 0;

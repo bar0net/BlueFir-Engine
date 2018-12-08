@@ -16,6 +16,7 @@ namespace bluefir::core
 	public:
 		MeshRenderer(const GameObject* gameObject);
 		virtual ~MeshRenderer();
+
 		virtual void Update() override;
 		
 		void SetMesh(int mesh) { mesh_ID_ = mesh; }

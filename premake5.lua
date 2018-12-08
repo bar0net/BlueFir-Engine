@@ -36,7 +36,10 @@ project "BlueFir"
 		"Base/src",
 		"Graphics/src",
 		"Core/src",
-		"Modules/src"
+		"Renderer/src",
+		"Input/src",
+		"Scene/src",
+		"Time/src"
 	}
 	
 	links
@@ -44,7 +47,10 @@ project "BlueFir"
 		"Base",
 		"Graphics",
 		"Core",
-		"Modules"
+		"Renderer",
+		"Input",
+		"Scene",
+		"Time"
 	}
 	
 	filter "system:windows"
@@ -342,6 +348,7 @@ project "Scene"
 	{
 		"Base/src",
 		"Core/src",
+		"Renderer/src"
 	}
 	
 	libdirs
@@ -352,7 +359,8 @@ project "Scene"
 	links
 	{
 		"Base",
-		"Core"
+		"Core",
+		"Renderer"
 	}
 	
 	filter "system:windows"

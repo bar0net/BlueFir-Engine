@@ -9,7 +9,9 @@ namespace bluefir::modules
 	class ModuleTime : public Module 
 	{
 	public:
-		bool Init() override			 { LOGINFO("Initializing timer module."); chrono.Start(); return true; }
+		static ModuleTime& getInstance() { static ModuleTime instance_; return instance_; }
+
+		bool Init() override;
 		UpdateState PreUpdate() override { real_last_ = chrono.Pause(); return UpdateState::Update_Continue; }
 		bool CleanUp() override			 { LOGINFO("Closing timer module,"); chrono.Stop(); return true; }
 

@@ -36,6 +36,8 @@ namespace bluefir::modules
 	class ModuleRenderer : public Module
 	{
 	public:
+		static ModuleRenderer& getInstance() { static ModuleRenderer instance_; return instance_; }
+
 		// Flow Methods
 		virtual bool Init() override;
 		virtual UpdateState PreUpdate() override;
