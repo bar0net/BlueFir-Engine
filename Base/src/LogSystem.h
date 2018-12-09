@@ -9,6 +9,7 @@
 #define LOGINFO(x, ...)		bluefir::base::LogSystem::getInstance().Log(bluefir::base::LogLevel::Info, __FILE__, __LINE__, x, __VA_ARGS__)
 #define LOGWARNING(x, ...)	bluefir::base::LogSystem::getInstance().Log(bluefir::base::LogLevel::Warning, __FILE__, __LINE__, x, __VA_ARGS__)
 #define LOGERROR(x, ...)	bluefir::base::LogSystem::getInstance().Log(bluefir::base::LogLevel::Error, __FILE__, __LINE__, x, __VA_ARGS__)
+#define BF_LOG_TYPECOUNT 5
 
 namespace bluefir::base
 {
