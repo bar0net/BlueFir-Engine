@@ -24,7 +24,11 @@ namespace bluefir::editor
 		virtual void CleanUp() override;
 
 	private:
-		void DisplayGameObject(const core::GameObject* go, int level = 0) const;
+		void DisplayGameObject(const core::GameObject* go, int level = 0);
+		void SetSelectedObject(const core::GameObject* go);
+
+	private:
+		const core::GameObject* selected_ = nullptr;
 	};
 }
 #endif // !BF_EDITORPANELS_SCENE

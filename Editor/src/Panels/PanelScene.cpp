@@ -27,14 +27,34 @@ void bluefir::editor::PanelScene::CleanUp()
 {
 }
 
-void bluefir::editor::PanelScene::DisplayGameObject(const core::GameObject* go, int level) const
+void bluefir::editor::PanelScene::DisplayGameObject(const core::GameObject* go, int level)
 {
 	// TODO: Have base gameobject append to a root object in Scene (?)
 
-	std::string s = "";
-	for (int i = 0; i < level; ++i) s.append("  ");
-	ImGui::Text("%s%s", s.c_str(), go->name.c_str());
+	if (go->children_.size() == 0)
+	{
+		bool enabled = false;
+		if (selected_ == go) enabled = true;
+		if (ImGui::Selectable(go->name.c_str(), enabled)) SetSelectedObject(go);
+		return;
+	}
 
-	for (auto it = go->children_.begin(); it != go->children_.end(); ++it)
-		DisplayGameObject((*it), level + 1);
+	ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_None;
+	if (selected_ == go) flags = ImGuiTreeNodeFlags_Selected;
+
+	bool open = (ImGui::TreeNodeEx(go->name.c_str(), flags));
+	if (ImGui::IsItemClicked()) SetSelectedObject(go);
+
+	if (open)
+	{
+		for (auto it = go->children_.begin(); it != go->children_.end(); ++it)
+			DisplayGameObject((*it), level + 1);
+		ImGui::TreePop();
+	}
+
+}
+
+void bluefir::editor::PanelScene::SetSelectedObject(const core::GameObject* go)
+{
+	selected_ = go;
 }
