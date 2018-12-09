@@ -26,6 +26,9 @@ namespace bluefir::core
 	private:
 		int mesh_ID_ = -1;
 		int shader_ID_ = -1;
+
+
+		friend editor::ComponentSection;
 	};
 }
 #endif // !BF_CORE_COMPONENTS_MESHRENDERER

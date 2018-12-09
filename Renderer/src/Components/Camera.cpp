@@ -41,10 +41,10 @@ void bluefir::core::Camera::SetFarPlaneDistance(float value)
 	frustum_->farPlaneDistance = value;
 }
 
-void bluefir::core::Camera::SetFOV(float value, float height, float width)
+void bluefir::core::Camera::SetFOV(float value)
 {
 	frustum_->horizontalFov = math::pi * value / 180.0F;
-	frustum_->verticalFov = 2.0F * atan(tan(frustum_->horizontalFov / 2.0F) * (modules::ModuleRenderer::getInstance().GetWindowHeight() / modules::ModuleRenderer::getInstance().GetWindowWidth()));
+	frustum_->verticalFov = 2.0F * atan(tan(frustum_->horizontalFov / 2.0F) * ((float)modules::ModuleRenderer::getInstance().GetWindowHeight() / (float)modules::ModuleRenderer::getInstance().GetWindowWidth()));
 }
 
 float bluefir::core::Camera::GetNearPlaneDistance() const

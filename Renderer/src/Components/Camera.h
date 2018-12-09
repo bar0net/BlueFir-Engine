@@ -24,7 +24,7 @@ namespace bluefir::core
 
 		void SetNearPlaneDistance(float value);
 		void SetFarPlaneDistance(float value);
-		void SetFOV(float value, float height, float width);
+		void SetFOV(float value);
 
 		float GetNearPlaneDistance() const;
 		float GetFarPlaneDistance() const;
@@ -38,6 +38,9 @@ namespace bluefir::core
 
 	private:
 		math::Frustum* frustum_ = nullptr;
+
+
+		friend editor::ComponentSection;
 	};
 }
 #endif // !BF_CORE_COMPONENT_CAMERA

@@ -21,6 +21,8 @@ namespace bluefir::editor
 		ComponentSection() = delete;
 
 		static void DisplayTransform(core::Transform* c);
+		static void DisplayMeshRenderer(core::MeshRenderer* c);
+		static void DisplayCamera(core::Camera* c);
 	};
 }
 

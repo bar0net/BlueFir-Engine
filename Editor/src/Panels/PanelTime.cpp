@@ -23,10 +23,10 @@ void bluefir::editor::PanelTime::Draw()
 	if (!enabled_) return;
 	ImGui::Begin(name_.c_str(), &enabled_);
 
-	ImGui::Text("Execution time: %i:%f", (int)(modules::ModuleTime::getInstance().RealTime() / 60), std::fmodf(modules::ModuleTime::getInstance().RealTime(), 60));
-	ImGui::Text("Running time: %fs", modules::ModuleTime::getInstance().Time());
-	ImGui::Text("Unscaled Running time: %fs", modules::ModuleTime::getInstance().UnscaledTime());
-	ImGui::Text("Time Scale: %f", modules::ModuleTime::getInstance().GetTimeScale());
+	ImGui::Text("Execution time: %i:%06.3f", (int)(modules::ModuleTime::getInstance().RealTime() / 60), std::fmodf(modules::ModuleTime::getInstance().RealTime(), 60));
+	ImGui::Text("Running time: %06.3fs", modules::ModuleTime::getInstance().Time());
+	ImGui::Text("Unscaled Running time: %06.3fs", modules::ModuleTime::getInstance().UnscaledTime());
+	ImGui::Text("Time Scale: %.4f", modules::ModuleTime::getInstance().GetTimeScale());
 
 	ImGui::PlotLines("Delta Time", base::MovingArray<float>::Get, deltas_, (int)deltas_->Size(), 1, "", 0, 100, ImVec2(0, 50));
 	ImGui::Text("Average delta time: %fms", average_);
