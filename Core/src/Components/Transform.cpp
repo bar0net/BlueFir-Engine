@@ -10,7 +10,7 @@
 
 #define RAD2DEG 57.2957795F
 
-bluefir::core::Transform::Transform(const GameObject* gameObject) : Component(gameObject)
+bluefir::core::Transform::Transform(const GameObject* gameObject) : Component(gameObject, ComponentType::TRANSFORM)
 {
 	ASSERT(gameObject);
 
@@ -42,7 +42,7 @@ void bluefir::core::Transform::SetPosition(float x, float y, float z)
 
 void bluefir::core::Transform::SetRotation(float x, float y, float z)
 {
-	Quat q = Quat::FromEulerZXY(z / RAD2DEG, y / RAD2DEG, x / RAD2DEG);
+	Quat q = Quat::FromEulerZYX(z / RAD2DEG, y / RAD2DEG, x / RAD2DEG);
 	rotation_->Set(q.x, q.y, q.z, q.w);
 }
 
@@ -109,4 +109,20 @@ void bluefir::core::Transform::ToLocalCoordinates()
 	position_->Set(m.TranslatePart().x, m.TranslatePart().y, m.TranslatePart().z);
 	rotation_->Set(m.RotatePart());
 	scale_->Set(scale.x, scale.y, scale.z);
+}
+
+float * bluefir::core::Transform::GetPositionRaw() const
+{
+	return position_->ptr();
+}
+
+void bluefir::core::Transform::GetRotationRaw(float* vector3) const
+{
+	float3 euler = rotation_->ToEulerZYX().zyx() * RAD2DEG;
+	vector3[0] = euler.x; vector3[1] = euler.y; vector3[2] = euler.z;
+}
+
+float * bluefir::core::Transform::GetScaleRaw() const
+{
+	return scale_->ptr();
 }

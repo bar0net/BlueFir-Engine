@@ -7,6 +7,7 @@
 namespace bluefir::editor
 {
 	class EditorPanel;
+	class PanelInspector;
 }
 
 struct ImGuiIO;
@@ -25,6 +26,9 @@ namespace bluefir::modules
 		virtual UpdateState PostUpdate() override;
 		virtual bool CleanUp() override;
 
+		// Accessors
+		void SetInspectContent(const editor::EditorPanel* panel) { inspector_content_ = panel; }
+
 		// Event Handling
 		void ProcessEvent(void* event) const;
 
@@ -34,8 +38,12 @@ namespace bluefir::modules
 
 	private:
 		std::vector<editor::EditorPanel*> panels_;
+		editor::EditorPanel* inspector_ = nullptr;
+		const editor::EditorPanel* inspector_content_ = nullptr;
 
 		ImGuiIO* io = nullptr;
+
+		friend editor::PanelInspector;
 	};
 }
 #endif // !BF_MODULES_EDITOR

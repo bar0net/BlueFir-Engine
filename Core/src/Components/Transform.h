@@ -33,7 +33,7 @@ namespace bluefir::core
 		const float* GetPosition() const;
 		const float* GetRotation() const;
 		const float* GetScale() const;
-		
+				
 		// Returns the Transformation Matrix as a Row Major array of float[16]
 		void ModelMatrix(float* matrix) const;
 
@@ -51,6 +51,11 @@ namespace bluefir::core
 
 		// Converts geospacial info to local coordinates
 		void ToLocalCoordinates();
+
+	private:
+		float* GetPositionRaw() const;
+		void GetRotationRaw(float* vector3) const;
+		float* GetScaleRaw() const;
 		
 	protected:
 		math::float4x4* model_matrix_ = nullptr;
@@ -60,6 +65,7 @@ namespace bluefir::core
 		math::Quat* rotation_ = nullptr;
 		math::float3* scale_ = nullptr;
 
+		friend editor::ComponentSection;
 	};
 }
 

@@ -11,6 +11,7 @@
 #include "Panels/PanelTime.h"
 #include "Panels/PanelRenderer.h"
 #include "Panels/PanelScene.h"
+#include "Panels/PanelInspector.h"
 
 #define GLSL_VERSION "#version 130"
 
@@ -20,20 +21,25 @@ bool bluefir::modules::ModuleEditor::Init()
 {
 	LOGINFO("Initializing Editor.");
 
+	// Set ImGui Config
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	io = &ImGui::GetIO(); (void)io;
 	io->ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
 	io->ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
 
+	// Init Imgui
 	ImGui_ImplSDL2_InitForOpenGL(ModuleRenderer::getInstance().GetWindowData()->window, ModuleRenderer::getInstance().GetWindowData()->context);
 	ImGui_ImplOpenGL3_Init(GLSL_VERSION);
 	ImGui::StyleColorsDark();
 
+	// register all editor panels
 	panels_.push_back(new editor::PanelTime());
 	panels_.push_back(new editor::PanelRenderer());
 	panels_.push_back(new editor::PanelScene());
+	panels_.push_back(new editor::PanelInspector());
 
+	// Init all panels
 	for (auto it = panels_.begin(); it != panels_.end(); ++it)
 		(*it)->Init();
 
@@ -42,7 +48,6 @@ bool bluefir::modules::ModuleEditor::Init()
 
 bluefir::modules::UpdateState bluefir::modules::ModuleEditor::PreUpdate()
 {
-
 	return UpdateState::Update_Continue;
 }
 
@@ -52,7 +57,7 @@ bluefir::modules::UpdateState bluefir::modules::ModuleEditor::Update()
 	// Activate Editor Frame Buffer
 	// Clear Viewport
 
-	// Create new imgui editor fra,e
+	// Create new imgui editor frame
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(ModuleRenderer::getInstance().GetWindowData()->window);
 	ImGui::NewFrame();
@@ -62,7 +67,7 @@ bluefir::modules::UpdateState bluefir::modules::ModuleEditor::Update()
 	for (auto it = panels_.begin(); it != panels_.end(); ++it)
 		(*it)->Draw();
 
-	// Render imgui editor
+	// Render Imgui editor
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
@@ -83,9 +88,11 @@ bluefir::modules::UpdateState bluefir::modules::ModuleEditor::PostUpdate()
 bool bluefir::modules::ModuleEditor::CleanUp()
 {
 	LOGINFO("Closing Editor.");
+	// Delete all registered panels
 	for (auto it = panels_.begin(); it != panels_.end(); ++it)
 		delete (*it);
 
+	// Shut down Imgui
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplSDL2_Shutdown();
 	ImGui::DestroyContext();
@@ -108,12 +115,11 @@ bool bluefir::modules::ModuleEditor::MainMenu()
 		ImGui::EndMenu();
 	}
 
+	// Create an entry for all registered panels under 'Windows' menu
 	if (ImGui::BeginMenu("Windows"))
 	{
 		for (auto it = panels_.begin(); it != panels_.end(); ++it)
-		{
 			ImGui::MenuItem((*it)->name_.c_str(), NULL, &(*it)->enabled_);
-		}
 		ImGui::EndMenu();
 	}
 

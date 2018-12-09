@@ -3,9 +3,6 @@
 
 #include "../EditorPanel.h"
 
-#define BF_EPT_AVG_COUNT 15
-
-
 namespace bluefir::core
 {
 	class GameObject;
@@ -22,6 +19,7 @@ namespace bluefir::editor
 		virtual void Init() override;
 		virtual void Draw() override;
 		virtual void CleanUp() override;
+		virtual void Inspect() const override;
 
 	private:
 		void DisplayGameObject(const core::GameObject* go, int level = 0);

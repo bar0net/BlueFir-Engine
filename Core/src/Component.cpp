@@ -2,7 +2,7 @@
 
 #include "GameObject.h"
 
-bluefir::core::Component::Component(const GameObject * gameObject) : gameObject_(gameObject)
+bluefir::core::Component::Component(const GameObject * gameObject, ComponentType type) : gameObject_(gameObject), type_(type)
 {
 }
 

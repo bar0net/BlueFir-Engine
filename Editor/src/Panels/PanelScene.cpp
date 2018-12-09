@@ -3,8 +3,14 @@
 #include "../../Vendor/imgui-docking/imgui.h"
 
 #include "ModuleScene.h"
+#include "../ModuleEditor.h"
+
 #include "GameObject.h"
+#include "Component.h"
 #include "Components/Transform.h"
+
+#include "../ComponentSection.h"
+
 
 void bluefir::editor::PanelScene::Init()
 {
@@ -25,6 +31,21 @@ void bluefir::editor::PanelScene::Draw()
 
 void bluefir::editor::PanelScene::CleanUp()
 {
+}
+
+void bluefir::editor::PanelScene::Inspect() const
+{
+	if (!selected_) return;
+
+	for (auto it = selected_->components_.begin(); it != selected_->components_.end(); ++it)
+	{
+		for (auto jt = it->second.begin(); jt != it->second.end(); ++jt) 
+		{
+			core::Component* c = *jt;
+			ComponentSection::Display(c);
+		}
+	}
+
 }
 
 void bluefir::editor::PanelScene::DisplayGameObject(const core::GameObject* go, int level)
@@ -57,4 +78,5 @@ void bluefir::editor::PanelScene::DisplayGameObject(const core::GameObject* go, 
 void bluefir::editor::PanelScene::SetSelectedObject(const core::GameObject* go)
 {
 	selected_ = go;
+	modules::ModuleEditor::getInstance().SetInspectContent(this);
 }

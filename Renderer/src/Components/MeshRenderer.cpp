@@ -6,7 +6,7 @@
 #include "GameObject.h"
 #include "Components/Transform.h"
 
-bluefir::core::MeshRenderer::MeshRenderer(const GameObject * gameObject) : Component(gameObject)
+bluefir::core::MeshRenderer::MeshRenderer(const GameObject * gameObject) : Component(gameObject, ComponentType::MESH_RENDERER)
 {
 	ASSERT(gameObject);
 }

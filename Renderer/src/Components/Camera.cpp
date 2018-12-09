@@ -7,7 +7,7 @@
 
 #include "../ModuleRenderer.h"
 
-bluefir::core::Camera::Camera(const GameObject* gameObject) : Component(gameObject)
+bluefir::core::Camera::Camera(const GameObject* gameObject) : Component(gameObject, ComponentType::CAMERA)
 {
 	frustum_ = new Frustum();
 	frustum_->pos = math::float3::zero;
