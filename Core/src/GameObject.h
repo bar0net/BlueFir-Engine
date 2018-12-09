@@ -6,9 +6,15 @@
 
 #include <unordered_map>
 #include <vector>
+#include <string>
+#include <set>
 
 #define TYPE_TRANSFORM 1
 
+namespace bluefir::editor
+{
+	class PanelScene;
+}
 
 namespace bluefir::core
 {
@@ -39,14 +45,19 @@ namespace bluefir::core
 		void RemoveChild(const GameObject* child);
 
 	public:
+		std::string name = "GameObject";
 		Transform* transform = nullptr;
-
+		
 	private:
 		std::unordered_map<int, std::vector<Component*>> components_;
 		int id_ = 0;
 
 		GameObject* parent_ = nullptr;
 		std::vector<GameObject*> children_;
+
+
+	public:
+		friend editor::PanelScene;
 	};
 }
 

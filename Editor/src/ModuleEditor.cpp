@@ -10,6 +10,7 @@
 
 #include "Panels/PanelTime.h"
 #include "Panels/PanelRenderer.h"
+#include "Panels/PanelScene.h"
 
 #define GLSL_VERSION "#version 130"
 
@@ -31,6 +32,7 @@ bool bluefir::modules::ModuleEditor::Init()
 
 	panels_.push_back(new editor::PanelTime());
 	panels_.push_back(new editor::PanelRenderer());
+	panels_.push_back(new editor::PanelScene());
 
 	for (auto it = panels_.begin(); it != panels_.end(); ++it)
 		(*it)->Init();

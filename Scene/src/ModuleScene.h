@@ -10,6 +10,11 @@ namespace bluefir::core
 	class GameObject;
 }
 
+namespace bluefir::editor
+{
+	class PanelScene;
+}
+
 namespace bluefir::modules
 {
 	class ModuleScene : public Module
@@ -27,6 +32,9 @@ namespace bluefir::modules
 	private:
 		int gameObject_counter_ = 0;
 		std::unordered_map<int, core::GameObject*> gameObjects_;
+
+
+		friend bluefir::editor::PanelScene;
 	};
 }
 

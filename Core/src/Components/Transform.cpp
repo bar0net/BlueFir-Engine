@@ -31,14 +31,8 @@ bluefir::core::Transform::~Transform()
 
 void bluefir::core::Transform::PreUpdate()
 {
-	if (gameObject_->GetParent() == nullptr)
-	{
-		model_matrix_->Set(math::float4x4::FromTRS(*position_, *rotation_, *scale_));
-	}
-	else
-	{
-		model_matrix_->Set(*(gameObject_->GetParent()->transform->model_matrix_) * math::float4x4::FromTRS(*position_, *rotation_, *scale_));
-	}
+	if (gameObject_->GetParent() == nullptr) model_matrix_->Set(math::float4x4::FromTRS(*position_, *rotation_, *scale_));
+	else model_matrix_->Set(*(gameObject_->GetParent()->transform->model_matrix_) * math::float4x4::FromTRS(*position_, *rotation_, *scale_));
 }
 
 void bluefir::core::Transform::SetPosition(float x, float y, float z)
@@ -94,4 +88,25 @@ void bluefir::core::Transform::ModelMatrixIT(float * matrix) const
 {
 	ASSERT(matrix);
 	memcpy(matrix, model_matrix_->Inverted().Transposed().ptr(), 16 * sizeof(float));
+}
+
+void bluefir::core::Transform::ToWorldCoordinates()
+{
+	math::float3 scale = model_matrix_->GetScale();
+
+	position_->Set(model_matrix_->TranslatePart().x, model_matrix_->TranslatePart().y, model_matrix_->TranslatePart().z);
+	rotation_->Set(model_matrix_->RotatePart());
+	scale_->Set(scale.x, scale.y, scale.z);
+}
+
+void bluefir::core::Transform::ToLocalCoordinates()
+{
+	float4x4 m;
+	if (!gameObject_->GetParent()) m = *model_matrix_;
+	else m = (*gameObject_->GetParent()->transform->model_matrix_) * *model_matrix_;
+	math::float3 scale = m.GetScale();
+
+	position_->Set(m.TranslatePart().x, m.TranslatePart().y, m.TranslatePart().z);
+	rotation_->Set(m.RotatePart());
+	scale_->Set(scale.x, scale.y, scale.z);
 }

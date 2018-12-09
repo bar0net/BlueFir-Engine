@@ -45,6 +45,12 @@ namespace bluefir::core
 
 		// Returns the Inverse of the Transformation Matrix as a Column Major array of float[16]
 		void ModelMatrixIT(float* matrix) const;
+
+		// Converts geospacial info to world coordinates
+		void ToWorldCoordinates();
+
+		// Converts geospacial info to local coordinates
+		void ToLocalCoordinates();
 		
 	protected:
 		math::float4x4* model_matrix_ = nullptr;

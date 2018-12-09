@@ -36,9 +36,12 @@ namespace bluefir::modules
 {
 	struct DrawCall
 	{
-		float model[16];
-		const bluefir::graphics::Mesh* mesh = nullptr;
-		bluefir::graphics::Shader* shader = nullptr;
+		DrawCall(const float* model_matrix, bluefir::graphics::Mesh* mesh, bluefir::graphics::Shader* shader)
+			: mesh_(mesh), shader_(shader) { memcpy(model_, model_matrix, 16 * sizeof(float)); }
+
+		float model_[16];
+		const bluefir::graphics::Mesh* mesh_ = nullptr;
+		bluefir::graphics::Shader* shader_ = nullptr;
 	};
 
 	class ModuleRenderer : public Module

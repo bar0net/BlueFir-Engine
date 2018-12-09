@@ -43,17 +43,17 @@ bluefir::modules::UpdateState bluefir::modules::ModuleRenderer::Render()
 	while (!draw_calls_.empty())
 	{
 		DrawCall dc = draw_calls_.front();
-		dc.shader->Bind();
-		dc.mesh->Bind();
-		dc.shader->SetUniform("model", dc.model);
+		dc.shader_->Bind();
+		dc.mesh_->Bind();
+		dc.shader_->SetUniform("model", dc.model_);
 		for (auto it = cameras_.begin(); it != cameras_.end(); ++it)
 		{
 			// Remember: Proj and View must be sent as COLUMN Major!
 			float proj[16]; (*it)->FrustumMatrixT(proj);
 			float view[16]; (*it)->gameObject_->transform->ModelMatrixIT(view);
-			dc.shader->SetUniform("view", view);
-			dc.shader->SetUniform("proj", proj);
-			bluefir::graphics::Graphics::Draw((unsigned int)dc.mesh->indices_.size());
+			dc.shader_->SetUniform("view", view);
+			dc.shader_->SetUniform("proj", proj);
+			bluefir::graphics::Graphics::Draw((unsigned int)dc.mesh_->indices_.size());
 		}
 		draw_calls_.pop();
 	}
@@ -91,12 +91,15 @@ void bluefir::modules::ModuleRenderer::Draw(const float* model_matrix, int mesh,
 
 	if (shader_id < 0) return;
 
-	DrawCall c;
+	float model[16];
+	memcpy(model, model_matrix, 16 * sizeof(float));
+
+	//DrawCall c;
 	//TODO: Change transference method for model matrix to reduce the number of copies!
-	memcpy(c.model, model_matrix, 16 * sizeof(float));
-	c.mesh = meshes_[mesh];
-	c.shader = shader_ids_[shader_id];
-	draw_calls_.push(c);
+	//c.mesh = meshes_[mesh];
+	//c.shader = shader_ids_[shader_id];
+	//draw_calls_.push(c);
+	draw_calls_.emplace(model, meshes_[mesh], shader_ids_[shader_id]);
 }
 
 int bluefir::modules::ModuleRenderer::CreateShader(const char * vShader, const char * fShader)
@@ -145,8 +148,9 @@ int bluefir::modules::ModuleRenderer::CreateMesh(const std::vector<float>& verti
 int bluefir::modules::ModuleRenderer::CreateMesh(graphics::ModelList model)
 {
 	meshes_[mesh_counter_] = graphics::StandardModels::Get(model);
+	++mesh_counter_;
 
-	return 0;
+	return mesh_counter_ - 1;
 }
 
 void bluefir::modules::ModuleRenderer::ResizeEvent(unsigned int ID)

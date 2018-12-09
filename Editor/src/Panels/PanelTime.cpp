@@ -23,7 +23,7 @@ void bluefir::editor::PanelTime::Draw()
 	if (!enabled_) return;
 	ImGui::Begin(name_.c_str(), &enabled_);
 
-	ImGui::Text("Execution time: %fs", modules::ModuleTime::getInstance().RealTime());
+	ImGui::Text("Execution time: %i:%f", (int)(modules::ModuleTime::getInstance().RealTime() / 60), std::fmodf(modules::ModuleTime::getInstance().RealTime(), 60));
 	ImGui::Text("Running time: %fs", modules::ModuleTime::getInstance().Time());
 	ImGui::Text("Unscaled Running time: %fs", modules::ModuleTime::getInstance().UnscaledTime());
 	ImGui::Text("Time Scale: %f", modules::ModuleTime::getInstance().GetTimeScale());
