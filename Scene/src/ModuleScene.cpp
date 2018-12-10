@@ -7,7 +7,12 @@
 #include "Components/MeshRenderer.h"
 
 
-bluefir::modules::ModuleScene::~ModuleScene() {}
+bluefir::modules::ModuleScene::ModuleScene()
+{
+	root_ = &scene::scene_root;
+}
+
+bluefir::modules::ModuleScene::~ModuleScene() { /*delete root_; root_ = nullptr;*/ }
 
 bool bluefir::modules::ModuleScene::Init()
 {
@@ -73,6 +78,7 @@ int bluefir::modules::ModuleScene::CreateEmptyGameObject(core::GameObject* paren
 	LOGINFO("Creating empty game object.");
 	gameObjects_[gameObject_counter_] = new core::GameObject();
 	if (parent) gameObjects_[gameObject_counter_]->SetParent(parent);
+	else gameObjects_[gameObject_counter_]->SetParent(root_);
 	++gameObject_counter_;
 
 	return gameObject_counter_ - 1;

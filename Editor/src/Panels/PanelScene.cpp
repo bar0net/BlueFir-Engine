@@ -11,6 +11,7 @@
 
 #include "../ComponentSection.h"
 
+#define BF_EDITOR_INDENTOFFSET 10
 
 void bluefir::editor::PanelScene::Init()
 {
@@ -20,11 +21,14 @@ void bluefir::editor::PanelScene::Draw()
 {
 	ImGui::Begin(name_.c_str(), &enabled_);
 
-	for (auto it = modules::ModuleScene::getInstance().gameObjects_.begin(); it != modules::ModuleScene::getInstance().gameObjects_.end(); ++it)
+	/*for (auto it = modules::ModuleScene::getInstance().gameObjects_.begin(); it != modules::ModuleScene::getInstance().gameObjects_.end(); ++it)
 	{
 		if (it->second->parent_) continue;
 		DisplayGameObject(it->second);
-	}
+	}*/
+
+	for (auto it = modules::ModuleScene::getInstance().root_->children_.begin(); it != modules::ModuleScene::getInstance().root_->children_.end(); ++it)
+		DisplayGameObject(*it);
 
 	ImGui::End();
 }

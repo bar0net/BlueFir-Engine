@@ -65,9 +65,11 @@ void bluefir::core::GameObject::PostUpdate()
 
 void bluefir::core::GameObject::SetParent(GameObject * parent)
 {
-	ASSERT(parent);
 	if (parent_) parent_->RemoveChild(this);
-	parent_ = parent;
+
+	if(parent) parent_ = parent;
+	else parent_ = &modules::scene::scene_root;
+
 	if (parent_) parent_->AddChild(this);
 	transform->ToLocalCoordinates();
 }

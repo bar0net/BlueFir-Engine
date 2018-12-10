@@ -20,6 +20,7 @@ namespace bluefir::modules
 	class ModuleScene : public Module
 	{
 	public:
+		ModuleScene();
 		virtual ~ModuleScene();
 		static ModuleScene& getInstance() { static ModuleScene instance_; return instance_; }
 
@@ -28,6 +29,9 @@ namespace bluefir::modules
 		virtual bool CleanUp() override;
 
 		int CreateEmptyGameObject(core::GameObject* parent = nullptr);
+
+	public:
+		core::GameObject* root_ = nullptr;
 
 	private:
 		int gameObject_counter_ = 0;

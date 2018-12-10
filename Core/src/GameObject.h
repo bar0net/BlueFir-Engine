@@ -16,6 +16,7 @@ namespace bluefir::editor
 	class PanelScene;
 }
 
+
 namespace bluefir::core
 {
 	class Component;
@@ -59,6 +60,12 @@ namespace bluefir::core
 	public:
 		friend editor::PanelScene;
 	};
+}
+
+namespace bluefir::modules::scene
+{
+	// TODO: Improve this (?)
+	static bluefir::core::GameObject scene_root;
 }
 
 template <class T>
