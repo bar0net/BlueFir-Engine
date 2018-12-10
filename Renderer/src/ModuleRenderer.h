@@ -3,7 +3,7 @@
 
 #include "Module.h"
 
-#include <queue>
+#include <list>
 #include <vector>
 #include <unordered_map>
 #include <string>
@@ -53,6 +53,7 @@ namespace bluefir::modules
 		virtual bool Init() override;
 		virtual UpdateState PreUpdate() override;
 		UpdateState Render();
+		UpdateState Swap();
 		virtual bool CleanUp() override;
 
 		// Specific Methods
@@ -75,6 +76,9 @@ namespace bluefir::modules
 		void AddCamera(const core::Camera* camera);
 		void RemoveCamera(const core::Camera* camera);
 
+		// Utils
+		void RenderCamera(const core::Camera* cam);
+
 	private:
 		int width_ = 1280U;
 		int height_ = 720U;
@@ -83,7 +87,7 @@ namespace bluefir::modules
 		float depth_ = 1.0F;
 
 		graphics::WindowData* window_data_ = nullptr;
-		std::queue<DrawCall> draw_calls_;
+		std::list<DrawCall> draw_calls_;
 
 		std::vector<const core::Camera*> cameras_;
 

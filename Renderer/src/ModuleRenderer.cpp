@@ -40,26 +40,17 @@ bluefir::modules::UpdateState bluefir::modules::ModuleRenderer::PreUpdate()
 
 bluefir::modules::UpdateState bluefir::modules::ModuleRenderer::Render()
 {
-	while (!draw_calls_.empty())
-	{
-		DrawCall dc = draw_calls_.front();
-		dc.shader_->Bind();
-		dc.mesh_->Bind();
-		dc.shader_->SetUniform("model", dc.model_);
-		for (auto it = cameras_.begin(); it != cameras_.end(); ++it)
-		{
-			// Remember: Proj and View must be sent as COLUMN Major!
-			float proj[16]; (*it)->FrustumMatrixT(proj);
-			float view[16]; (*it)->gameObject_->transform->ModelMatrixIT(view);
-			dc.shader_->SetUniform("view", view);
-			dc.shader_->SetUniform("proj", proj);
-			bluefir::graphics::Graphics::Draw((unsigned int)dc.mesh_->indices_.size());
-		}
-		draw_calls_.pop();
-	}
+	for (auto it = cameras_.begin(); it != cameras_.end(); ++it)
+		RenderCamera(*it);
 
+	return UpdateState::Update_Continue;
+}
+
+bluefir::modules::UpdateState bluefir::modules::ModuleRenderer::Swap()
+{
 	// Swap windows
 	graphics::Graphics::SwapWindow(window_data_);
+	draw_calls_.clear();
 
 	return UpdateState::Update_Continue;
 }
@@ -94,12 +85,8 @@ void bluefir::modules::ModuleRenderer::Draw(const float* model_matrix, int mesh,
 	float model[16];
 	memcpy(model, model_matrix, 16 * sizeof(float));
 
-	//DrawCall c;
 	//TODO: Change transference method for model matrix to reduce the number of copies!
-	//c.mesh = meshes_[mesh];
-	//c.shader = shader_ids_[shader_id];
-	//draw_calls_.push(c);
-	draw_calls_.emplace(model, meshes_[mesh], shader_ids_[shader_id]);
+	draw_calls_.emplace_back(model, meshes_[mesh], shader_ids_[shader_id]);
 }
 
 int bluefir::modules::ModuleRenderer::CreateShader(const char * vShader, const char * fShader)
@@ -197,6 +184,38 @@ void bluefir::modules::ModuleRenderer::RemoveCamera(const core::Camera * camera)
 	}
 
 	LOGWARNING("Trying to remove a camera that is not registered in the module.");
+}
+
+void bluefir::modules::ModuleRenderer::RenderCamera(const core::Camera * cam)
+{
+	// Remember: Proj and View must be sent as COLUMN Major!
+	float proj[16]; cam->FrustumMatrixT(proj);
+	float view[16]; cam->gameObject_->transform->ModelMatrixIT(view);
+
+	// ASUMTION: All shaders include a UniformBlock (layout 140) with view and proj
+	draw_calls_.front().shader_->SetUniform("view", view);
+	draw_calls_.front().shader_->SetUniform("proj", proj);
+
+	for (auto it = draw_calls_.begin(); it != draw_calls_.end(); ++it)
+	{
+		it->shader_->Bind();
+		it->mesh_->Bind();
+		it->shader_->SetUniform("model", it->model_);
+		bluefir::graphics::Graphics::Draw((unsigned int)it->mesh_->indices_.size());
+	}
+
+	/*
+	while (!draw_calls_.empty())
+	{
+		DrawCall dc = draw_calls_.front();
+		dc.shader_->Bind();
+		for (auto it = cameras_.begin(); it != cameras_.end(); ++it)
+		{
+			dc.shader_->SetUniform("view", view);
+			dc.shader_->SetUniform("proj", proj);
+		}
+		draw_calls_.pop();
+	}*/
 }
 
 

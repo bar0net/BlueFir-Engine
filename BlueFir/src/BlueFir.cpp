@@ -52,6 +52,7 @@ bool bluefir::BlueFir::Update()
 		ret = (*it)->PostUpdate();
 
 	if (ret == modules::UpdateState::Update_Continue) ret = renderer->Render();
+	if (ret == modules::UpdateState::Update_Continue) ret = renderer->Swap();
 
 	return ret == modules::UpdateState::Update_Continue;
 }
