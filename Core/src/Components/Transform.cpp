@@ -101,6 +101,8 @@ void bluefir::core::Transform::ToWorldCoordinates()
 
 void bluefir::core::Transform::ToLocalCoordinates()
 {
+	model_matrix_->Set(*(gameObject_->GetParent()->transform->model_matrix_) * math::float4x4::FromTRS(*position_, *rotation_, *scale_));
+
 	float4x4 m;
 	if (!gameObject_->GetParent()) m = *model_matrix_;
 	else m = (*gameObject_->GetParent()->transform->model_matrix_) * *model_matrix_;

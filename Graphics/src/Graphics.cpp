@@ -172,3 +172,8 @@ void bluefir::graphics::Graphics::Draw(unsigned int count)
 {
 	GLCall(glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, 0));
 }
+
+void bluefir::graphics::Graphics::DrawLines(unsigned int count)
+{
+	GLCall(glDrawElements(GL_LINES, count, GL_UNSIGNED_INT, 0));
+}

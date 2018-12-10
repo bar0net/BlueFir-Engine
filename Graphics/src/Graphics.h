@@ -43,7 +43,8 @@ namespace bluefir::graphics
 		static void GLClearErrors();
 		static bool GLLogCall(const char* function, const char* file, int line);
 
-		static void Draw(unsigned int count); // TODO: Define Draw
+		static void Draw(unsigned int count);
+		static void DrawLines(unsigned int count);
 
 	private:
 		Graphics() = delete;

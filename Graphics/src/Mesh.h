@@ -10,10 +10,13 @@ namespace bluefir::graphics
 	class VertexArray;
 	class BufferLayout;
 
-	struct Mesh
+	enum class MeshType { POINT, LINE, TRIANGLE };
+
+	class Mesh
 	{
 	public:
 		Mesh(const std::vector<float>& vertices, const std::vector<unsigned int>& indices, const BufferLayout& layout);
+		Mesh(const std::vector<float>& vertices, const std::vector<unsigned int>& indices, const BufferLayout& layout, MeshType type);
 		virtual ~Mesh();
 		void Build();
 		void Bind() const;
@@ -23,6 +26,7 @@ namespace bluefir::graphics
 		std::vector<float> vertices_;
 		std::vector<unsigned int> indices_;
 		const BufferLayout* layout_;
+		MeshType type_ = MeshType::TRIANGLE;
 
 	private:
 		VertexBuffer* vbo_ = nullptr;

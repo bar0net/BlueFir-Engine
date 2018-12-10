@@ -201,7 +201,12 @@ void bluefir::modules::ModuleRenderer::RenderCamera(const core::Camera * cam)
 		it->shader_->Bind();
 		it->mesh_->Bind();
 		it->shader_->SetUniform("model", it->model_);
-		bluefir::graphics::Graphics::Draw((unsigned int)it->mesh_->indices_.size());
+
+		if (it->mesh_->type_ == graphics::MeshType::TRIANGLE)
+			bluefir::graphics::Graphics::Draw((unsigned int)it->mesh_->indices_.size());
+
+		else if (it->mesh_->type_ == graphics::MeshType::LINE)
+			bluefir::graphics::Graphics::DrawLines((unsigned int)it->mesh_->indices_.size());
 	}
 
 	/*

@@ -9,7 +9,8 @@ namespace bluefir::graphics
 	{
 		Triangle = 0,
 		Quad,
-		Cube
+		Cube,
+		Grid
 	};
 
 	class StandardModels
@@ -20,6 +21,7 @@ namespace bluefir::graphics
 	private:
 		StandardModels() = delete;
 
+		static Mesh* Grid();
 		static Mesh* Triangle();
 		static Mesh* Quad();
 		static Mesh* Cube();

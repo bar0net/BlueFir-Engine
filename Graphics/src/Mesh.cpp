@@ -7,7 +7,12 @@
 
 
 bluefir::graphics::Mesh::Mesh(const std::vector<float>& vertices, const std::vector<unsigned int>& indices, const BufferLayout & layout)
-	: vertices_(vertices), indices_(indices), layout_(&layout)
+	: vertices_(vertices), indices_(indices), layout_(&layout), type_(MeshType::TRIANGLE)
+{
+}
+
+bluefir::graphics::Mesh::Mesh(const std::vector<float>& vertices, const std::vector<unsigned int>& indices, const BufferLayout & layout, MeshType type)
+	: vertices_(vertices), indices_(indices), layout_(&layout), type_(type)
 {
 	// TODO: Check the constructor is working properly
 	// TODO: Maybe build mesh in the constructor (?)

@@ -14,7 +14,7 @@ bluefir::core::Camera::Camera(const GameObject* gameObject) : Component(gameObje
 	frustum_->front = -math::float3::unitZ;
 	frustum_->up = math::float3::unitY;
 
-	frustum_->nearPlaneDistance = 0.1F;
+	frustum_->nearPlaneDistance = 0.5F;
 	frustum_->farPlaneDistance = 1000.0F;
 
 	frustum_->horizontalFov = math::pi * 60 / 180.0F;
