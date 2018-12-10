@@ -83,6 +83,15 @@ bluefir::modules::UpdateState bluefir::modules::ModuleEditor::Update()
 	for (auto it = panels_.begin(); it != panels_.end(); ++it)
 		(*it)->Draw();
 
+
+	return UpdateState::Update_Continue;
+}
+
+bluefir::modules::UpdateState bluefir::modules::ModuleEditor::PostUpdate()
+{
+	go_editor_camera_->PostUpdate();
+	modules::ModuleRenderer::getInstance().RenderCamera(editor_camera_);
+
 	// Render Imgui editor
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -92,14 +101,6 @@ bluefir::modules::UpdateState bluefir::modules::ModuleEditor::Update()
 		ImGui::UpdatePlatformWindows();
 		ImGui::RenderPlatformWindowsDefault();
 	}
-
-	return UpdateState::Update_Continue;
-}
-
-bluefir::modules::UpdateState bluefir::modules::ModuleEditor::PostUpdate()
-{
-	go_editor_camera_->PostUpdate();
-	modules::ModuleRenderer::getInstance().RenderCamera(editor_camera_);
 
 	return UpdateState::Update_Continue;
 }
