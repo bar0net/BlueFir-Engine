@@ -10,6 +10,12 @@ namespace bluefir::editor
 	class PanelInspector;
 }
 
+namespace bluefir::core
+{
+	class GameObject;
+	class Camera;
+}
+
 struct ImGuiIO;
 
 namespace bluefir::modules
@@ -42,6 +48,9 @@ namespace bluefir::modules
 		const editor::EditorPanel* inspector_content_ = nullptr;
 
 		ImGuiIO* io = nullptr;
+
+		core::GameObject* go_editor_camera_;
+		core::Camera* editor_camera_;
 
 		friend editor::PanelInspector;
 	};

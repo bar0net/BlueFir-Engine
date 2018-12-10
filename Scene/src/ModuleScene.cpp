@@ -16,11 +16,11 @@ bluefir::modules::ModuleScene::~ModuleScene() { }
 
 bool bluefir::modules::ModuleScene::Init()
 {
-	int cam = CreateEmptyGameObject();
+	/*int cam = CreateEmptyGameObject();
 	gameObjects_[cam]->name = "Cam";
 	gameObjects_[cam]->AddComponent<core::Camera>();
 	gameObjects_[cam]->transform->SetPosition(0, 0.0F, 10.0F);
-	gameObjects_[cam]->transform->SetRotation(0, 0.0F, 0);
+	gameObjects_[cam]->transform->SetRotation(0, 0.0F, 0);*/
 
 	int cube = CreateEmptyGameObject();
 	gameObjects_[cube]->name = "Quad";
@@ -28,7 +28,7 @@ bool bluefir::modules::ModuleScene::Init()
 	gameObjects_[cube]->transform->SetRotation(0, 0, 0);
 	gameObjects_[cube]->transform->SetScale(0.5F, 0.5F, 1.0F);
 	core::MeshRenderer* mr = gameObjects_[cube]->AddComponent<core::MeshRenderer>();
-	int mesh_id = ModuleRenderer::getInstance().CreateMesh(graphics::ModelList::Quad);
+	int mesh_id = ModuleRenderer::getInstance().CreateMesh(graphics::ModelList::Cube);
 	mr->SetMesh(mesh_id);
 	int shader_id = ModuleRenderer::getInstance().CreateShader("triangle.vs", "default.fs");
 	mr->SetMaterial(shader_id);

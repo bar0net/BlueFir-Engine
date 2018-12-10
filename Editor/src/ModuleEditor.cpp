@@ -7,6 +7,9 @@
 #include "Graphics.h"
 #include "EditorPanel.h"
 #include "ModuleRenderer.h"
+#include "GameObject.h"
+#include "Components/Camera.h"
+#include "Components/Transform.h"
 
 #include "Panels/PanelTime.h"
 #include "Panels/PanelRenderer.h"
@@ -34,6 +37,13 @@ bool bluefir::modules::ModuleEditor::Init()
 	ImGui_ImplOpenGL3_Init(GLSL_VERSION);
 	ImGui::StyleColorsDark();
 
+	// Define editor camera
+	go_editor_camera_ = new core::GameObject();
+	go_editor_camera_->name = "Editor Cam";
+	editor_camera_ = go_editor_camera_->AddComponent<core::Camera>();
+	go_editor_camera_->transform->SetPosition(0, 1.0F, 10.0F);
+	go_editor_camera_->transform->SetRotation(0, 0.0F, 0);
+
 	// register all editor panels
 	panels_.push_back(new editor::PanelTime());
 	panels_.push_back(new editor::PanelRenderer());
@@ -50,11 +60,15 @@ bool bluefir::modules::ModuleEditor::Init()
 
 bluefir::modules::UpdateState bluefir::modules::ModuleEditor::PreUpdate()
 {
+	go_editor_camera_->PreUpdate();
+
 	return UpdateState::Update_Continue;
 }
 
 bluefir::modules::UpdateState bluefir::modules::ModuleEditor::Update()
 {
+	go_editor_camera_->Update();
+
 	// ModuleRenderer::getInstance().Render();
 	// Activate Editor Frame Buffer
 	// Clear Viewport
@@ -84,6 +98,9 @@ bluefir::modules::UpdateState bluefir::modules::ModuleEditor::Update()
 
 bluefir::modules::UpdateState bluefir::modules::ModuleEditor::PostUpdate()
 {
+	go_editor_camera_->PostUpdate();
+	modules::ModuleRenderer::getInstance().RenderCamera(editor_camera_);
+
 	return UpdateState::Update_Continue;
 }
 
