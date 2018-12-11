@@ -32,3 +32,26 @@ const char* bluefir::base::FileSystem::ReadFile(const char* filename)
 
 	return data;
 }
+
+void bluefir::base::FileSystem::LoadFile(const char* filename, char* data, int& size)
+{
+	ASSERT(filename);
+
+	LOGINFO("Read file: %s", filename);
+	if (data) delete data; data = nullptr;
+	FILE* file = nullptr;
+	fopen_s(&file, filename, "rb");
+
+	if (file)
+	{
+		fseek(file, 0, SEEK_END);
+		size = ftell(file);
+		rewind(file);
+		data = new char[size + 1];
+
+		fread(data, 1, size, file);
+		data[size] = 0;
+
+		fclose(file);
+	}
+}

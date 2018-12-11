@@ -158,13 +158,15 @@ project "Graphics"
 	{
 		"Base/src",
 		"Vendor/glew-2.1.0/include/",
-		"Vendor/SDL2-2.0.8/include/"
+		"Vendor/SDL2-2.0.8/include/",
+		"Vendor/DevIL/include"
 	}
 	
 	libdirs
 	{
 		"Vendor/glew-2.1.0/lib/x64/",
-		"Vendor/SDL2-2.0.8/lib/x64/"
+		"Vendor/SDL2-2.0.8/lib/x64/",
+		"Vendor/DevIL/lib/x64/Release"
 	}
 	
 	links
@@ -172,7 +174,10 @@ project "Graphics"
 		"Base",
 		"glew32",
 		"OpenGL32",
-		"SDL2"
+		"SDL2",
+		"DevIL",
+		"IL",
+		"ILUT"
 	}
 	
 	filter "system:windows"

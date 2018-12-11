@@ -3,9 +3,12 @@
 #include "GL/glew.h"
 #include "GL/wglew.h"
 #include "SDL.h"
+#include "IL/il.h"
+#include "IL/ilut.h"
 
 #include "LogSystem.h"
 
+#include "Buffer/TextureBuffer.h"
 
 bluefir::graphics::WindowData* bluefir::graphics::Graphics::StartWindow(const char * title, unsigned int width, unsigned int height)
 {
@@ -176,4 +179,50 @@ void bluefir::graphics::Graphics::Draw(unsigned int count)
 void bluefir::graphics::Graphics::DrawLines(unsigned int count)
 {
 	GLCall(glDrawElements(GL_LINES, count, GL_UNSIGNED_INT, 0));
+}
+
+void bluefir::graphics::Graphics::ImportTexture(TextureBuffer* texture, const char* data, unsigned int size, const char* format)
+{
+	ASSERT(data);
+	ILenum type = IL_PNG; // TODO: Parse type
+	if (texture) delete texture; texture = nullptr;
+
+	unsigned int imageID = 0;
+	ilGenImages(1, &imageID);
+	ilBindImage(imageID);
+
+	ILboolean success = IL_TRUE;
+	ILenum error;
+
+	if (ilLoadL(type, data, size))
+	{
+		ILinfo ImageInfo;
+		iluGetImageInfo(&ImageInfo);
+		if (ImageInfo.Origin == IL_ORIGIN_UPPER_LEFT) iluFlipImage();
+
+		int channels = ilGetInteger(IL_IMAGE_CHANNELS);
+		if (channels == 3) success = ilConvertImage(IL_RGB,  IL_UNSIGNED_BYTE);
+		else if (channels == 4) success = ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
+
+		if (success) 
+		{
+			ILubyte* content = ilGetData();
+			int width = ilGetInteger(IL_IMAGE_WIDTH);
+			int height = ilGetInteger(IL_IMAGE_HEIGHT);
+			texture = new TextureBuffer(width, height, ilGetInteger(IL_IMAGE_FORMAT), ilGetInteger(IL_IMAGE_FORMAT), (char*)content);
+			LOGINFO("Image imported successfully.");
+		}
+		else
+		{
+			LOGERROR("Image conversion on Texture Load failed.");
+		}
+		ilDeleteImages(1, &imageID);
+	}
+	else
+	{
+		error = ilGetError();
+		LOGERROR("Could not read the image data. (IL reports error %i: %s", (int)error, iluErrorString(error));
+		ASSERT(false);
+	}
+	ilBindImage(0);
 }
