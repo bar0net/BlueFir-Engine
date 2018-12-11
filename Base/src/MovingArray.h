@@ -2,6 +2,7 @@
 #define BF_BASE_MOVINGARRAY_H
 
 #include <cstring>
+#include "LogSystem.h"
 
 namespace bluefir::base
 {
@@ -21,10 +22,15 @@ namespace bluefir::base
 
 		virtual ~MovingArray() { delete[] values_; values_ = nullptr; }
 
-		T& operator[](unsigned int x)
+		T const& operator[](int x) const
 		{
-			if (x < idx_) return values_[idx_ - x - 1];
-			else return values_[size_ + idx_ - x - 1];
+			int i = ((int)idx_ + x);
+			while (i < 0) i += size_;
+			i = i % (int)size_;
+			return values_[i];
+
+			//if (x < idx_) return values_[idx_ - x - 1];
+			//else return values_[size_ + idx_ - x - 1];
 		}
 
 		void Push(T x)
@@ -33,7 +39,9 @@ namespace bluefir::base
 			if (++idx_ == size_) idx_ = 0U;
 		}
 
-		static float Get(void* data, int idx) { return (float)(* static_cast<MovingArray*>(data) )[idx]; }
+		inline unsigned int Size() const { return size_; }
+
+		static float Get(void* data, int idx) { return (float)(*static_cast<MovingArray*>(data))[-idx]; }
 
 	private:
 		T* values_ = nullptr;

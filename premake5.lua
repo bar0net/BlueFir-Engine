@@ -36,7 +36,11 @@ project "BlueFir"
 		"Base/src",
 		"Graphics/src",
 		"Core/src",
-		"Modules/src"
+		"Renderer/src",
+		"Input/src",
+		"Scene/src",
+		"Time/src",
+		"Editor/src"
 	}
 	
 	links
@@ -44,7 +48,11 @@ project "BlueFir"
 		"Base",
 		"Graphics",
 		"Core",
-		"Modules"
+		"Renderer",
+		"Input",
+		"Scene",
+		"Time",
+		"Editor"
 	}
 	
 	filter "system:windows"
@@ -191,10 +199,15 @@ project "Graphics"
 		optimize "On"
 		
 -- ===================================================================================
--- =============================== PROJECT MODULES ===================================
+-- ################################# GROUP MODULES ###################################
 -- ===================================================================================
-project "Modules"
-	location "Modules"
+
+group "Modules"
+-- ===================================================================================
+-- ================================== PROJECT CORE ===================================
+-- ===================================================================================
+project "Core"
+	location "Core"
 	kind "StaticLib"
 	language "C++"
 	
@@ -205,12 +218,75 @@ project "Modules"
 	files
 	{
 		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
+		"%{prj.name}/src/**.cpp",
+		
+		"%{prj.name}/Vendor/**/**.h",
+		"%{prj.name}/Vendor/**/**.cpp"
+	}
+	
+	includedirs
+	{
+		"Base/src"
+	}
+	
+	libdirs
+	{
+	
+	}
+	
+	links
+	{
+		"Base"
+	}
+	
+	filter "system:windows"
+		cppdialect "C++17"
+		staticruntime "On"
+		systemversion "latest"
+		
+		defines
+		{
+			"BF_PLATFORM_WINDOWS"
+		}
+		
+		
+	filter "configurations:Debug"
+		defines "BF_DEBUG"
+		symbols "On"
+		
+	filter "configurations:Development"
+		defines "BF_Development"
+		optimize "On"
+		
+	filter "configurations:Release"
+		defines "BF_RELEASE"
+		optimize "On"
+		
+-- ===================================================================================
+-- ================================ PROJECT RENDERER =================================
+-- ===================================================================================
+project "Renderer"
+	location "Renderer"
+	kind "StaticLib"
+	language "C++"
+	
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+	debugdir "files/"
+	
+	files
+	{
+		"%{prj.name}/src/**.h",
+		"%{prj.name}/src/**.cpp",
+		
+		"%{prj.name}/Vendor/**/**.h",
+		"%{prj.name}/Vendor/**/**.cpp"
 	}
 	
 	includedirs
 	{
 		"Base/src",
+		"Core/src",
 		"Graphics/src"
 	}
 	
@@ -222,6 +298,7 @@ project "Modules"
 	links
 	{
 		"Base",
+		"Core",
 		"Graphics"
 	}
 	
@@ -249,10 +326,10 @@ project "Modules"
 		optimize "On"
 		
 -- ===================================================================================
--- ================================== PROJECT CORE ===================================
+-- ================================== PROJECT SCENE ===================================
 -- ===================================================================================
-project "Core"
-	location "Core"
+project "Scene"
+	location "Scene"
 	kind "StaticLib"
 	language "C++"
 	
@@ -263,13 +340,17 @@ project "Core"
 	files
 	{
 		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
+		"%{prj.name}/src/**.cpp",
+		
+		"%{prj.name}/Vendor/**/**.h",
+		"%{prj.name}/Vendor/**/**.cpp"
 	}
 	
 	includedirs
 	{
 		"Base/src",
-		"Modules/src"
+		"Core/src",
+		"Renderer/src"
 	}
 	
 	libdirs
@@ -280,7 +361,8 @@ project "Core"
 	links
 	{
 		"Base",
-		"Modules"
+		"Core",
+		"Renderer"
 	}
 	
 	filter "system:windows"
@@ -306,3 +388,209 @@ project "Core"
 		defines "BF_RELEASE"
 		optimize "On"
 		
+-- ===================================================================================
+-- ================================== PROJECT INPUT ==================================
+-- ===================================================================================
+project "Input"
+	location "Input"
+	kind "StaticLib"
+	language "C++"
+	
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+	debugdir "files/"
+	
+	files
+	{
+		"%{prj.name}/src/**.h",
+		"%{prj.name}/src/**.cpp",
+		
+		"%{prj.name}/Vendor/**/**.h",
+		"%{prj.name}/Vendor/**/**.cpp"
+	}
+	
+	includedirs
+	{
+		"Base/src",
+		"Core/src",
+		"Renderer/src",
+		"Editor/src",
+		"Vendor/SDL2-2.0.8/include/"
+	}
+	
+	libdirs
+	{
+		"Vendor/SDL2-2.0.8/lib/x64/"	
+	}
+	
+	links
+	{
+		"Base",
+		"Core",
+		"Renderer",
+		"Editor",
+		"SDL2"
+	}
+	
+	filter "system:windows"
+		cppdialect "C++17"
+		staticruntime "On"
+		systemversion "latest"
+		
+		defines
+		{
+			"BF_PLATFORM_WINDOWS"
+		}
+		
+		
+	filter "configurations:Debug"
+		defines "BF_DEBUG"
+		symbols "On"
+		
+	filter "configurations:Development"
+		defines "BF_Development"
+		optimize "On"
+		
+	filter "configurations:Release"
+		defines "BF_RELEASE"
+		optimize "On"		
+		
+-- ===================================================================================
+-- ================================= PROJECT TIME ==================================
+-- ===================================================================================
+project "Time"
+	location "Time"
+	kind "StaticLib"
+	language "C++"
+	
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+	debugdir "files/"
+	
+	files
+	{
+		"%{prj.name}/src/**.h",
+		"%{prj.name}/src/**.cpp",
+		
+		"%{prj.name}/Vendor/**/**.h",
+		"%{prj.name}/Vendor/**/**.cpp"
+	}
+	
+	includedirs
+	{
+		"Base/src",
+		"Core/src"
+	}
+	
+	libdirs
+	{
+	
+	}
+	
+	links
+	{
+		"Base",
+		"Core"
+	}
+	
+	filter "system:windows"
+		cppdialect "C++17"
+		staticruntime "On"
+		systemversion "latest"
+		
+		defines
+		{
+			"BF_PLATFORM_WINDOWS"
+		}
+		
+		
+	filter "configurations:Debug"
+		defines "BF_DEBUG"
+		symbols "On"
+		
+	filter "configurations:Development"
+		defines "BF_Development"
+		optimize "On"
+		
+	filter "configurations:Release"
+		defines "BF_RELEASE"
+		optimize "On"
+		
+-- ===================================================================================
+-- ================================= PROJECT EDITOR ==================================
+-- ===================================================================================
+project "Editor"
+	location "Editor"
+	kind "StaticLib"
+	language "C++"
+	
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+	debugdir "files/"
+	
+	files
+	{
+		"%{prj.name}/src/**.h",
+		"%{prj.name}/src/**.cpp",
+		
+		"%{prj.name}/Vendor/**/**.h",
+		"%{prj.name}/Vendor/**/**.cpp"
+	}
+	
+	includedirs
+	{
+		"Base/src",
+		"Core/src",
+		"Graphics/src",
+		"Renderer/src",
+		"Time/src",
+		"Scene/src",
+		
+		"Vendor/glew-2.1.0/include/",
+		"Vendor/SDL2-2.0.8/include/"
+	}
+	
+	libdirs
+	{
+		"Vendor/glew-2.1.0/lib/x64/",
+		"Vendor/SDL2-2.0.8/lib/x64/"	
+	}
+	
+	links
+	{
+		"Base",
+		"Core",
+		"Graphics",
+		"Renderer",
+		"Time",
+		"Scene",
+		
+		"glew32",
+		"OpenGL32",
+		"SDL2"
+	}
+	
+	filter "system:windows"
+		cppdialect "C++17"
+		staticruntime "On"
+		systemversion "latest"
+		
+		defines
+		{
+			"BF_PLATFORM_WINDOWS"
+		}
+		
+		
+	filter "configurations:Debug"
+		defines "BF_DEBUG"
+		symbols "On"
+		
+	filter "configurations:Development"
+		defines "BF_Development"
+		optimize "On"
+		
+	filter "configurations:Release"
+		defines "BF_RELEASE"
+		optimize "On"		
+
+group ""

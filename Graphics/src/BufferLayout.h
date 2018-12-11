@@ -11,11 +11,7 @@
 #include <vector>
 #include <assert.h>
 
-#if(BF_DEBUG)
-	#define ASSERT(x) assert(x)
-#else
-	#define ASSERT(x)
-#endif
+#include "BaseMacros.h"
 
 namespace bluefir::graphics
 {
