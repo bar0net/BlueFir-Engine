@@ -23,14 +23,14 @@ namespace bluefir::graphics
 	{
 		// TODO: CORRECT THIS!!!!
 		template<class T>
-		MaterialAttrib() : type_(UniformPrimitive::NONE), size_(M) { }
+		MaterialAttribData() : type_(UniformPrimitive::NONE), size_(M) { }
+		/*
+		template<>
+		MaterialAttribData<float, M>() : type_(UniformPrimitive::FLOAT), size_(M) { }
 
 		template<>
-		MaterialAttrib<float>() : type_(UniformPrimitive::FLOAT), size_(M) { }
-
-		template<>
-		MaterialAttrib<int>() : type_(UniformPrimitive::INT), size_(M) { }
-
+		MaterialAttribData<int, M>() : type_(UniformPrimitive::INT), size_(M) { }
+		*/
 		T values[M];
 	};
 

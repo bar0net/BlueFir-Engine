@@ -40,7 +40,8 @@ project "BlueFir"
 		"Input/src",
 		"Scene/src",
 		"Time/src",
-		"Editor/src"
+		"Editor/src",
+		"Texture/src"
 	}
 	
 	links
@@ -52,7 +53,8 @@ project "BlueFir"
 		"Input",
 		"Scene",
 		"Time",
-		"Editor"
+		"Editor",
+		"Texture"
 	}
 	
 	filter "system:windows"
@@ -176,7 +178,7 @@ project "Graphics"
 		"OpenGL32",
 		"SDL2",
 		"DevIL",
-		"IL",
+		"ILU",
 		"ILUT"
 	}
 	
@@ -550,6 +552,7 @@ project "Editor"
 		"Renderer/src",
 		"Time/src",
 		"Scene/src",
+		"Texture/src",
 		
 		"Vendor/glew-2.1.0/include/",
 		"Vendor/SDL2-2.0.8/include/"
@@ -569,6 +572,7 @@ project "Editor"
 		"Renderer",
 		"Time",
 		"Scene",
+		"Texture",
 		
 		"glew32",
 		"OpenGL32",
@@ -598,4 +602,67 @@ project "Editor"
 		defines "BF_RELEASE"
 		optimize "On"		
 
+-- ===================================================================================
+-- ================================ PROJECT TEXTURE ==================================
+-- ===================================================================================
+project "Texture"
+	location "Texture"
+	kind "StaticLib"
+	language "C++"
+	
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+	debugdir "files/"
+	
+	files
+	{
+		"%{prj.name}/src/**.h",
+		"%{prj.name}/src/**.cpp",
+		
+		"%{prj.name}/Vendor/**/**.h",
+		"%{prj.name}/Vendor/**/**.cpp"
+	}
+	
+	includedirs
+	{
+		"Base/src",
+		"Core/src",
+		"Graphics/src"		
+	}
+	
+	libdirs
+	{
+	
+	}
+	
+	links
+	{
+		"Base",
+		"Core",
+		"Renderer",
+		"Graphics"
+	}
+	
+	filter "system:windows"
+		cppdialect "C++17"
+		staticruntime "On"
+		systemversion "latest"
+		
+		defines
+		{
+			"BF_PLATFORM_WINDOWS"
+		}
+		
+		
+	filter "configurations:Debug"
+		defines "BF_DEBUG"
+		symbols "On"
+		
+	filter "configurations:Development"
+		defines "BF_Development"
+		optimize "On"
+		
+	filter "configurations:Release"
+		defines "BF_RELEASE"
+		optimize "On"				
 group ""

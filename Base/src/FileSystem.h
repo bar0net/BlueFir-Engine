@@ -7,7 +7,7 @@ namespace bluefir::base
 	{
 	public:
 		static const char* ReadFile(const char* filename);
-		static void LoadFile(const char* filename, char* data, int& size);
+		static int ImportFile(const char* filename, char* data);
 
 	private:
 		FileSystem() = delete;

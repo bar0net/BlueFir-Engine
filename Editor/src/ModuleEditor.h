@@ -33,7 +33,8 @@ namespace bluefir::modules
 		virtual bool CleanUp() override;
 
 		// Accessors
-		void SetInspectContent(const editor::EditorPanel* panel) { inspector_content_ = panel; }
+		void SetInspectContent(const editor::EditorPanel* panel) 
+		{ inspector_content_ = panel; }
 
 		// Event Handling
 		void ProcessEvent(void* event) const;
@@ -44,13 +45,16 @@ namespace bluefir::modules
 
 	private:
 		std::vector<editor::EditorPanel*> panels_;
-		editor::EditorPanel* inspector_ = nullptr;
+
+		// Inspector content points towards the PanelScene 
+		// to enable the inspector to display the PanelScene's
+		// selected gameObject
 		const editor::EditorPanel* inspector_content_ = nullptr;
 
 		ImGuiIO* io = nullptr;
 
-		core::GameObject* go_editor_camera_;
-		core::Camera* editor_camera_;
+		core::GameObject* go_editor_camera_ = nullptr;
+		core::Camera* editor_camera_ = nullptr;
 
 		friend editor::PanelInspector;
 	};

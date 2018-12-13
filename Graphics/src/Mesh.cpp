@@ -16,6 +16,7 @@ bluefir::graphics::Mesh::Mesh(const std::vector<float>& vertices, const std::vec
 {
 	// TODO: Check the constructor is working properly
 	// TODO: Maybe build mesh in the constructor (?)
+	// TODO: Passing the layout by ref doesn't work. It gets destroid at the end of the caller's scope, dummy!
 }
 
 bluefir::graphics::Mesh::~Mesh()
@@ -37,6 +38,16 @@ bluefir::graphics::Mesh::~Mesh()
 		delete vao_;
 		vao_ = nullptr;
 	}
+
+	//TODO: ?????
+	/*if (layout_ != nullptr)
+	{
+		delete layout_;
+		layout_ = nullptr;
+	}*/
+
+	vertices_.clear();
+	indices_.clear();
 }
 
 void bluefir::graphics::Mesh::Build()

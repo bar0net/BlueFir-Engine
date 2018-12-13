@@ -33,9 +33,10 @@ const char* bluefir::base::FileSystem::ReadFile(const char* filename)
 	return data;
 }
 
-void bluefir::base::FileSystem::LoadFile(const char* filename, char* data, int& size)
+int bluefir::base::FileSystem::ImportFile(const char* filename, char* data)
 {
 	ASSERT(filename);
+	int size = 0;
 
 	LOGINFO("Read file: %s", filename);
 	if (data) delete data; data = nullptr;
@@ -54,4 +55,6 @@ void bluefir::base::FileSystem::LoadFile(const char* filename, char* data, int& 
 
 		fclose(file);
 	}
+
+	return size;
 }

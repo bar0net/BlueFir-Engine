@@ -112,6 +112,8 @@ bool bluefir::modules::ModuleEditor::CleanUp()
 	for (auto it = panels_.begin(); it != panels_.end(); ++it)
 		delete (*it);
 
+	delete go_editor_camera_; go_editor_camera_ = nullptr;
+
 	// Shut down Imgui
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplSDL2_Shutdown();

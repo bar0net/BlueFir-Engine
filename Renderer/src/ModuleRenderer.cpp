@@ -69,6 +69,11 @@ bool bluefir::modules::ModuleRenderer::CleanUp()
 		delete it->second;
 	meshes_.clear();
 
+	//delete cameras
+	for (auto it = cameras_.begin(); it != cameras_.end(); ++it)
+		delete *it;
+	cameras_.clear();
+
 	// Delete Viewport
 	graphics::Graphics::DestroyWindow(window_data_);
 	delete window_data_; window_data_ = nullptr;
@@ -208,19 +213,6 @@ void bluefir::modules::ModuleRenderer::RenderCamera(const core::Camera * cam)
 		else if (it->mesh_->type_ == graphics::MeshType::LINE)
 			bluefir::graphics::Graphics::DrawLines((unsigned int)it->mesh_->indices_.size());
 	}
-
-	/*
-	while (!draw_calls_.empty())
-	{
-		DrawCall dc = draw_calls_.front();
-		dc.shader_->Bind();
-		for (auto it = cameras_.begin(); it != cameras_.end(); ++it)
-		{
-			dc.shader_->SetUniform("view", view);
-			dc.shader_->SetUniform("proj", proj);
-		}
-		draw_calls_.pop();
-	}*/
 }
 
 
