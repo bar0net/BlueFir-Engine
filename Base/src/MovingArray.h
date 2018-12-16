@@ -20,7 +20,10 @@ namespace bluefir::base
 		MovingArray(MovingArray const&) = delete;
 		void operator=(MovingArray const&) = delete;
 
-		virtual ~MovingArray() { delete[] values_; values_ = nullptr; }
+		virtual ~MovingArray() 
+		{ 
+			delete[] values_; values_ = nullptr; 
+		}
 
 		T const& operator[](int x) const
 		{
@@ -28,9 +31,6 @@ namespace bluefir::base
 			while (i < 0) i += size_;
 			i = i % (int)size_;
 			return values_[i];
-
-			//if (x < idx_) return values_[idx_ - x - 1];
-			//else return values_[size_ + idx_ - x - 1];
 		}
 
 		void Push(T x)

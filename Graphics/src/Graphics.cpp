@@ -7,6 +7,7 @@
 #include "IL/ilut.h"
 
 #include "LogSystem.h"
+#include "BaseMacros.h"
 
 #include "Buffer/TextureBuffer.h"
 
@@ -50,6 +51,7 @@ void bluefir::graphics::Graphics::DestroyWindow(WindowData * data)
 	SDL_GL_DeleteContext(data->context);
 	SDL_DestroyWindow(data->window);
 	SDL_Quit();
+	delete data;
 }
 
 unsigned int bluefir::graphics::Graphics::GetWindowID(WindowData * data)
@@ -185,7 +187,10 @@ void bluefir::graphics::Graphics::ImportTexture(TextureBuffer* texture, const ch
 {
 	ASSERT(data);
 	ILenum type = IL_PNG; // TODO: Parse type
-	if (texture) delete texture; texture = nullptr;
+	if (texture) 
+	{ 
+		delete texture; texture = nullptr; 
+	}
 
 	unsigned int imageID = 0;
 	ilGenImages(1, &imageID);

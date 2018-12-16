@@ -41,7 +41,7 @@ void bluefir::editor::PanelRenderer::Draw()
 	if (ImGui::CollapsingHeader("Meshes"))
 	{
 		for (auto it = mr->meshes_.begin(); it != mr->meshes_.end(); ++it)
-			ImGui::Text("[%i] %i vertices & %i indices", it->first, it->second->vertices_.size()/3, it->second->indices_.size());
+			ImGui::Text("[%i] %i vertices & %i indices", it->first, it->second->vertices_->size()/3, it->second->indices_->size());
 	}
 
 	ImGui::End();

@@ -39,7 +39,10 @@ int bluefir::base::FileSystem::ImportFile(const char* filename, char* data)
 	int size = 0;
 
 	LOGINFO("Read file: %s", filename);
-	if (data) delete data; data = nullptr;
+	if (data) 
+	{ 
+		delete[] data; data = nullptr; 
+	}
 	FILE* file = nullptr;
 	fopen_s(&file, filename, "rb");
 
@@ -57,4 +60,12 @@ int bluefir::base::FileSystem::ImportFile(const char* filename, char* data)
 	}
 
 	return size;
+}
+
+void bluefir::base::FileSystem::ReleaseFile(const char * data)
+{
+	if (data) 
+	{ 
+		delete[] data; data = nullptr; 
+	}
 }

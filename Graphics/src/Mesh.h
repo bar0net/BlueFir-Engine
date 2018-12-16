@@ -15,16 +15,16 @@ namespace bluefir::graphics
 	class Mesh
 	{
 	public:
-		Mesh(const std::vector<float>& vertices, const std::vector<unsigned int>& indices, const BufferLayout& layout);
-		Mesh(const std::vector<float>& vertices, const std::vector<unsigned int>& indices, const BufferLayout& layout, MeshType type);
+		Mesh(const std::vector<float>* vertices, const std::vector<unsigned int>* indices, const BufferLayout* layout);
+		Mesh(const std::vector<float>* vertices, const std::vector<unsigned int>* indices, const BufferLayout* layout, MeshType type);
 		virtual ~Mesh();
 		void Build();
 		void Bind() const;
 		void UnBind() const;
 
 	public:
-		std::vector<float> vertices_;
-		std::vector<unsigned int> indices_;
+		const std::vector<float>* vertices_;
+		const std::vector<unsigned int>* indices_;
 		const BufferLayout* layout_;
 		MeshType type_ = MeshType::TRIANGLE;
 

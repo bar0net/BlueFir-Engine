@@ -37,4 +37,5 @@ void bluefir::editor::PanelTime::Draw()
 void bluefir::editor::PanelTime::CleanUp()
 {
 	delete deltas_; deltas_ = nullptr;
+	delete average_array_; average_array_ = nullptr;
 }

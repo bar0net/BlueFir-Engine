@@ -36,6 +36,7 @@ int bluefir::modules::ModuleTexture::LoadTexture(const char * filename)
 	}
 
 	textures_[texture->ID()] = texture;
+	base::FileSystem::ReleaseFile(data);
 
 	return texture->ID();
 }

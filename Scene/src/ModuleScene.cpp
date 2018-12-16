@@ -9,19 +9,18 @@
 
 bluefir::modules::ModuleScene::ModuleScene()
 {
-	root_ = &scene::scene_root;
+	//root_ = new core::GameObject();
+	scene::scene_root = new bluefir::core::GameObject();
+	root_ = scene::scene_root;
 }
 
-bluefir::modules::ModuleScene::~ModuleScene() { }
+bluefir::modules::ModuleScene::~ModuleScene() { delete scene::scene_root; }
 
 bool bluefir::modules::ModuleScene::Init()
 {
-	/*int cam = CreateEmptyGameObject();
-	gameObjects_[cam]->name = "Cam";
-	gameObjects_[cam]->AddComponent<core::Camera>();
-	gameObjects_[cam]->transform->SetPosition(0, 0.0F, 10.0F);
-	gameObjects_[cam]->transform->SetRotation(0, 0.0F, 0);*/
+	int shader_id = ModuleRenderer::getInstance().CreateShader("triangle.vs", "default.fs");
 
+	/*
 	int cube = CreateEmptyGameObject();
 	gameObjects_[cube]->name = "Quad";
 	gameObjects_[cube]->transform->SetPosition(0.0F, 0.0F, 0.0F);
@@ -30,8 +29,8 @@ bool bluefir::modules::ModuleScene::Init()
 	core::MeshRenderer* mr = gameObjects_[cube]->AddComponent<core::MeshRenderer>();
 	int mesh_id = ModuleRenderer::getInstance().CreateMesh(graphics::ModelList::Cube);
 	mr->SetMesh(mesh_id);
-	int shader_id = ModuleRenderer::getInstance().CreateShader("triangle.vs", "default.fs");
 	mr->SetMaterial(shader_id);
+	
 
 	int tri = CreateEmptyGameObject();
 	gameObjects_[tri]->name = "Triangle";
@@ -43,6 +42,7 @@ bool bluefir::modules::ModuleScene::Init()
 	int mesht_id = ModuleRenderer::getInstance().CreateMesh(graphics::ModelList::Triangle);
 	mr_t->SetMesh(mesht_id);
 	mr_t->SetMaterial(shader_id);
+	*/
 
 	int grid = CreateEmptyGameObject();
 	gameObjects_[grid]->name = "Grid";
@@ -61,9 +61,9 @@ bool bluefir::modules::ModuleScene::Init()
 
 bluefir::modules::UpdateState bluefir::modules::ModuleScene::Update()
 {
-	static float a = 0.0F;
-	a += 0.5F;
-	gameObjects_[1]->transform->SetRotation(0, 0, a);
+	//static float a = 0.0F;
+	//a += 0.5F;
+	//gameObjects_[1]->transform->SetRotation(0, 0, a);
 
 	for (auto it = gameObjects_.begin(); it != gameObjects_.end(); ++it)
 		it->second->PreUpdate();
@@ -82,6 +82,7 @@ bool bluefir::modules::ModuleScene::CleanUp()
 	for (auto it = gameObjects_.begin(); it != gameObjects_.end(); ++it)
 		delete it->second;
 	gameObjects_.clear();
+	//if (root_ != nullptr) delete root_;
 
 	return true;
 }

@@ -1,5 +1,7 @@
 #include "Shader.h"
 
+#include "BaseMacros.h"
+
 #include <vector>
 #include "GL/glew.h"
 

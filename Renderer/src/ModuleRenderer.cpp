@@ -76,7 +76,7 @@ bool bluefir::modules::ModuleRenderer::CleanUp()
 
 	// Delete Viewport
 	graphics::Graphics::DestroyWindow(window_data_);
-	delete window_data_; window_data_ = nullptr;
+	//delete window_data_; window_data_ = nullptr;
 
 	return true;
 }
@@ -111,8 +111,10 @@ int bluefir::modules::ModuleRenderer::CreateShader(const char * vShader, const c
 
 	bluefir::graphics::Shader* shader = new bluefir::graphics::Shader(vContent, fContent);
 
-	delete vContent; vContent = nullptr;
-	delete fContent; fContent = nullptr;
+	//delete vContent; vContent = nullptr;
+	//delete fContent; fContent = nullptr;
+	base::FileSystem::ReleaseFile(vContent);
+	base::FileSystem::ReleaseFile(fContent);
 
 	if (!shader->valid)
 	{
@@ -128,9 +130,9 @@ int bluefir::modules::ModuleRenderer::CreateShader(const char * vShader, const c
 	return (shader_counter_ - 1);
 }
 
-int bluefir::modules::ModuleRenderer::CreateMesh(const std::vector<float>& vertices, const std::vector<unsigned int>& indices, const graphics::BufferLayout & layout)
+int bluefir::modules::ModuleRenderer::CreateMesh(const std::vector<float>& vertices, const std::vector<unsigned int>& indices, const graphics::BufferLayout*  layout)
 {
-	meshes_[mesh_counter_] = new graphics::Mesh(vertices, indices, layout);
+	meshes_[mesh_counter_] = new graphics::Mesh(&vertices, &indices, layout);
 	meshes_[mesh_counter_]->Build();
 	++mesh_counter_;
 
@@ -193,6 +195,8 @@ void bluefir::modules::ModuleRenderer::RemoveCamera(const core::Camera * camera)
 
 void bluefir::modules::ModuleRenderer::RenderCamera(const core::Camera * cam)
 {
+	if (draw_calls_.size() == 0) return;
+
 	// Remember: Proj and View must be sent as COLUMN Major!
 	float proj[16]; cam->FrustumMatrixT(proj);
 	float view[16]; cam->gameObject_->transform->ModelMatrixIT(view);
@@ -208,10 +212,10 @@ void bluefir::modules::ModuleRenderer::RenderCamera(const core::Camera * cam)
 		it->shader_->SetUniform("model", it->model_);
 
 		if (it->mesh_->type_ == graphics::MeshType::TRIANGLE)
-			bluefir::graphics::Graphics::Draw((unsigned int)it->mesh_->indices_.size());
+			bluefir::graphics::Graphics::Draw((unsigned int)it->mesh_->indices_->size());
 
 		else if (it->mesh_->type_ == graphics::MeshType::LINE)
-			bluefir::graphics::Graphics::DrawLines((unsigned int)it->mesh_->indices_.size());
+			bluefir::graphics::Graphics::DrawLines((unsigned int)it->mesh_->indices_->size());
 	}
 }
 

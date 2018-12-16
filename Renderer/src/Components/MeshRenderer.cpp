@@ -17,6 +17,8 @@ bluefir::core::MeshRenderer::~MeshRenderer()
 
 void bluefir::core::MeshRenderer::Update()
 {
+	if (mesh_ID_ < 0) return;
+
 	float model[16];
 	gameObject_->transform->ModelMatrix(model);
 	modules::ModuleRenderer::getInstance().Draw(model, mesh_ID_, shader_ID_);

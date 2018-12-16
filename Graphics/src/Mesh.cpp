@@ -1,18 +1,22 @@
 #include "Mesh.h"
 
+#include "BaseMacros.h"
+
 #include "Buffer/VertexBuffer.h"
 #include "Buffer/VertexArray.h"
 #include "Buffer/IndexBuffer.h"
 #include "BufferLayout.h"
 
+#include "LogSystem.h"
 
-bluefir::graphics::Mesh::Mesh(const std::vector<float>& vertices, const std::vector<unsigned int>& indices, const BufferLayout & layout)
-	: vertices_(vertices), indices_(indices), layout_(&layout), type_(MeshType::TRIANGLE)
+
+bluefir::graphics::Mesh::Mesh(const std::vector<float>* vertices, const std::vector<unsigned int>* indices, const BufferLayout* layout)
+	: vertices_(vertices), indices_(indices), layout_(layout), type_(MeshType::TRIANGLE)
 {
 }
 
-bluefir::graphics::Mesh::Mesh(const std::vector<float>& vertices, const std::vector<unsigned int>& indices, const BufferLayout & layout, MeshType type)
-	: vertices_(vertices), indices_(indices), layout_(&layout), type_(type)
+bluefir::graphics::Mesh::Mesh(const std::vector<float>* vertices, const std::vector<unsigned int>* indices, const BufferLayout* layout, MeshType type)
+	: vertices_(vertices), indices_(indices), layout_(layout), type_(type)
 {
 	// TODO: Check the constructor is working properly
 	// TODO: Maybe build mesh in the constructor (?)
@@ -39,22 +43,32 @@ bluefir::graphics::Mesh::~Mesh()
 		vao_ = nullptr;
 	}
 
-	//TODO: ?????
-	/*if (layout_ != nullptr)
+	if (layout_ != nullptr)
 	{
 		delete layout_;
 		layout_ = nullptr;
-	}*/
+	}
 
-	vertices_.clear();
-	indices_.clear();
+	if (vertices_)
+	{
+		//vertices_->clear();
+		delete vertices_;
+		vertices_ = nullptr;
+	}
+
+	if (indices_)
+	{
+		//indices_->clear();
+		delete indices_;
+		indices_ = nullptr;
+	}
 }
 
 void bluefir::graphics::Mesh::Build()
 {
-	vbo_ = new VertexBuffer(&vertices_);
+	vbo_ = new VertexBuffer(vertices_);
 	vao_ = new VertexArray(*vbo_, *layout_);
-	ibo_ = new IndexBuffer(&indices_);
+	ibo_ = new IndexBuffer(indices_);
 }
 
 void bluefir::graphics::Mesh::Bind() const

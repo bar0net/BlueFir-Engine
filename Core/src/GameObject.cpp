@@ -68,7 +68,7 @@ void bluefir::core::GameObject::SetParent(GameObject * parent)
 	if (parent_) parent_->RemoveChild(this);
 
 	if(parent) parent_ = parent;
-	else parent_ = &modules::scene::scene_root;
+	else parent_ = modules::scene::scene_root;
 
 	if (parent_) parent_->AddChild(this);
 

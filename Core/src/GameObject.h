@@ -65,7 +65,7 @@ namespace bluefir::core
 namespace bluefir::modules::scene
 {
 	// TODO: Improve this (?)
-	static bluefir::core::GameObject scene_root;
+	static bluefir::core::GameObject* scene_root;
 }
 
 template <class T>

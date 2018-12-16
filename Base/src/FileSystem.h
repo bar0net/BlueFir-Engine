@@ -8,6 +8,7 @@ namespace bluefir::base
 	public:
 		static const char* ReadFile(const char* filename);
 		static int ImportFile(const char* filename, char* data);
+		static void ReleaseFile(const char* data);
 
 	private:
 		FileSystem() = delete;

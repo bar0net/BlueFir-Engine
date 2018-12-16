@@ -27,7 +27,7 @@ namespace bluefir::modules
 	private:
 		std::unordered_map<int, const graphics::TextureBuffer* > textures_;
 
-		friend 
+		//friend 
 	};
 
 }

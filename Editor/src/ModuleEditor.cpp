@@ -108,6 +108,10 @@ bluefir::modules::UpdateState bluefir::modules::ModuleEditor::PostUpdate()
 bool bluefir::modules::ModuleEditor::CleanUp()
 {
 	LOGINFO("Closing Editor.");
+	// CleanUp all registered panels
+	for (auto it = panels_.begin(); it != panels_.end(); ++it)
+		(*it)->CleanUp();
+
 	// Delete all registered panels
 	for (auto it = panels_.begin(); it != panels_.end(); ++it)
 		delete (*it);

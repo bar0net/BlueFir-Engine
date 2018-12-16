@@ -59,7 +59,7 @@ namespace bluefir::modules
 		// Specific Methods
 		void Draw(const float* model_matrix, int mesh_id, int shader_id);
 		int CreateShader(const char* vShader, const char* fShader);
-		int CreateMesh(const std::vector<float>& vertices, const std::vector<unsigned int>& indices, const graphics::BufferLayout& layout);
+		int CreateMesh(const std::vector<float>& vertices, const std::vector<unsigned int>& indices, const graphics::BufferLayout* layout);
 		int CreateMesh(graphics::ModelList model);
 
 		// Event

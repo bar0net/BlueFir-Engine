@@ -1,5 +1,7 @@
 #include "Material.h"
 
+#include "BaseMacros.h"
+
 bluefir::graphics::Material::Material(Shader * shader) : shader_(shader)
 {
 }
