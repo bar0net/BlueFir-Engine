@@ -183,13 +183,13 @@ void bluefir::graphics::Graphics::DrawLines(unsigned int count)
 	GLCall(glDrawElements(GL_LINES, count, GL_UNSIGNED_INT, 0));
 }
 
-void bluefir::graphics::Graphics::ImportTexture(TextureBuffer* texture, const char* data, unsigned int size, const char* format)
+void bluefir::graphics::Graphics::ImportTexture(TextureBuffer** texture, const char* data, unsigned int size, const char* format)
 {
 	ASSERT(data);
 	ILenum type = IL_PNG; // TODO: Parse type
-	if (texture) 
+	if (*texture) 
 	{ 
-		delete texture; texture = nullptr; 
+		delete *texture; *texture = nullptr; 
 	}
 
 	unsigned int imageID = 0;
@@ -214,7 +214,7 @@ void bluefir::graphics::Graphics::ImportTexture(TextureBuffer* texture, const ch
 			ILubyte* content = ilGetData();
 			int width = ilGetInteger(IL_IMAGE_WIDTH);
 			int height = ilGetInteger(IL_IMAGE_HEIGHT);
-			texture = new TextureBuffer(width, height, ilGetInteger(IL_IMAGE_FORMAT), ilGetInteger(IL_IMAGE_FORMAT), (char*)content);
+			*texture = new TextureBuffer(width, height, ilGetInteger(IL_IMAGE_FORMAT), ilGetInteger(IL_IMAGE_FORMAT), (char*)content);
 			LOGINFO("Image imported successfully.");
 		}
 		else

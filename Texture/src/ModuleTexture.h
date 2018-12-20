@@ -3,10 +3,16 @@
 
 #include "Module.h"
 #include <unordered_map>
+#include <string>
 
 namespace bluefir::graphics
 {
 	class TextureBuffer;
+}
+
+namespace bluefir::editor
+{
+	class PanelTexture;
 }
 
 namespace bluefir::modules
@@ -17,6 +23,7 @@ namespace bluefir::modules
 		static ModuleTexture& getInstance() { static ModuleTexture instance_; return instance_; }
 
 		// Flow
+		virtual bool Init() override;
 		virtual bool CleanUp() override;
 
 		// Texture Management
@@ -26,8 +33,9 @@ namespace bluefir::modules
 
 	private:
 		std::unordered_map<int, const graphics::TextureBuffer* > textures_;
+		std::unordered_map<std::string, int> texture_names_;
 
-		//friend 
+		friend bluefir::editor::PanelTexture;
 	};
 
 }

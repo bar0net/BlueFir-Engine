@@ -48,7 +48,7 @@ namespace bluefir::graphics
 		static void Draw(unsigned int count);
 		static void DrawLines(unsigned int count);
 
-		static void ImportTexture(TextureBuffer* texture, const char* data, unsigned int size, const char* format);
+		static void ImportTexture(TextureBuffer** texture, const char* data, unsigned int size, const char* format);
 
 	private:
 		Graphics() = delete;

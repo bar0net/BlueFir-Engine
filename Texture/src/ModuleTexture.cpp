@@ -4,6 +4,14 @@
 #include "Graphics.h"
 #include "Buffer/TextureBuffer.h"
 
+
+
+bool bluefir::modules::ModuleTexture::Init()
+{
+	int i = LoadTexture("checkers.png");
+	return true;
+}
+
 bool bluefir::modules::ModuleTexture::CleanUp()
 {
 	for (auto it = textures_.begin(); it != textures_.end(); ++it)
@@ -16,9 +24,15 @@ bool bluefir::modules::ModuleTexture::CleanUp()
 int bluefir::modules::ModuleTexture::LoadTexture(const char * filename)
 {
 	ASSERT(filename);
+	if (texture_names_.find(filename) != texture_names_.end())
+	{
+		LOGINFO("Texture %s is already loaded.", filename);
+		return texture_names_[filename];
+	}
+
 	LOGINFO("Loading Texture %s", filename);
 	char* data = nullptr;
-	int size = base::FileSystem::ImportFile(filename, data);
+	int size = base::FileSystem::ImportFile(filename, &data);
 	if (size == 0)
 	{
 		LOGERROR("Could not import file: %s", filename);
@@ -26,8 +40,9 @@ int bluefir::modules::ModuleTexture::LoadTexture(const char * filename)
 	}
 
 	graphics::TextureBuffer* texture = nullptr;
+
 	// TODO: dynamically check texture format
-	graphics::Graphics::ImportTexture(texture, data, size, "png");
+	graphics::Graphics::ImportTexture(&texture, data, size, "png");
 
 	if (!texture)
 	{
@@ -36,7 +51,8 @@ int bluefir::modules::ModuleTexture::LoadTexture(const char * filename)
 	}
 
 	textures_[texture->ID()] = texture;
-	base::FileSystem::ReleaseFile(data);
+	texture_names_[std::string(filename)] = texture->ID();
+	base::FileSystem::ReleaseFile(&data);
 
 	return texture->ID();
 }

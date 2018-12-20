@@ -33,15 +33,15 @@ const char* bluefir::base::FileSystem::ReadFile(const char* filename)
 	return data;
 }
 
-int bluefir::base::FileSystem::ImportFile(const char* filename, char* data)
+int bluefir::base::FileSystem::ImportFile(const char* filename, char** data)
 {
 	ASSERT(filename);
 	int size = 0;
 
 	LOGINFO("Read file: %s", filename);
-	if (data) 
+	if (*data) 
 	{ 
-		delete[] data; data = nullptr; 
+		delete[] *data; *data = nullptr; 
 	}
 	FILE* file = nullptr;
 	fopen_s(&file, filename, "rb");
@@ -51,10 +51,10 @@ int bluefir::base::FileSystem::ImportFile(const char* filename, char* data)
 		fseek(file, 0, SEEK_END);
 		size = ftell(file);
 		rewind(file);
-		data = new char[size + 1];
+		*data = new char[size + 1];
 
-		fread(data, 1, size, file);
-		data[size] = 0;
+		fread(*data, 1, size, file);
+		(*data)[size] = 0;
 
 		fclose(file);
 	}
@@ -62,10 +62,18 @@ int bluefir::base::FileSystem::ImportFile(const char* filename, char* data)
 	return size;
 }
 
-void bluefir::base::FileSystem::ReleaseFile(const char * data)
+void bluefir::base::FileSystem::ReleaseFile(char ** data)
 {
-	if (data) 
+	if (*data) 
 	{ 
-		delete[] data; data = nullptr; 
+		delete[] *data; *data = nullptr; 
+	}
+}
+
+void bluefir::base::FileSystem::ReleaseFile(const char ** data)
+{
+	if (*data)
+	{
+		delete[] * data; *data = nullptr;
 	}
 }

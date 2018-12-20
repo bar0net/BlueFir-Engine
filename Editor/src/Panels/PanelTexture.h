@@ -15,12 +15,12 @@ namespace bluefir::editor
 	{
 	public:
 		PanelTexture() : EditorPanel("Module Textures") {}
-		virtual ~PanelScene() {}
+		virtual ~PanelTexture() {}
 
-		virtual void Init() override;
+		virtual void Init() override {}
 		virtual void Draw() override;
-		virtual void CleanUp() override;
-		virtual void Inspect() const override;
+		virtual void CleanUp() override {}
+		virtual void Inspect() const override {}
 	};
 }
 #endif // !BF_EDITORPANELS_TEXTURE

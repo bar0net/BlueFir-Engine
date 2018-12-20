@@ -57,6 +57,7 @@ bluefir::modules::UpdateState bluefir::modules::ModuleRenderer::Swap()
 
 bool bluefir::modules::ModuleRenderer::CleanUp()
 {
+
 	LOGINFO("Closing renderer.");
 	// Delete Shaders
 	for (auto it = shader_ids_.begin(); it != shader_ids_.end(); ++it)
@@ -113,8 +114,8 @@ int bluefir::modules::ModuleRenderer::CreateShader(const char * vShader, const c
 
 	//delete vContent; vContent = nullptr;
 	//delete fContent; fContent = nullptr;
-	base::FileSystem::ReleaseFile(vContent);
-	base::FileSystem::ReleaseFile(fContent);
+	base::FileSystem::ReleaseFile(&vContent);
+	base::FileSystem::ReleaseFile(&fContent);
 
 	if (!shader->valid)
 	{
