@@ -7,6 +7,11 @@
 
 #include "../ModuleRenderer.h"
 
+#include "Graphics.h"
+#include "Buffer/FrameBuffer.h"
+#include "Buffer/RenderBuffer.h"
+#include "Buffer/TextureBuffer.h"
+
 bluefir::core::Camera::Camera(const GameObject* gameObject) : Component(gameObject, ComponentType::CAMERA)
 {
 	frustum_ = new Frustum();
@@ -23,12 +28,45 @@ bluefir::core::Camera::Camera(const GameObject* gameObject) : Component(gameObje
 	frustum_->type = math::FrustumType::PerspectiveFrustum;
 
 	modules::ModuleRenderer::getInstance().AddCamera(this);
+	
+	int width  = modules::ModuleRenderer::getInstance().GetWindowWidth();
+	int height = modules::ModuleRenderer::getInstance().GetWindowHeight();
+
+	fbo_ = new graphics::FrameBuffer();
+	rbo_ = new graphics::RenderBuffer();
+	texture_ = new graphics::TextureBuffer(width, height);
+	rbo_->SetStorage(width, height, BF_DEPTH_COMPONENT);
+	fbo_->SetRenderBuffer(rbo_->ID(), BF_DEPTH_ATTACHMENT);
+	fbo_->SetTexture(texture_->ID(), 0, BF_COLOR_ATTACHMENT0);
+
+	if (!main_camera) main_camera = this;
 }
 
 bluefir::core::Camera::~Camera()
 {
 	modules::ModuleRenderer::getInstance().RemoveCamera(this);
-	delete frustum_; frustum_ = nullptr;
+	
+	if (main_camera == this) main_camera = nullptr;
+
+	if (frustum_)
+	{
+		delete frustum_; frustum_ = nullptr;
+	}
+
+	if (fbo_)
+	{
+		delete fbo_; fbo_ = nullptr;
+	}
+
+	if (rbo_)
+	{
+		delete rbo_; rbo_ = nullptr;
+	}
+
+	if (texture_) 
+	{
+		delete texture_; texture_ = nullptr;
+	}
 }
 
 void bluefir::core::Camera::SetNearPlaneDistance(float value)
@@ -72,4 +110,32 @@ void bluefir::core::Camera::FrustumMatrixT(float * matrix) const
 {
 	float4x4 m = frustum_->ProjectionMatrix().Transposed();
 	memcpy(matrix, m.ptr(), 16 * sizeof(float));
+}
+
+void bluefir::core::Camera::Bind() const
+{
+	if (fbo_) fbo_->Bind();
+	else graphics::FrameBuffer::ForceUnBind();
+}
+
+void bluefir::core::Camera::UnBind() const
+{
+	fbo_->UnBind();
+}
+
+void bluefir::core::Camera::ForceUnBind()
+{
+	graphics::FrameBuffer::ForceUnBind();
+}
+
+void bluefir::core::Camera::ToEditorConfiguration()
+{
+	//render_contents_ = false;
+	if (main_camera == this) main_camera = nullptr;
+}
+
+int bluefir::core::Camera::RenderTextureID()
+{
+	if (texture_) return texture_->ID();
+	else return BF_INVALID_TEXTURE_ID;
 }

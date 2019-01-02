@@ -17,6 +17,7 @@ namespace bluefir::graphics
 
 		void Bind() const override;
 		void UnBind() const override;
+		static void ForceUnBind();
 
 		void SetRenderBuffer(unsigned int renderID, unsigned int type) const;
 		void SetTexture(unsigned int textureID, unsigned int slot, unsigned int type) const;

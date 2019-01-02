@@ -8,6 +8,7 @@ namespace bluefir::editor
 {
 	class EditorPanel;
 	class PanelInspector;
+	class PanelEditorView;
 }
 
 namespace bluefir::core
@@ -57,6 +58,7 @@ namespace bluefir::modules
 		core::Camera* editor_camera_ = nullptr;
 
 		friend editor::PanelInspector;
+		friend editor::PanelEditorView;
 	};
 }
 #endif // !BF_MODULES_EDITOR

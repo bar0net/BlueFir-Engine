@@ -11,6 +11,10 @@
 	#define GLCall(x)	x
 #endif
 
+#define BF_DEPTH_COMPONENT 0x1902
+#define BF_DEPTH_ATTACHMENT 0x8D00
+#define BF_COLOR_ATTACHMENT0 0x8CE0
+
 struct SDL_Window;
 struct SDL_Surface;
 

@@ -3,6 +3,8 @@
 
 #include "Component.h"
 
+#define BF_INVALID_TEXTURE_ID -1
+
 namespace math
 {
 	class Frustum;
@@ -11,6 +13,13 @@ namespace math
 namespace bluefir::core
 {
 	class GameObject;
+}
+
+namespace bluefir::graphics
+{
+	class FrameBuffer;
+	class TextureBuffer;
+	class RenderBuffer;
 }
 
 namespace bluefir::core
@@ -36,12 +45,26 @@ namespace bluefir::core
 		//Frustum Matrix (Column Major) as an array of float[16]
 		void FrustumMatrixT(float* matrix) const;
 
+		void Bind() const;
+		void UnBind() const;
+		static void ForceUnBind();
+		
+		void ToEditorConfiguration();
+		int RenderTextureID();
+
+	public:
+		bool render_contents_ = true;
+
 	private:
 		math::Frustum* frustum_ = nullptr;
 
+		graphics::FrameBuffer* fbo_ = nullptr;
+		graphics::RenderBuffer* rbo_ = nullptr;
+		graphics::TextureBuffer* texture_ = nullptr;
 
 		friend editor::ComponentSection;
 	};
+	static Camera* main_camera = nullptr;
 }
 #endif // !BF_CORE_COMPONENT_CAMERA
 

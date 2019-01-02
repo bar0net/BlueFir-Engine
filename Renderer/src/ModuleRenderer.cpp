@@ -112,8 +112,6 @@ int bluefir::modules::ModuleRenderer::CreateShader(const char * vShader, const c
 
 	bluefir::graphics::Shader* shader = new bluefir::graphics::Shader(vContent, fContent);
 
-	//delete vContent; vContent = nullptr;
-	//delete fContent; fContent = nullptr;
 	base::FileSystem::ReleaseFile(&vContent);
 	base::FileSystem::ReleaseFile(&fContent);
 
@@ -196,7 +194,10 @@ void bluefir::modules::ModuleRenderer::RemoveCamera(const core::Camera * camera)
 
 void bluefir::modules::ModuleRenderer::RenderCamera(const core::Camera * cam)
 {
-	if (draw_calls_.size() == 0) return;
+	if (draw_calls_.size() == 0 || cam->render_contents_ == false) return;
+
+	cam->Bind();
+
 
 	// Remember: Proj and View must be sent as COLUMN Major!
 	float proj[16]; cam->FrustumMatrixT(proj);

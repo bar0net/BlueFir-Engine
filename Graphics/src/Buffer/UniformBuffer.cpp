@@ -15,7 +15,11 @@ bluefir::graphics::UniformBuffer::UniformBuffer(unsigned int buffer_size) : buff
 
 bluefir::graphics::UniformBuffer::~UniformBuffer()
 {
-	UnBind();
+	if (active_ubo != buffer_id_) return;
+
+	GLCall(glBindBuffer(GL_UNIFORM_BUFFER, 0));
+	active_ubo = 0;
+
 	GLCall(glDeleteBuffers(1, &buffer_id_));
 }
 

@@ -17,6 +17,7 @@
 #include "Panels/PanelInspector.h"
 #include "Panels/PanelConsole.h"
 #include "Panels/PanelTexture.h"
+#include "Panels/PanelEditorView.h"
 
 #define GLSL_VERSION "#version 130"
 
@@ -42,6 +43,7 @@ bool bluefir::modules::ModuleEditor::Init()
 	go_editor_camera_ = new core::GameObject();
 	go_editor_camera_->name = "Editor Cam";
 	editor_camera_ = go_editor_camera_->AddComponent<core::Camera>();
+	editor_camera_->ToEditorConfiguration();
 	go_editor_camera_->transform->SetPosition(0, 1.0F, 10.0F);
 	go_editor_camera_->transform->SetRotation(0, 0.0F, 0);
 
@@ -52,6 +54,7 @@ bool bluefir::modules::ModuleEditor::Init()
 	panels_.push_back(new editor::PanelInspector());
 	panels_.push_back(new editor::PanelConsole());
 	panels_.push_back(new editor::PanelTexture());
+	panels_.push_back(new editor::PanelEditorView());
 
 	// Init all panels
 	for (auto it = panels_.begin(); it != panels_.end(); ++it)
@@ -71,7 +74,14 @@ bluefir::modules::UpdateState bluefir::modules::ModuleEditor::Update()
 {
 	go_editor_camera_->Update();
 
-	// ModuleRenderer::getInstance().Render();
+	//ModuleRenderer::getInstance().Render();
+
+	//modules::ModuleRenderer::getInstance().RenderCamera(editor_camera_);
+	//editor_camera_->UnBind();
+
+	modules::ModuleRenderer::getInstance().RenderCamera(editor_camera_);
+	editor_camera_->UnBind();
+
 	// Activate Editor Frame Buffer
 	// Clear Viewport
 
@@ -92,9 +102,10 @@ bluefir::modules::UpdateState bluefir::modules::ModuleEditor::Update()
 bluefir::modules::UpdateState bluefir::modules::ModuleEditor::PostUpdate()
 {
 	go_editor_camera_->PostUpdate();
-	modules::ModuleRenderer::getInstance().RenderCamera(editor_camera_);
+	//modules::ModuleRenderer::getInstance().RenderCamera(editor_camera_);
 
 	// Render Imgui editor
+	graphics::Graphics::ClearViewport();
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 

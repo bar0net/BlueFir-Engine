@@ -8,6 +8,7 @@
 namespace bluefir::core
 {
 	class GameObject;
+	class Camera;
 }
 
 namespace bluefir::editor

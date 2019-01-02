@@ -40,6 +40,14 @@ void bluefir::graphics::FrameBuffer::UnBind() const
 	active_fbo = 0;
 }
 
+void bluefir::graphics::FrameBuffer::ForceUnBind()
+{
+	if (active_fbo == 0) return;
+
+	GLCall(glBindFramebuffer(GL_FRAMEBUFFER, 0));
+	active_fbo = 0;
+}
+
 void bluefir::graphics::FrameBuffer::SetRenderBuffer(unsigned int renderID, unsigned int type) const
 {
 	Bind();
