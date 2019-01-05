@@ -10,6 +10,8 @@
 
 #include "StandardModels.h"
 
+#define bluefir_renderer bluefir::modules::ModuleRenderer::getInstance()
+
 // TODO:
 // Need game object with transform to complete the draw pipeline
 // Need Material class that parses uniforms to complete the draw pipeline
@@ -69,6 +71,7 @@ namespace bluefir::modules
 		inline const graphics::WindowData* GetWindowData() const { return window_data_; }
 		inline int GetWindowWidth() const { return width_; }
 		inline int GetWindowHeight() const { return height_; }
+		inline float GetAspectRatio() const { return (float)width_ / (float)height_; }
 		inline float* GetClearColor() const { return (float*)clear_color_; }
 		inline void SetClearColor(float r, float g, float b, float a) { clear_color_[0] = r; clear_color_[1] = g; clear_color_[2] = b; clear_color_[3] = a;	UpdateClearColor(); }
 		void UpdateClearColor();

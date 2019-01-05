@@ -3,20 +3,14 @@
 #include "SDL.h"
 
 #include "ModuleRenderer.h"
-#include "moduleEditor.h"
+#include "ModuleEditor.h"
+#include "Input.h"
 
 bluefir::modules::ModuleInput::ModuleInput() {}
 bluefir::modules::ModuleInput::~ModuleInput() {}
 
 bool bluefir::modules::ModuleInput::Init()
 {
-	LOGINFO("Initializing Input System.");
-	keyboard_ = new KeyState[KEY_COUNT];
-	mouse_ = new KeyState[MOUSE_KEY_COUNT];
-
-	memset(keyboard_, 0, KEY_COUNT * sizeof(KeyState));
-	memset(mouse_, 0, MOUSE_KEY_COUNT * sizeof(KeyCode));
-
 	SDL_Init(0);
 	if (SDL_InitSubSystem(SDL_INIT_EVENTS) < 0)
 	{
@@ -39,9 +33,6 @@ bluefir::modules::UpdateState bluefir::modules::ModuleInput::PreUpdate()
 bool bluefir::modules::ModuleInput::CleanUp()
 {
 	LOGINFO("Closing input system.");
-	delete[] keyboard_;
-	delete[] mouse_;
-
 	SDL_QuitSubSystem(SDL_INIT_EVENTS);
 
 	return true;
@@ -50,38 +41,18 @@ bool bluefir::modules::ModuleInput::CleanUp()
 void bluefir::modules::ModuleInput::UpdateKeyboardState()
 {
 	const Uint8* keys = SDL_GetKeyboardState(nullptr);
-	for (unsigned int i = 0U; i < KEY_COUNT; ++i)
-	{		
-		if (keys[i] == 1)
-		{
-			if  (keyboard_[i] == KeyState::IDLE) keyboard_[i] = KeyState::DOWN;
-			else keyboard_[i] = KeyState::REPEAT;
-		}
-		else
-		{
-			if (keyboard_[i] == KeyState::REPEAT || keyboard_[i] == KeyState::DOWN)
-				keyboard_[i] = KeyState::UP;
-			else
-				keyboard_[i] = KeyState::IDLE;
-		}	
-	}
+	for (unsigned int i = 0U; i < KEY_COUNT; ++i) 
+		bluefir_input.SetKeyState(i, keys[i] == 1);
 }
 
 void bluefir::modules::ModuleInput::UpdateMouseState()
 {
-	for (unsigned int i = 0U; i < MOUSE_KEY_COUNT; ++i)
-	{
-		if (mouse_[i] == KeyState::DOWN)	mouse_[i] = KeyState::REPEAT;
-		else if (mouse_[i] == KeyState::UP)		mouse_[i] = KeyState::IDLE;
-	}
+	bluefir_input.UpdateMouseState();
 
 	int x = 0;
 	int y = 0;
 	SDL_GetMouseState(&x, &y);
-	mouse_deltax_ = mouse_sensitivity * (float)(mouse_x_ - x);
-	mouse_deltay_ = mouse_sensitivity * (float)(mouse_y_ - y);
-	mouse_x_ = x;
-	mouse_y_ = y;
+	bluefir_input.SetMousePosition(x, y);
 }
 
 bluefir::modules::UpdateState bluefir::modules::ModuleInput::ParseEvents()
@@ -98,19 +69,19 @@ bluefir::modules::UpdateState bluefir::modules::ModuleInput::ParseEvents()
 			break;
 
 		case SDL_MOUSEBUTTONDOWN:
-			if (event.button.button == SDL_BUTTON_LEFT)			mouse_[(int)MouseButton::MOUSE_LEFT] = KeyState::DOWN;
-			else if (event.button.button == SDL_BUTTON_RIGHT)	mouse_[(int)MouseButton::MOUSE_RIGHT] = KeyState::DOWN;
-			else if (event.button.button == SDL_BUTTON_MIDDLE)	mouse_[(int)MouseButton::MOUSE_MIDDLE] = KeyState::DOWN;
+			if (event.button.button == SDL_BUTTON_LEFT)			bluefir_input.SetMouseButtonState(core::MouseButton::MOUSE_LEFT,true);
+			else if (event.button.button == SDL_BUTTON_RIGHT)	bluefir_input.SetMouseButtonState(core::MouseButton::MOUSE_RIGHT, true);
+			else if (event.button.button == SDL_BUTTON_MIDDLE)	bluefir_input.SetMouseButtonState(core::MouseButton::MOUSE_MIDDLE, true);
 			break;
 
 		case SDL_MOUSEBUTTONUP:
-			if (event.button.button == SDL_BUTTON_LEFT)			mouse_[(int)MouseButton::MOUSE_LEFT] = KeyState::UP;
-			else if (event.button.button == SDL_BUTTON_RIGHT)	mouse_[(int)MouseButton::MOUSE_RIGHT] = KeyState::UP;
-			else if (event.button.button == SDL_BUTTON_MIDDLE)	mouse_[(int)MouseButton::MOUSE_MIDDLE] = KeyState::UP;
+			if (event.button.button == SDL_BUTTON_LEFT)			bluefir_input.SetMouseButtonState(core::MouseButton::MOUSE_LEFT, false);
+			else if (event.button.button == SDL_BUTTON_RIGHT)	bluefir_input.SetMouseButtonState(core::MouseButton::MOUSE_RIGHT, false);
+			else if (event.button.button == SDL_BUTTON_MIDDLE)	bluefir_input.SetMouseButtonState(core::MouseButton::MOUSE_MIDDLE, false);
 			break;
 
 		case SDL_MOUSEWHEEL:
-			mouse_wheel_ = event.wheel.y;
+			core::Input::getInstance().SetMouseWheel(event.wheel.y);
 			break;
 
 		case SDL_WINDOWEVENT:

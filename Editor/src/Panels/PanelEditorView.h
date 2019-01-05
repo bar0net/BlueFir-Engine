@@ -16,6 +16,9 @@ namespace bluefir::editor
 		virtual void Init() override;
 		virtual void Draw() override;
 		virtual void CleanUp() override;
+
+	private:
+		void CameraControl();
 	};
 }
 #endif // !BF_EDITORPANELS_SCENEVIEW
