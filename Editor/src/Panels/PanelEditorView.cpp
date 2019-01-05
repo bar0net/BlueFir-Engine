@@ -3,7 +3,9 @@
 #include "../../Vendor/imgui-docking/imgui.h"
 
 #include "../ModuleEditor.h"
+
 #include "Input.h"
+#include "ModuleTime.h"
 
 #include "GameObject.h"
 #include "Components/Camera.h"
@@ -11,6 +13,9 @@
 
 // TODO: Change editor cam FOV on window resize, display scene on whole window (?)
 #include "ModuleRenderer.h"
+
+#define BF_VIEW_SPEED 2
+#define BF_VIEW_ANGULAR 45
 
 void bluefir::editor::PanelEditorView::Init()
 {
@@ -55,7 +60,37 @@ void bluefir::editor::PanelEditorView::CleanUp()
 void bluefir::editor::PanelEditorView::CameraControl()
 {
 	core::Transform* t = modules::ModuleEditor::getInstance().go_editor_camera_->transform;
+	float mov_speed = BF_VIEW_SPEED * bluefir_time.RealDeltaTime();
+	float rot_speed = BF_VIEW_ANGULAR * bluefir_time.RealDeltaTime();
+	
+	if (bluefir_input.GetKey(core::KeyCode::LSHIFT)) { mov_speed *= 2; rot_speed *= 2; }
+
+	// Linear Movement
+	if (bluefir_input.GetKey(core::KeyCode::A)) t->LocalTranslate( mov_speed, 0, 0);
+	if (bluefir_input.GetKey(core::KeyCode::D)) t->LocalTranslate(-mov_speed, 0, 0);
+
+	if (bluefir_input.GetKey(core::KeyCode::W)) t->LocalTranslate(0,  mov_speed, 0);
+	if (bluefir_input.GetKey(core::KeyCode::S)) t->LocalTranslate(0, -mov_speed, 0);
+
+	if (bluefir_input.GetKey(core::KeyCode::Q)) t->LocalTranslate(0, 0,  mov_speed);
+	if (bluefir_input.GetKey(core::KeyCode::E)) t->LocalTranslate(0, 0, -mov_speed);
+
+	// Rotation
+	if (bluefir_input.GetKey(core::KeyCode::J)) t->Rotate(0, -rot_speed, 0);
+	if (bluefir_input.GetKey(core::KeyCode::L)) t->Rotate(0,  rot_speed, 0);
+
+	if (bluefir_input.GetKey(core::KeyCode::I)) t->Rotate( rot_speed, 0, 0);
+	if (bluefir_input.GetKey(core::KeyCode::K)) t->Rotate(-rot_speed, 0, 0);
+
+	if (bluefir_input.GetKey(core::KeyCode::U)) t->Rotate(0, 0, -rot_speed);
+	if (bluefir_input.GetKey(core::KeyCode::O)) t->Rotate(0, 0,  rot_speed);
+
 
 	// TODO
-	if (bluefir_input.GetMouseWheel() != 0) LOGINFO("mouse wheel");
+	if (bluefir_input.GetMouseWheel() != 0)
+	{
+		LOGDEBUG("PRE:  %f,%f,%f", t->GetPosition()[0], t->GetPosition()[1], t->GetPosition()[2]);
+		t->LocalTranslate(0, 0, (float)bluefir_input.GetMouseWheel() * bluefir_time.RealDeltaTime());
+		LOGDEBUG("POST: %f,%f,%f", t->GetPosition()[0], t->GetPosition()[1], t->GetPosition()[2]);
+	}
 }

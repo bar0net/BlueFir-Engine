@@ -44,7 +44,7 @@ namespace bluefir::core
 
 		// Setters
 		void SetMouseButtonState(MouseButton b, bool is_down) { mouse_[(int)b] = (is_down ? KeyState::DOWN : KeyState::UP); }
-		void UpdateMouseState() { for (int i = 0; i < MOUSE_KEY_COUNT; ++i) mouse_[i] = (mouse_[i] == KeyState::DOWN) ? KeyState::REPEAT : KeyState::IDLE; }
+		void UpdateMouseState() { for (int i = 0; i < MOUSE_KEY_COUNT; ++i) mouse_[i] = (mouse_[i] == KeyState::DOWN) ? KeyState::REPEAT : KeyState::IDLE; mouse_wheel_ = 0; }
 		// TODO: Does it have any sense applying mouse sensitivity to delta x?
 		void SetMousePosition(int x, int y) { mouse_deltax_ = mouse_sensitivity * (float)(x - mouse_x_); mouse_sensitivity * (float)(mouse_deltay_ = y - mouse_y_); mouse_x_ = x; mouse_y_ = y; }
 		void SetMouseWheel(int value) { mouse_wheel_ = value; }
@@ -84,9 +84,9 @@ namespace bluefir::core
 		KeyState* mouse_ = nullptr;
 		int mouse_x_ = 0;
 		int mouse_y_ = 0;
+		int mouse_wheel_ = 0;
 		float mouse_deltax_ = 0.0F;
 		float mouse_deltay_ = 0.0F;
-		int mouse_wheel_ = 0;
 	};
 }
 

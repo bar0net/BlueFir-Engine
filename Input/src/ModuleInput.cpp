@@ -25,8 +25,8 @@ bool bluefir::modules::ModuleInput::Init()
 bluefir::modules::UpdateState bluefir::modules::ModuleInput::PreUpdate()
 {
 	UpdateKeyboardState();
-	UpdateState ret = ParseEvents();
 	UpdateMouseState();
+	UpdateState ret = ParseEvents();
 	return ret;
 }
 

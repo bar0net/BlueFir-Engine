@@ -113,6 +113,26 @@ void bluefir::core::Transform::ToLocalCoordinates()
 	scale_->Set(scale.x, scale.y, scale.z);
 }
 
+void bluefir::core::Transform::Translate(float x, float y, float z)
+{
+	position_->x += x;
+	position_->y += y;
+	position_->z += z;
+}
+
+void bluefir::core::Transform::LocalTranslate(float x, float y, float z)
+{
+	float3 move = x * model_matrix_->WorldX() + y * model_matrix_->WorldY() + z * model_matrix_->WorldZ();
+	position_->x += move.x;
+	position_->y += move.y;
+	position_->z += move.z;
+}
+
+void bluefir::core::Transform::Rotate(float x, float y, float z)
+{
+	*rotation_ = *rotation_ * Quat::RotateZ(z / RAD2DEG) * Quat::RotateY(y / RAD2DEG) * Quat::RotateX(x / RAD2DEG);
+}
+
 float * bluefir::core::Transform::GetPositionRaw() const
 {
 	return position_->ptr();

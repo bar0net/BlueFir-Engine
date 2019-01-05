@@ -52,6 +52,15 @@ namespace bluefir::core
 		// Converts geospacial info to local coordinates
 		void ToLocalCoordinates();
 
+		// Moves Following Global Coordinates
+		void Translate(float x, float y, float z);
+
+		// Moves Following Local Coordinates
+		void LocalTranslate(float x, float y, float z);
+
+		// Rotates using local axis
+		void Rotate(float x, float y, float z);
+
 	private:
 		float* GetPositionRaw() const;
 		void GetRotationRaw(float* vector3) const;

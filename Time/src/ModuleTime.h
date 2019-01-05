@@ -4,6 +4,8 @@
 #include "Module.h"
 #include "Chrono.h"
 
+#define bluefir_time bluefir::modules::ModuleTime::getInstance()
+
 namespace bluefir::modules
 {
 	class ModuleTime : public Module 
