@@ -8,7 +8,7 @@ namespace bluefir
 	namespace modules
 	{
 		class Module;
-		class ModuleInput;
+		class ModuleEvents;
 		class ModuleRenderer;
 		class ModuleTime;
 		class ModuleScene;
@@ -27,7 +27,7 @@ namespace bluefir
 		bool End();
 
 	public:
-		modules::ModuleInput* input = nullptr;
+		modules::ModuleEvents* input = nullptr;
 		modules::ModuleRenderer* renderer = nullptr;
 		modules::ModuleTime* time = nullptr;
 		modules::ModuleScene* scene = nullptr;

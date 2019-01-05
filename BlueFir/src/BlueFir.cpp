@@ -1,7 +1,7 @@
 #include "BlueFir.h"
 
 #include "Module.h"
-#include "ModuleInput.h"
+#include "ModuleEvents.h"
 #include "ModuleRenderer.h"
 #include "ModuleTime.h"
 #include "ModuleScene.h"
@@ -11,7 +11,7 @@
 bluefir::BlueFir::BlueFir()
 {
 	modules_.push_back(renderer = &modules::ModuleRenderer::getInstance());
-	modules_.push_back(input = &modules::ModuleInput::getInstance());
+	modules_.push_back(input = &modules::ModuleEvents::getInstance());
 	modules_.push_back(time = &modules::ModuleTime::getInstance());
 	modules_.push_back(scene = &modules::ModuleScene::getInstance());
 	modules_.push_back(editor = &modules::ModuleEditor::getInstance());
