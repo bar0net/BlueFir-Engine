@@ -8,6 +8,8 @@
 
 void bluefir::editor::PanelTexture::Draw()
 {
+	if (!enabled_) return;
+
 	ImGui::Begin(name_.c_str(), &enabled_);
 
 	for (auto it = BF_TEXTURES.texture_names_.begin(); it != BF_TEXTURES.texture_names_.end(); ++it)

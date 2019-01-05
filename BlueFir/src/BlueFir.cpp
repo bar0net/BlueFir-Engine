@@ -22,10 +22,6 @@ bluefir::BlueFir::BlueFir()
 bluefir::BlueFir::~BlueFir()
 {
 	modules_.clear();
-	/*delete input;		input = nullptr;
-	delete renderer;	renderer = nullptr;
-	delete time;		time = nullptr;
-	delete scene;		scene = nullptr;*/
 }
 
 bool bluefir::BlueFir::Start()

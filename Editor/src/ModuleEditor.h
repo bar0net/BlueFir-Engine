@@ -42,6 +42,7 @@ namespace bluefir::modules
 
 	private:
 		bool MainMenu();
+		void CreateDockingSpace();
 
 
 	private:

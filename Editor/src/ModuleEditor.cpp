@@ -75,15 +75,11 @@ bluefir::modules::UpdateState bluefir::modules::ModuleEditor::Update()
 	go_editor_camera_->Update();
 
 	//ModuleRenderer::getInstance().Render();
-
 	//modules::ModuleRenderer::getInstance().RenderCamera(editor_camera_);
 	//editor_camera_->UnBind();
 
 	modules::ModuleRenderer::getInstance().RenderCamera(editor_camera_);
 	editor_camera_->UnBind();
-
-	// Activate Editor Frame Buffer
-	// Clear Viewport
 
 	// Create new imgui editor frame
 	ImGui_ImplOpenGL3_NewFrame();
@@ -92,6 +88,8 @@ bluefir::modules::UpdateState bluefir::modules::ModuleEditor::Update()
 
 	// Draw UI
 	if (!MainMenu()) return UpdateState::Update_End;
+	CreateDockingSpace();
+
 	for (auto it = panels_.begin(); it != panels_.end(); ++it)
 		(*it)->Draw();
 
@@ -164,4 +162,29 @@ bool bluefir::modules::ModuleEditor::MainMenu()
 
 	ImGui::EndMainMenuBar();
 	return true;
+}
+
+void bluefir::modules::ModuleEditor::CreateDockingSpace()
+{
+	ImGuiViewport* viewport = ImGui::GetMainViewport();
+	ImGui::SetNextWindowPos(ImVec2(viewport->Pos.x, viewport->Pos.y));
+	ImGui::SetNextWindowSize(ImVec2(viewport->Size.x, viewport->Size.y));
+	ImGui::SetNextWindowViewport(viewport->ID);
+	ImGui::SetNextWindowBgAlpha(0.0F);
+	bool p_open = true;
+
+	ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+	window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+	window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0F);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0F);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0F, 0.0F));
+	ImGui::Begin("DockSpace Demo", &p_open, window_flags);
+	ImGui::PopStyleVar(3);
+
+	ImGuiID dockspace_id = ImGui::GetID("MyDockspace");
+	ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_PassthruDockspace;
+	ImGui::DockSpace(dockspace_id, ImVec2(0.0F, 0.0F), dockspace_flags);
+	ImGui::End();
 }
