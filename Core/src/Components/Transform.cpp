@@ -130,7 +130,7 @@ void bluefir::core::Transform::LocalTranslate(float x, float y, float z)
 
 void bluefir::core::Transform::Rotate(float x, float y, float z)
 {
-	*rotation_ = *rotation_ * Quat::RotateZ(z / RAD2DEG) * Quat::RotateY(y / RAD2DEG) * Quat::RotateX(x / RAD2DEG);
+	*rotation_ = *rotation_ * Quat::RotateZ(z / RAD2DEG) * Quat::RotateY(y / RAD2DEG) * Quat::RotateX(x / RAD2DEG); 
 }
 
 float * bluefir::core::Transform::GetPositionRaw() const

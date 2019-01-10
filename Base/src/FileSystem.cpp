@@ -77,3 +77,24 @@ void bluefir::base::FileSystem::ReleaseFile(const char ** data)
 		delete[] * data; *data = nullptr;
 	}
 }
+
+std::vector<bluefir::base::File> bluefir::base::FileSystem::ReadDirectory(const char* path)
+{
+	ASSERT(path);
+	std::vector<bluefir::base::File> directory;
+
+	// base::File
+	for (const auto &entry : std::filesystem::directory_iterator(path))
+	{
+		/*
+		directory.emplace_back(
+			entry.path().string().substr(std::strlen(path) + 1),
+			entry.path().string(),
+			entry.last_write_time(),
+			entry.file_size()
+		);
+		*/
+	}
+
+	return directory;
+}

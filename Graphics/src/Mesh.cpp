@@ -51,14 +51,12 @@ bluefir::graphics::Mesh::~Mesh()
 
 	if (vertices_)
 	{
-		//vertices_->clear();
 		delete vertices_;
 		vertices_ = nullptr;
 	}
 
 	if (indices_)
 	{
-		//indices_->clear();
 		delete indices_;
 		indices_ = nullptr;
 	}

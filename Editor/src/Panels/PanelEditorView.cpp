@@ -86,11 +86,25 @@ void bluefir::editor::PanelEditorView::CameraControl()
 	if (bluefir_input.GetKey(core::KeyCode::O)) t->Rotate(0, 0,  rot_speed);
 
 
-	// TODO
+	// TODO: Find a solution to avoid moving the window (when undocked) while moving the camera
+
+	if (bluefir_input.GetMouseButton(core::MouseButton::MOUSE_MIDDLE))
+	{
+		float x, y;
+		bluefir_input.GetMouseDisplacement(x, y);
+		t->LocalTranslate(x, -y, 0);
+	}
+
+	if (bluefir_input.GetMouseButton(core::MouseButton::MOUSE_RIGHT) && !bluefir_input.GetMouseButton(core::MouseButton::MOUSE_LEFT))
+	{
+		float x, y;
+		bluefir_input.GetMouseDisplacement(x, y);
+		t->Rotate(y, x, 0);
+	}
+
+
 	if (bluefir_input.GetMouseWheel() != 0)
 	{
-		LOGDEBUG("PRE:  %f,%f,%f", t->GetPosition()[0], t->GetPosition()[1], t->GetPosition()[2]);
 		t->LocalTranslate(0, 0, (float)bluefir_input.GetMouseWheel() * bluefir_time.RealDeltaTime());
-		LOGDEBUG("POST: %f,%f,%f", t->GetPosition()[0], t->GetPosition()[1], t->GetPosition()[2]);
 	}
 }

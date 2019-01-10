@@ -18,6 +18,7 @@ namespace bluefir::graphics
 		Mesh(const std::vector<float>* vertices, const std::vector<unsigned int>* indices, const BufferLayout* layout);
 		Mesh(const std::vector<float>* vertices, const std::vector<unsigned int>* indices, const BufferLayout* layout, MeshType type);
 		virtual ~Mesh();
+
 		void Build();
 		void Bind() const;
 		void UnBind() const;

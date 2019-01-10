@@ -41,7 +41,7 @@ project "BlueFir"
 		"Scene/src",
 		"Time/src",
 		"Editor/src",
-		"Texture/src"
+		"Resources/src"
 	}
 	
 	links
@@ -54,7 +54,7 @@ project "BlueFir"
 		"Scene",
 		"Time",
 		"Editor",
-		"Texture"
+		"Resources"
 	}
 	
 	filter "system:windows"
@@ -552,7 +552,7 @@ project "Editor"
 		"Renderer/src",
 		"Time/src",
 		"Scene/src",
-		"Texture/src",
+		"Resources/src",
 		
 		"Vendor/glew-2.1.0/include/",
 		"Vendor/SDL2-2.0.8/include/"
@@ -572,7 +572,7 @@ project "Editor"
 		"Renderer",
 		"Time",
 		"Scene",
-		"Texture",
+		"Resources",
 		
 		"glew32",
 		"OpenGL32",
@@ -603,10 +603,10 @@ project "Editor"
 		optimize "On"		
 
 -- ===================================================================================
--- ================================ PROJECT TEXTURE ==================================
+-- ================================ PROJECT RESOURCES ==================================
 -- ===================================================================================
-project "Texture"
-	location "Texture"
+project "Resources"
+	location "Resources"
 	kind "StaticLib"
 	language "C++"
 	
@@ -627,11 +627,13 @@ project "Texture"
 	{
 		"Base/src",
 		"Core/src",
-		"Graphics/src"		
+		"Graphics/src",
+		"Vendor/Assimp/include"
 	}
 	
 	libdirs
 	{
+		"Vendor/Assimp/lib/x64"
 	
 	}
 	
