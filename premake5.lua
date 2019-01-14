@@ -357,7 +357,8 @@ project "Scene"
 	{
 		"Base/src",
 		"Core/src",
-		"Renderer/src"
+		"Renderer/src",
+		"Resources/src"
 	}
 	
 	libdirs
@@ -369,7 +370,8 @@ project "Scene"
 	{
 		"Base",
 		"Core",
-		"Renderer"
+		"Renderer",
+		"Resources"
 	}
 	
 	filter "system:windows"
@@ -634,7 +636,6 @@ project "Resources"
 	libdirs
 	{
 		"Vendor/Assimp/lib/x64"
-	
 	}
 	
 	links
@@ -642,7 +643,8 @@ project "Resources"
 		"Base",
 		"Core",
 		"Renderer",
-		"Graphics"
+		"Graphics",
+		"assimp-vc140-mt"
 	}
 	
 	filter "system:windows"

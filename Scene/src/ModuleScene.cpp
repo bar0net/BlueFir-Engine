@@ -6,6 +6,9 @@
 #include "ModuleRenderer.h"
 #include "Components/MeshRenderer.h"
 
+#include "FileSystem.h"
+#include "ModelLoader.h"
+
 
 bluefir::modules::ModuleScene::ModuleScene()
 {
@@ -19,6 +22,10 @@ bluefir::modules::ModuleScene::~ModuleScene() { delete scene::scene_root; }
 bool bluefir::modules::ModuleScene::Init()
 {
 	int shader_id = ModuleRenderer::getInstance().CreateShader("triangle.vs", "default.fs");
+
+	char* data;
+	int size = base::FileSystem::ImportAsset("Models/BakerHouse.fbx", &data);
+	core::ModelLoader::Load(data, size);
 
 	/*
 	int cube = CreateEmptyGameObject();

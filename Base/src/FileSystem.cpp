@@ -33,16 +33,22 @@ const char* bluefir::base::FileSystem::ReadFile(const char* filename)
 	return data;
 }
 
+int bluefir::base::FileSystem::ImportAsset(const char * filename, char** data)
+{
+	std::string s = BF_FILESYSTEM_ASSETSDIR + std::string("/") + filename;
+	return ImportFile(s.c_str(), data);
+}
+
 int bluefir::base::FileSystem::ImportFile(const char* filename, char** data)
 {
 	ASSERT(filename);
 	int size = 0;
 
 	LOGINFO("Read file: %s", filename);
-	if (*data) 
+	/*if (*data != nullptr) 
 	{ 
 		delete[] *data; *data = nullptr; 
-	}
+	}*/
 	FILE* file = nullptr;
 	fopen_s(&file, filename, "rb");
 
