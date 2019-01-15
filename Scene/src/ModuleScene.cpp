@@ -23,9 +23,6 @@ bool bluefir::modules::ModuleScene::Init()
 {
 	int shader_id = ModuleRenderer::getInstance().CreateShader("triangle.vs", "default.fs");
 
-	char* data;
-	int size = base::FileSystem::ImportAsset("Models/BakerHouse.fbx", &data);
-	core::ModelLoader::Load(data, size);
 
 	/*
 	int cube = CreateEmptyGameObject();

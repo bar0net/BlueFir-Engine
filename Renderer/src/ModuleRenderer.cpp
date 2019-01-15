@@ -2,9 +2,10 @@
 
 #include "FileSystem.h"
 
+#include "Graphics.h"
 #include "Shader.h"
 #include "Mesh.h"
-#include "Graphics.h"
+#include "Material.h"
 
 #include "Components/Camera.h"
 #include "Components/Transform.h"
@@ -27,6 +28,7 @@ bool bluefir::modules::ModuleRenderer::Init()
 	LOGINFO("Window created successfully.");
 	
 	graphics::Graphics::CreateViewport(width_, height_, clear_color_, depth_);
+
 
 	return true;
 }

@@ -4,11 +4,19 @@
 #include "Graphics.h"
 #include "Buffer/TextureBuffer.h"
 
-
+#include "Mesh.h"
+#include "Material.h"
+#include "ModelLoader.h"
 
 bool bluefir::modules::ModuleTexture::Init()
 {
 	int i = LoadTexture("checkers.png");
+
+	char* data;
+	int size = base::FileSystem::ImportAsset("Models/BakerHouse.fbx", &data);
+	std::vector<graphics::Mesh*> meshes;
+	std::vector<graphics::Material*> materials;
+	core::ModelLoader::Load(data, size, meshes, materials);
 
 	return true;
 }

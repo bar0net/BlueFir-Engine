@@ -25,7 +25,8 @@ namespace bluefir::graphics
 	{
 		NONE = 0,
 		INT,
-		FLOAT
+		FLOAT,
+		TEXTURE
 	};
 
 
