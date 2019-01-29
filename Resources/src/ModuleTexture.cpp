@@ -12,12 +12,6 @@ bool bluefir::modules::ModuleTexture::Init()
 {
 	int i = LoadTexture("checkers.png");
 
-	char* data;
-	int size = base::FileSystem::ImportAsset("Models/BakerHouse.fbx", &data);
-	std::vector<graphics::Mesh*> meshes;
-	std::vector<graphics::Material*> materials;
-	core::ModelLoader::Load(data, size, meshes, materials);
-
 	return true;
 }
 

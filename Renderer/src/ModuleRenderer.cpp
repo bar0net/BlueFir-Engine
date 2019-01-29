@@ -148,6 +148,14 @@ int bluefir::modules::ModuleRenderer::CreateMesh(graphics::ModelList model)
 	return mesh_counter_ - 1;
 }
 
+int bluefir::modules::ModuleRenderer::CreateMesh(graphics::Mesh * mesh)
+{
+	meshes_[mesh_counter_] = mesh;
+	++mesh_counter_;
+
+	return mesh_counter_ - 1;
+}
+
 void bluefir::modules::ModuleRenderer::ResizeEvent(unsigned int ID)
 {
 	ASSERT(window_data_);

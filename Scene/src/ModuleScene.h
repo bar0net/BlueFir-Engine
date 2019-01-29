@@ -30,6 +30,8 @@ namespace bluefir::modules
 		virtual bool CleanUp() override;
 
 		int CreateEmptyGameObject(core::GameObject* parent = nullptr);
+		
+		bool ImportModel(const char* filename);
 
 	public:
 		core::GameObject* root_ = nullptr;

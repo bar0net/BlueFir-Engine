@@ -63,6 +63,7 @@ namespace bluefir::modules
 		int CreateShader(const char* vShader, const char* fShader);
 		int CreateMesh(const std::vector<float>& vertices, const std::vector<unsigned int>& indices, const graphics::BufferLayout* layout);
 		int CreateMesh(graphics::ModelList model);
+		int CreateMesh(graphics::Mesh* mesh);
 
 		// Event
 		void ResizeEvent(unsigned int ID);

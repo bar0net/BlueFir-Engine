@@ -3,8 +3,10 @@
 #include "GameObject.h"
 #include "Components/Camera.h"
 #include "Components/Transform.h"
-#include "ModuleRenderer.h"
 #include "Components/MeshRenderer.h"
+
+#include "ModuleRenderer.h"
+#include "ModelLoader.h"
 
 #include "FileSystem.h"
 #include "ModelLoader.h"
@@ -23,7 +25,7 @@ bool bluefir::modules::ModuleScene::Init()
 {
 	int shader_id = ModuleRenderer::getInstance().CreateShader("triangle.vs", "default.fs");
 
-
+	ImportModel("Models/BakerHouse.fbx");
 	/*
 	int cube = CreateEmptyGameObject();
 	gameObjects_[cube]->name = "Quad";
@@ -100,4 +102,32 @@ int bluefir::modules::ModuleScene::CreateEmptyGameObject(core::GameObject* paren
 	++gameObject_counter_;
 
 	return gameObject_counter_ - 1;
+}
+
+bool bluefir::modules::ModuleScene::ImportModel(const char * filename)
+{
+
+	char* data = nullptr;
+	int size = base::FileSystem::ImportAsset(filename, &data);
+
+	std::vector<int> meshes;
+	std::vector<int> materials;
+	core::ModelLoader::Load(data, size, meshes, materials);
+
+	int parent = CreateEmptyGameObject();
+	gameObjects_[parent]->name = "GameObject";
+	
+	for (int mesh : meshes)
+	{
+		int game_object = CreateEmptyGameObject();
+		gameObjects_[game_object]->name = std::string("Mesh_") + std::to_string(mesh);
+		gameObjects_[game_object]->SetParent(gameObjects_[parent]);
+
+		core::MeshRenderer* mr = gameObjects_[game_object]->AddComponent<core::MeshRenderer>();
+		mr->SetMesh(mesh);
+		mr->SetMaterial(0);
+	}
+
+	delete data; data = nullptr;
+	return false;
 }

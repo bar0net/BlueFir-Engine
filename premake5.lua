@@ -412,10 +412,7 @@ project "Input"
 	files
 	{
 		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp",
-		
-		"%{prj.name}/Vendor/**/**.h",
-		"%{prj.name}/Vendor/**/**.cpp"
+		"%{prj.name}/src/**.cpp"
 	}
 	
 	includedirs
@@ -479,10 +476,7 @@ project "Time"
 	files
 	{
 		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp",
-		
-		"%{prj.name}/Vendor/**/**.h",
-		"%{prj.name}/Vendor/**/**.cpp"
+		"%{prj.name}/src/**.cpp"
 	}
 	
 	includedirs
@@ -630,12 +624,13 @@ project "Resources"
 		"Base/src",
 		"Core/src",
 		"Graphics/src",
-		"Vendor/Assimp/include"
+		"Renderer/src",
+		"Resources/Vendor/Assimp/include"
 	}
 	
 	libdirs
 	{
-		"Vendor/Assimp/lib/x64"
+		"Resources/Vendor/Assimp/lib/x64"
 	}
 	
 	links

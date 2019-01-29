@@ -5,6 +5,8 @@
 #include <unordered_map>
 #include <string>
 
+#define bluefir_textures bluefir::modules::ModuleTexture::getInstance()
+
 namespace bluefir::graphics
 {
 	class TextureBuffer;
