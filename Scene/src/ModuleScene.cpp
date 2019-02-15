@@ -11,6 +11,7 @@
 #include "FileSystem.h"
 #include "ModelLoader.h"
 
+#include "ModuleResources.h"
 
 bluefir::modules::ModuleScene::ModuleScene()
 {
@@ -61,6 +62,8 @@ bool bluefir::modules::ModuleScene::Init()
 	int meshg_id = ModuleRenderer::getInstance().CreateMesh(graphics::ModelList::Grid);
 	mr_g->SetMesh(meshg_id);
 	mr_g->SetMaterial(shader_id);
+
+	bluefir_resources.ImportFile("checkers.png", true);
 
 	return true;
 }

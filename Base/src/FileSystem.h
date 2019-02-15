@@ -42,11 +42,23 @@ namespace bluefir::base
 		static const char* ReadFile(const char* filename);
 		static int ImportFile(const char* filename, char** data);
 		static int ImportAsset(const char* filename, char** data);
+		static bool ExportFile(const char* filename, const char* data, unsigned int size);
+
 		static void ReleaseFile(char** data);
 		static void ReleaseFile(const char** data);
 
+		static const char* GetFileExtension(const char* path);
+
 		static std::vector<File> ReadDirectory(const char* path);
-		static bool ExistsDir(const char* path) { return std::filesystem::directory_entry(path).exists(); }
+		static inline bool ExistsDir(const char* path) 
+		{ 
+			return std::filesystem::exists(path);
+			//std::filesystem::directory_entry dir(std::filesystem::path(path));
+			//return dir.exists();
+
+			//return std::filesystem::directory_entry(path).exists(); 
+		}
+
 		static bool CreateDir(const char* path) { return std::filesystem::create_directory(path); }
 	private:
 		FileSystem() = delete;

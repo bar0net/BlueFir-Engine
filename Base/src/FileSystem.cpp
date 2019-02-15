@@ -39,16 +39,36 @@ int bluefir::base::FileSystem::ImportAsset(const char * filename, char** data)
 	return ImportFile(s.c_str(), data);
 }
 
+bool bluefir::base::FileSystem::ExportFile(const char * filename, const char * data, unsigned int size)
+{
+	ASSERT(filename && data);
+
+	LOGINFO("Exporting file: %s", filename);
+	FILE* file = nullptr;
+	fopen_s(&file, filename, "wb");
+
+	if (file)
+	{
+		std::fwrite(data, sizeof(char), size, file);
+		fclose(file);
+		return true;
+	}
+	else
+	{
+		LOGERROR("Could not export file: %s", filename);
+		fclose(file);
+		return false;
+	}
+	
+	return false;
+}
+
 int bluefir::base::FileSystem::ImportFile(const char* filename, char** data)
 {
 	ASSERT(filename);
 	int size = 0;
 
 	LOGINFO("Read file: %s", filename);
-	/*if (*data != nullptr) 
-	{ 
-		delete[] *data; *data = nullptr; 
-	}*/
 	FILE* file = nullptr;
 	fopen_s(&file, filename, "rb");
 
@@ -82,6 +102,24 @@ void bluefir::base::FileSystem::ReleaseFile(const char ** data)
 	{
 		delete[] * data; *data = nullptr;
 	}
+}
+
+const char * bluefir::base::FileSystem::GetFileExtension(const char * path)
+{
+	ASSERT(path);
+
+	const char* last_dot = nullptr;
+	while (++path != NULL && last_dot == nullptr) 
+	{
+		char x = *path;
+
+		if ( x == '.')
+		{
+			last_dot = path + 1;
+		}
+	}
+
+	return last_dot;
 }
 
 std::vector<bluefir::base::File> bluefir::base::FileSystem::ReadDirectory(const char* path)

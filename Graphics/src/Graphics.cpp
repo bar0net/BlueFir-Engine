@@ -205,15 +205,16 @@ void bluefir::graphics::Graphics::ImportTexture(TextureBuffer** texture, const c
 		iluGetImageInfo(&ImageInfo);
 		if (ImageInfo.Origin == IL_ORIGIN_UPPER_LEFT) iluFlipImage();
 
-		int channels = ilGetInteger(IL_IMAGE_CHANNELS);
-		if (channels == 3) success = ilConvertImage(IL_RGB,  IL_UNSIGNED_BYTE);
-		else if (channels == 4) success = ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
+		ILint image_format = ilGetInteger(IL_IMAGE_FORMAT);
+		success = ilConvertImage(image_format,  IL_UNSIGNED_BYTE);
 
 		if (success) 
 		{
 			ILubyte* content = ilGetData();
 			int width = ilGetInteger(IL_IMAGE_WIDTH);
 			int height = ilGetInteger(IL_IMAGE_HEIGHT);
+			int depth = ilGetInteger(IL_IMAGE_DEPTH);
+
 			*texture = new TextureBuffer(width, height, ilGetInteger(IL_IMAGE_FORMAT), ilGetInteger(IL_IMAGE_FORMAT), (char*)content);
 			LOGINFO("Image imported successfully.");
 		}
@@ -230,4 +231,56 @@ void bluefir::graphics::Graphics::ImportTexture(TextureBuffer** texture, const c
 		ASSERT(false);
 	}
 	ilBindImage(0);
+}
+
+unsigned int bluefir::graphics::Graphics::ConvertTexture(const char * input_data, unsigned int input_size, char ** output_data)
+{
+	ASSERT(input_data);
+	ILenum type = IL_PNG;
+
+	unsigned int imageID = 0;
+	ilGenImages(1, &imageID);
+	ilBindImage(imageID);
+
+	ILboolean success = IL_TRUE;
+	ILenum error;
+
+	if (ilLoadL(type, input_data, input_size))
+	{
+		ILinfo ImageInfo;
+		iluGetImageInfo(&ImageInfo);
+		if (ImageInfo.Origin == IL_ORIGIN_UPPER_LEFT) iluFlipImage();
+
+		ILubyte* data = ilGetData();
+
+		// Set Compression
+		ilSetInteger(IL_DXTC_FORMAT, IL_DXT5); 
+		
+		// Get size
+		ILuint size = ilSaveL(IL_DDS, NULL, 0);
+
+		*output_data = new char[size];
+		if (ilSaveL(IL_DDS, *output_data, size) > 0)
+		{
+			ilDeleteImages(1, &imageID);
+			ilBindImage(0);
+			return size;
+		}
+		else
+		{
+			ilDeleteImages(1, &imageID);
+			ilBindImage(0);
+			error = ilGetError();
+			LOGERROR("Could not convert file to DDS. %s", iluErrorString(error));
+			return 0U;
+		}
+
+	}
+	else
+	{
+		ilBindImage(0);
+		error = ilGetError();
+		LOGERROR("Could not read the image data. (IL reports error %i: %s)", (int)error, iluErrorString(error));
+		return 0U;
+	}
 }
