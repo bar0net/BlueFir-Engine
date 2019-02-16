@@ -30,8 +30,8 @@ namespace bluefir::resources
 		inline bool IsLoadedToMemory() const { return keep_in_memory_ || loaded_ > 0U; }
 		inline unsigned int CountReferences() const { return loaded_; }
 
-		virtual void Save(Config* config) const {};
-		virtual void Load(const Config* config) {};
+		virtual void Save() const {};
+		virtual void Load() {};
 		virtual bool LoadInMemory() = 0;
 
 	protected:

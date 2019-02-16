@@ -101,7 +101,8 @@ project "Base"
 	
 	includedirs
 	{
-		"Vendor/SDL2-2.0.8/include/"
+		"Vendor/SDL2-2.0.8/include/",
+		"Vendor/rapidjson/include/"
 	}
 	
 	libdirs

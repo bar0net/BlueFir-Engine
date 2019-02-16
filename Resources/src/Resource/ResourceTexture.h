@@ -19,8 +19,8 @@ namespace bluefir::resources
 		virtual ~ResourceTexture() {}
 
 		bool LoadInMemory() override { return false; };
-		//void Save(Config* config) const override;
-		//void Load(const Config* config) override;
+		void Save() const override;
+		//void Load() override;
 
 	public:
 		unsigned int width = 0;

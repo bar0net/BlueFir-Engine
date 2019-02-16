@@ -122,22 +122,14 @@ const char * bluefir::base::FileSystem::GetFileExtension(const char * path)
 	return last_dot;
 }
 
-std::vector<bluefir::base::File> bluefir::base::FileSystem::ReadDirectory(const char* path)
+std::vector<std::string> bluefir::base::FileSystem::ReadDirectory(const char* path)
 {
 	ASSERT(path);
-	std::vector<bluefir::base::File> directory;
+	std::vector<std::string> directory;
 
-	// base::File
 	for (const auto &entry : std::filesystem::directory_iterator(path))
 	{
-		/*
-		directory.emplace_back(
-			entry.path().string().substr(std::strlen(path) + 1),
-			entry.path().string(),
-			entry.last_write_time(),
-			entry.file_size()
-		);
-		*/
+		directory.emplace_back(entry.path().string());
 	}
 
 	return directory;

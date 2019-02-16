@@ -9,6 +9,7 @@
 
 namespace bluefir::base
 {
+	// TODO: Check if File is needed
 	struct File
 	{
 		File() {}
@@ -49,17 +50,10 @@ namespace bluefir::base
 
 		static const char* GetFileExtension(const char* path);
 
-		static std::vector<File> ReadDirectory(const char* path);
-		static inline bool ExistsDir(const char* path) 
-		{ 
-			return std::filesystem::exists(path);
-			//std::filesystem::directory_entry dir(std::filesystem::path(path));
-			//return dir.exists();
-
-			//return std::filesystem::directory_entry(path).exists(); 
-		}
-
-		static bool CreateDir(const char* path) { return std::filesystem::create_directory(path); }
+		static std::vector<std::string> ReadDirectory(const char* path);
+		static inline bool IsDir(const char* path)		{ return std::filesystem::is_directory(path); }
+		static inline bool ExistsDir(const char* path)	{ return std::filesystem::exists(path); }
+		static inline bool CreateDir(const char* path)	{ return std::filesystem::create_directory(path); }
 	private:
 		FileSystem() = delete;
 	};

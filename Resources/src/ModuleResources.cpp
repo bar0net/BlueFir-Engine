@@ -1,6 +1,8 @@
 #include "ModuleResources.h"
 #include "BaseMacros.h"
 
+#include <vector>
+
 #include "FileSystem.h"
 #include "Importer.h"
 
@@ -8,6 +10,38 @@
 
 // TODO: Maybe use something more sophisticated?
 #include <random>
+
+bool bluefir::modules::ModuleResources::Init()
+{
+	// Search and load all files in Library Folder
+	std::vector<std::string> files = base::FileSystem::ReadDirectory(BF_FILESYSTEM_LIBRARYDIR);
+	while (!files.empty())
+	{
+		std::string current_file = files[0];
+		if (base::FileSystem::IsDir(current_file.c_str()))
+		{
+			std::vector<std::string> new_files = base::FileSystem::ReadDirectory(current_file.c_str());
+			files.insert(files.end(), new_files.begin(), new_files.end());
+		}
+		else
+		{
+			LOGINFO("File: %s", current_file.c_str());
+		}
+		files.erase(files.begin());
+	}
+	//LOGINFO("File");
+
+	return true;
+}
+
+bool bluefir::modules::ModuleResources::CleanUp()
+{
+	for (auto it = resources_.begin(); it != resources_.end(); ++it)
+		delete it->second;
+	resources_.clear();
+
+	return true;
+}
 
 UID bluefir::modules::ModuleResources::Find(const char * file_in_assets) const
 {
@@ -50,6 +84,7 @@ UID bluefir::modules::ModuleResources::ImportFile(const char * file_in_assets, b
 		{
 			// Create Resource
 			resources_[uid] = new resources::ResourceTexture(uid, path.c_str(), save_path.c_str(), false);
+			resources_[uid]->Save();
 		}
 		else
 		{

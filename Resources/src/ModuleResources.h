@@ -19,6 +19,9 @@ namespace bluefir::modules
 	public:
 		static ModuleResources& getInstance() { static ModuleResources instance_; return instance_; }
 
+		bool Init() override;
+		bool CleanUp() override;
+
 		UID Find(const char* file_in_assets) const;
 		UID ImportFile(const char* file_in_assets, bool force = false);
 		UID GenerateNewUID();

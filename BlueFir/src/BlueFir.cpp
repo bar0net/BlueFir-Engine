@@ -7,6 +7,7 @@
 #include "ModuleScene.h"
 #include "ModuleEditor.h"
 #include "ModuleTexture.h"
+#include "ModuleResources.h"
 
 bluefir::BlueFir::BlueFir()
 {
@@ -16,7 +17,7 @@ bluefir::BlueFir::BlueFir()
 	modules_.push_back(scene = &modules::ModuleScene::getInstance());
 	modules_.push_back(editor = &modules::ModuleEditor::getInstance());
 	modules_.push_back(texture = &modules::ModuleTexture::getInstance());
-
+	modules_.push_back(resources = &modules::ModuleResources::getInstance());
 }
 
 bluefir::BlueFir::~BlueFir()
