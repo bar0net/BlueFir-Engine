@@ -285,7 +285,7 @@ unsigned int bluefir::graphics::Graphics::ConvertTexture(const char * input_data
 	}
 }
 
-void bluefir::graphics::Graphics::TextureInfo(const char* data, int size, int * width, int * height, int * depth, int * mips, int * bytes, int * format)
+void bluefir::graphics::Graphics::TextureInfo(const char* data, int size, unsigned int* width, unsigned int* height, unsigned int* depth, unsigned int* mips, unsigned int* bytes, int* format)
 {
 	ASSERT(data);
 	ILenum type = IL_DDS;

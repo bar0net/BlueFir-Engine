@@ -8,11 +8,12 @@
 
 #include "Resource/ResourceTexture.h"
 
-// TODO: Maybe use something more sophisticated?
-#include <random>
+#define IS_IN_ASSETS(x) base::FileSystem::ExistsDir(x)
 
 bool bluefir::modules::ModuleResources::Init()
 {
+	LOGINFO("Initializing Resource Module.");
+
 	// Search and load all files in Library Folder
 	std::vector<std::string> files = base::FileSystem::ReadDirectory(BF_FILESYSTEM_LIBRARYDIR);
 	while (!files.empty())
@@ -30,7 +31,21 @@ bool bluefir::modules::ModuleResources::Init()
 
 			if (extension == "dds") resource = new resources::ResourceTexture(current_file.c_str());
 
-			LOGINFO("File: %s", current_file.c_str());
+			if (resource != nullptr)
+			{
+				// Check if this file is still in assets
+				// if no meta file was found, GetFile returns 'INVALID_PATH'.
+				if (IS_IN_ASSETS(resource->GetFile()))
+				{
+					LOGINFO("Resource found in library: %s", resource->GetFile());
+					resources_[resource->GetUID()] = resource;
+				}
+				else 
+				{
+					this->DeleteResource(resource->GetUID());
+					delete resource;
+				}
+			}
 		}
 		files.erase(files.begin());
 	}
@@ -40,6 +55,8 @@ bool bluefir::modules::ModuleResources::Init()
 
 bool bluefir::modules::ModuleResources::CleanUp()
 {
+	LOGINFO("Closing Resource Module.");
+
 	for (auto it = resources_.begin(); it != resources_.end(); ++it)
 		delete it->second;
 	resources_.clear();
@@ -62,68 +79,45 @@ UID bluefir::modules::ModuleResources::Find(const char * file_in_assets) const
 UID bluefir::modules::ModuleResources::ImportFile(const char * file_in_assets, bool force)
 {
 	ASSERT(file_in_assets);
+
 	std::string path = BF_FILESYSTEM_ASSETSDIR + std::string("/") + file_in_assets;
-	UID uid = Find(file_in_assets);
+	UID uid = Find(path.c_str());
+	resources::Resource* resource = nullptr;
 
 	if (force || uid == 0)
 	{
-		// Import
-		char* data = nullptr;
+		if (uid == 0) uid = GenerateNewUID();
+		if (force) DeleteResource(uid);
 
-		const char* extension = base::FileSystem::GetFileExtension(path.c_str());
-		unsigned int size = resources::Importer::Texture(path.c_str(), &data);
-		int width, height, depth, mips, bytes, format;
-		resources::Importer::TextureInfo(data, size, &width, &height, &depth, &mips, &bytes, &format);
+		std::string extension = base::FileSystem::GetFileExtension(path.c_str());
 
-		if (size == 0)
+		if (extension == "png") resource = resources::Importer::Texture(file_in_assets, uid);
+
+
+		if (resource == nullptr)
 		{
-			LOGERROR("Error importing texture to library (%s)", path.c_str());
-			return 0;
-		}
-		
-		uid = GenerateNewUID();
-		while (resources_.find(uid) != resources_.end()) uid = GenerateNewUID();
-		
-		// Check Save Folder Exists
-		std::string save_path = BF_FILESYSTEM_LIBRARYDIR + std::string("/") + std::to_string(uid % 100);
-		if (!base::FileSystem::ExistsDir(save_path.c_str()))
-		{
-			base::FileSystem::CreateDir(save_path.c_str());
-		}
-
-		// Save DDS to Library
-		save_path += std::string("/") + std::to_string(uid) + std::string(".dds");
-		if (base::FileSystem::ExportFile(save_path.c_str(), data, size))
-		{
-			// Create Resource
-			resources::ResourceTexture* resource = new resources::ResourceTexture(uid, path.c_str(), save_path.c_str(), false);
-			resource->width = width;
-			resource->height = height;
-			resource->depth = depth;
-			resource->mips = mips;
-			resource->bytes = bytes;
-			resource->format = (resources::TextureFormat)format;
-
-			resources_[uid] = resource;
-			resources_[uid]->Save();
+			LOGERROR("An error has occurred while importing %s.", path.c_str());
+			return 0U;
 		}
 		else
 		{
-			LOGERROR("Could not export texture to library (%s).", save_path.c_str());
-			uid = 0U;
+			LOGINFO("Successfully imported %s.", path.c_str());
+			resource->Save();
+			resources_[uid] = resource;
 		}
-
-		delete data; data = nullptr;
-		return uid;
 	}
+	else
+	{
+		LOGDEBUG("Using previously imported %s.", path.c_str());
+	}
+
 	return uid;
 }
 
 UID bluefir::modules::ModuleResources::GenerateNewUID()
 {
-	static std::mt19937_64 generator;
-
 	last_uid_ = generator();
+	while (resources_.find(last_uid_) != resources_.end()) last_uid_ = generator();
 
 	return last_uid_;
 }
@@ -131,4 +125,27 @@ UID bluefir::modules::ModuleResources::GenerateNewUID()
 bluefir::resources::Resource * bluefir::modules::ModuleResources::CreateNewResource(int type, UID force_uid)
 {
 	return nullptr;
+}
+
+void bluefir::modules::ModuleResources::DeleteResource(UID uid)
+{
+	std::string file = resources_[uid]->GetExportedFile();
+	std::string meta = file.substr(0, file.find_last_of(".")) + ".meta";
+
+	base::FileSystem::DeleteFile(file.c_str());
+	base::FileSystem::DeleteFile(meta.c_str());
+
+	if (resources_.find(uid) == resources_.end()) return;
+
+	delete resources_[uid]; resources_[uid] = nullptr;
+	resources_.erase(uid);
+}
+
+void bluefir::modules::ModuleResources::DeleteResource(const char * exported_file)
+{
+	std::string file = exported_file;
+	std::string meta = file.substr(0, file.find_last_of(".")) + ".meta";
+
+	base::FileSystem::DeleteFile(file.c_str());
+	base::FileSystem::DeleteFile(meta.c_str());
 }

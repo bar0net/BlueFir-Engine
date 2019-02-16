@@ -33,6 +33,8 @@ void bluefir::resources::ResourceTexture::Load()
 	char* data = nullptr;
 	std::string path = exported_file_.substr(0, exported_file_.find_last_of('.')) + ".meta";
 
+	if (!base::FileSystem::ExistsDir(path.c_str())) return;
+
 	base::FileSystem::ImportFile(path.c_str(), &data);
 	base::JSON json(data);
 	base::FileSystem::ReleaseFile(&data);
@@ -48,6 +50,14 @@ void bluefir::resources::ResourceTexture::Load()
 	mips = json.GetInt("mips");
 	bytes = json.GetInt("bytes");
 	format = (resources::TextureFormat)json.GetInt("format");
+}
 
-
+void bluefir::resources::ResourceTexture::Set(unsigned int width, unsigned int height, unsigned int depth, unsigned int mips, unsigned int bytes, int format)
+{
+	this->width  = width;
+	this->height = height;
+	this->depth  = depth;
+	this->mips   = mips;
+	this->bytes  = bytes;
+	this->format = (TextureFormat)format;
 }

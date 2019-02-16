@@ -6,35 +6,58 @@
 
 #include "BaseMacros.h"
 
+#include "Resource.h"
+#include "Resource/ResourceTexture.h"
 
-unsigned int bluefir::resources::Importer::Texture(const char * file_in_assets, char ** data)
+bluefir::resources::Resource* bluefir::resources::Importer::Texture(const char * file_in_assets, UID uid)
 {
 	ASSERT(file_in_assets);
-
-	if (*data != nullptr) 
-	{ 
-		delete *data; *data = nullptr; 
-	}
+	std::string file = BF_FILESYSTEM_ASSETSDIR + std::string("/") + file_in_assets;
+	resources::ResourceTexture* resource = nullptr;
+	char* raw_image = nullptr;
+	char* dds_image = nullptr;
 
 	// Import data from assets 
-	char* raw_image;
-	unsigned int size = bluefir::base::FileSystem::ImportFile(file_in_assets, &raw_image);
+	unsigned int size = bluefir::base::FileSystem::ImportFile(file.c_str(), &raw_image);
 	if (size == 0)
 	{
 		LOGERROR("An error has occurred while importing %s", std::string(file_in_assets));
-		return false;
+		return nullptr;
 	}
 
 	// Get file extension
 	const char* extension = base::FileSystem::GetFileExtension(file_in_assets);
 
 	// Convert to DDS
-	unsigned int dds_size = graphics::Graphics::ConvertTexture(raw_image, size, data);
+	unsigned int dds_size = graphics::Graphics::ConvertTexture(raw_image, size, &dds_image);
 
-	return dds_size;
+	// Get Save Folder
+	std::string save_folder = GetSaveFolder(uid);
+	std::string filename = save_folder + std::string("/") + std::to_string(uid) + std::string(".dds");
+
+	// Save DDS to Library
+	if (base::FileSystem::ExportFile(filename.c_str(), dds_image, dds_size))
+	{
+		// Create Resource
+		int format;
+		resource = new resources::ResourceTexture(uid, file.c_str(), filename.c_str(), false);
+		graphics::Graphics::TextureInfo(dds_image, dds_size, &resource->width, &resource->height, &resource->depth, &resource->mips, &resource->bytes, &format);
+		resource->format = (TextureFormat)format;
+	}
+	else LOGERROR("Could not export texture to library (%s).", filename.c_str());
+
+	bluefir::base::FileSystem::ReleaseFile(&raw_image);
+	bluefir::base::FileSystem::ReleaseFile(&dds_image);
+
+	return resource;
 }
 
-void bluefir::resources::Importer::TextureInfo(const char * data, int size, int * width, int * height, int * depth, int * mips, int * bytes, int * format)
+std::string bluefir::resources::Importer::GetSaveFolder(UID uid)
 {
-	graphics::Graphics::TextureInfo(data, size, width, height, depth, mips, bytes, format); 
+	std::string save_path = BF_FILESYSTEM_LIBRARYDIR + std::string("/") + std::to_string(uid % 100);
+	if (!base::FileSystem::ExistsDir(save_path.c_str()))
+	{
+		base::FileSystem::CreateDir(save_path.c_str());
+	}
+	return save_path;
 }

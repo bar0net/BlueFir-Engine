@@ -24,13 +24,16 @@ namespace bluefir::resources
 	class ResourceTexture : public Resource
 	{
 	public:
+		// TODO: Solve if meta has been erased previous to load.
 		ResourceTexture(const char* exported_file) : Resource(exported_file) { this->Load(); }
 		ResourceTexture(UID id, const char* file, const char* exported_file, bool keep_in_memory = false) : Resource(id, file, exported_file, Type::TEXTURE, keep_in_memory) {}
 		virtual ~ResourceTexture() {}
 
 		bool LoadInMemory() override { return false; };
+
 		void Save() const override;
 		void Load() override;
+		void Set(unsigned int width, unsigned int height, unsigned int depth, unsigned int mips, unsigned int bytes, int format);
 
 	public:
 		unsigned int width = 0;

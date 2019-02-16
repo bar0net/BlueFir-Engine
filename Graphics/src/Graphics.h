@@ -54,7 +54,7 @@ namespace bluefir::graphics
 
 		static void ImportTexture(TextureBuffer** texture, const char* data, unsigned int size, const char* format);
 		static unsigned int ConvertTexture(const char* input_data, unsigned int input_size, char** output_data);
-		static void TextureInfo(const char* data, int size, int* width, int* height, int* depth, int* mips, int* bytes, int* format);
+		static void TextureInfo(const char* data, int size, unsigned int* width, unsigned int* height, unsigned int* depth, unsigned int* mips, unsigned int* bytes, int* format);
 
 	private:
 		Graphics() = delete;

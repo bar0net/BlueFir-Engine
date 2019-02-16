@@ -54,6 +54,7 @@ namespace bluefir::base
 		static inline bool IsDir(const char* path)		{ return std::filesystem::is_directory(path); }
 		static inline bool ExistsDir(const char* path)	{ return std::filesystem::exists(path); }
 		static inline bool CreateDir(const char* path)	{ return std::filesystem::create_directory(path); }
+		static inline void DeleteFile(const char* path) { if (std::filesystem::exists(path)) std::filesystem::remove(path); }
 	private:
 		FileSystem() = delete;
 	};

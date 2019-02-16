@@ -4,6 +4,9 @@
 #include "Module.h"
 #include <unordered_map>
 
+// TODO: Maybe use something more sophisticated than random!
+#include <random>
+
 #define bluefir_resources bluefir::modules::ModuleResources::getInstance()
 #define UID unsigned long long
 
@@ -30,11 +33,15 @@ namespace bluefir::modules
 		resources::Resource* CreateNewResource(int type, UID force_uid = 0);
 
 	private:
-		ModuleResources() {};
+		ModuleResources() { generator.seed(std::random_device{}());	};
 		~ModuleResources() {};
+		
+		void DeleteResource(UID uid);
+		void DeleteResource(const char* exported_file);
 
 	private:
 		UID last_uid_ = 1;
+		std::mt19937_64 generator;
 
 		std::unordered_map < UID, resources::Resource*> resources_;
 	};

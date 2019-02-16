@@ -39,7 +39,7 @@ namespace bluefir::resources
 
 	protected:
 		UID uid_ = 0;
-		std::string file_;
+		std::string file_ = "INVALID_PATH";
 		std::string exported_file_;
 
 		Type type_ = Type::UNKNOWN;
