@@ -5,22 +5,32 @@
 
 namespace bluefir::resources
 {
+	// Using same format codes from DevIL "il.h"
+	// for convenience
 	enum class TextureFormat
 	{
 		UNKNOWN = 0,
-		RGB,
-		RGBA
+		COLOUR_INDEX	= 0x1900,
+		COLOR_INDEX		= 0x1900,
+		ALPHA			= 0x1906,
+		RGB				= 0x1907,
+		RGBA			= 0x1908,
+		BGR				= 0x80E0,
+		BGRA			= 0x80E1,
+		LUMINANCE		= 0x1909,
+		LUMINANCE_ALPHA = 0x190A
 	};
 
 	class ResourceTexture : public Resource
 	{
 	public:
+		ResourceTexture(const char* exported_file) : Resource(exported_file) { this->Load(); }
 		ResourceTexture(UID id, const char* file, const char* exported_file, bool keep_in_memory = false) : Resource(id, file, exported_file, Type::TEXTURE, keep_in_memory) {}
 		virtual ~ResourceTexture() {}
 
 		bool LoadInMemory() override { return false; };
 		void Save() const override;
-		//void Load() override;
+		void Load() override;
 
 	public:
 		unsigned int width = 0;

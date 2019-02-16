@@ -2,6 +2,7 @@
 #define BLUEFIR_BASE_JSON_H
 
 #include "../../Vendor/rapidjson/include/rapidjson/document.h"
+#include <string>
 
 namespace bluefir::base
 {
@@ -9,6 +10,7 @@ namespace bluefir::base
 	{
 	public:
 		JSON();
+		JSON(const char* buffer);
 		virtual ~JSON();
 
 		void FillBuffer(char** buffer);
@@ -26,7 +28,7 @@ namespace bluefir::base
 		unsigned int GetULongInt(const char* name) const;
 
 		void SetString(const char* name, const char* value);
-		void GetString(const char* name, char** data) const;
+		std::string GetString(const char* name) const;
 
 
 		//void Add(const char* name, unsigned int value);

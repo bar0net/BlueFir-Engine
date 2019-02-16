@@ -33,3 +33,8 @@ unsigned int bluefir::resources::Importer::Texture(const char * file_in_assets, 
 
 	return dds_size;
 }
+
+void bluefir::resources::Importer::TextureInfo(const char * data, int size, int * width, int * height, int * depth, int * mips, int * bytes, int * format)
+{
+	graphics::Graphics::TextureInfo(data, size, width, height, depth, mips, bytes, format); 
+}

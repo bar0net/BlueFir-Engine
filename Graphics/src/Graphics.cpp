@@ -284,3 +284,35 @@ unsigned int bluefir::graphics::Graphics::ConvertTexture(const char * input_data
 		return 0U;
 	}
 }
+
+void bluefir::graphics::Graphics::TextureInfo(const char* data, int size, int * width, int * height, int * depth, int * mips, int * bytes, int * format)
+{
+	ASSERT(data);
+	ILenum type = IL_DDS;
+
+	unsigned int imageID = 0;
+	ilGenImages(1, &imageID);
+	ilBindImage(imageID);
+
+	ILboolean success = IL_TRUE;
+	ILenum error;
+
+	if (ilLoadL(type, data, size))
+	{
+		ILinfo ImageInfo;
+		iluGetImageInfo(&ImageInfo);
+		
+		*width = ImageInfo.Width;
+		*height = ImageInfo.Height;
+		*depth = ImageInfo.Depth;
+		*mips = ImageInfo.NumMips;
+		*bytes = ImageInfo.Bpp;
+		*format = ImageInfo.Format;
+	}
+	else
+	{
+		ilBindImage(0);
+		error = ilGetError();
+		LOGERROR("Could not read the image data. (IL reports error %i: %s)", (int)error, iluErrorString(error));
+	}
+}

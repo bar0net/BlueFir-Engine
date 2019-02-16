@@ -14,6 +14,14 @@ bluefir::base::JSON::JSON()
 	allocator_ = &document_->GetAllocator();
 }
 
+bluefir::base::JSON::JSON(const char * buffer)
+{
+	document_ = new rapidjson::Document();
+	document_->SetObject();
+	document_->Parse(buffer);
+	allocator_ = &document_->GetAllocator();
+}
+
 bluefir::base::JSON::~JSON()
 {
 	delete document_; document_ = nullptr;
@@ -132,22 +140,16 @@ void bluefir::base::JSON::SetString(const char * name, const char* value)
 	else document_->AddMember(json_key, rapidjson::Value(value, strlen(value)), *allocator_);
 }
 
-void bluefir::base::JSON::GetString(const char * name, char ** data) const
+std::string bluefir::base::JSON::GetString(const char * name) const
 {
 	ASSERT(name);
-
-	if (*data != nullptr)
-	{
-		delete *data; *data = nullptr;
-	}
 
 	rapidjson::Value::MemberIterator it = document_->FindMember(name);
 	if (it != document_->MemberEnd())
 	{
-		*data = new char[it->value.GetStringLength()];
-		strcpy(*data, it->value.GetString());
-		return;
+		return std::string(it->value.GetString());
 	}
 
 	LOGWARNING("Unable to find %s member.", name);
+	return std::string();
 }

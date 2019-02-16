@@ -18,6 +18,7 @@ namespace bluefir::resources
 	class Resource
 	{
 	public:
+		Resource(const char* exported_file) : exported_file_(exported_file) { }
 		Resource(UID uid, const char* file, const char* exported_file, Type type, bool keep_in_memory = false) : uid_(uid), type_(type), keep_in_memory_(keep_in_memory) 
 		{ file_ = std::string(file); exported_file_ = std::string(exported_file); };
 		
@@ -26,12 +27,14 @@ namespace bluefir::resources
 		inline UID GetUID() const { return uid_; }
 		inline Type GetType() const { return type_; }
 		inline const char* GetFile() const { return file_.c_str(); }
+		bool CheckFile(const char* file) const { return strcmp(file, file_.c_str()) == 0; }
 		inline const char* GetExportedFile() const { return exported_file_.c_str(); }
 		inline bool IsLoadedToMemory() const { return keep_in_memory_ || loaded_ > 0U; }
 		inline unsigned int CountReferences() const { return loaded_; }
 
+
 		virtual void Save() const {};
-		virtual void Load() {};
+		virtual void Load() { };
 		virtual bool LoadInMemory() = 0;
 
 	protected:

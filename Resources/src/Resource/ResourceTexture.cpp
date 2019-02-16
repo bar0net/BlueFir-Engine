@@ -1,4 +1,5 @@
 #include "ResourceTexture.h"
+#include "BaseMacros.h"
 
 #include "json.h"
 #include "FileSystem.h"
@@ -24,4 +25,29 @@ void bluefir::resources::ResourceTexture::Save() const
 	json.FillBuffer(&buffer);
 	std::string path = exported_file_.substr(0, exported_file_.find_last_of('.')) + ".meta";
 	base::FileSystem::ExportFile(path.c_str(), buffer, strlen(buffer));
+}
+
+void bluefir::resources::ResourceTexture::Load()
+{
+	ASSERT(!exported_file_.empty());
+	char* data = nullptr;
+	std::string path = exported_file_.substr(0, exported_file_.find_last_of('.')) + ".meta";
+
+	base::FileSystem::ImportFile(path.c_str(), &data);
+	base::JSON json(data);
+	base::FileSystem::ReleaseFile(&data);
+
+	uid_ = json.GetULongInt("uid");
+	file_ = json.GetString("file");
+	type_ = (resources::Type)json.GetInt("type");
+	keep_in_memory_ = json.GetBool("keep_in_memory");
+
+	width = json.GetInt("width");
+	height = json.GetInt("height");
+	depth = json.GetInt("depth");
+	mips = json.GetInt("mips");
+	bytes = json.GetInt("bytes");
+	format = (resources::TextureFormat)json.GetInt("format");
+
+
 }
