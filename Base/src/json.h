@@ -25,7 +25,7 @@ namespace bluefir::base
 		unsigned int GetUInt(const char* name) const;
 
 		void SetULongInt(const char* name, unsigned long long int value);
-		unsigned int GetULongInt(const char* name) const;
+		unsigned long long int GetULongInt(const char* name) const;
 
 		void SetString(const char* name, const char* value);
 		std::string GetString(const char* name) const;

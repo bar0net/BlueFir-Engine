@@ -25,7 +25,7 @@ namespace bluefir::modules
 
 		bool Init() override;
 		bool CleanUp() override;
-		UpdateState PostUpdate() override;
+		UpdateState PreUpdate() override;
 
 		UID Find(const char* file_in_assets) const;
 		UID ImportFile(const char* file_in_assets, bool force = false);
@@ -35,7 +35,7 @@ namespace bluefir::modules
 		resources::Resource* CreateNewResource(int type, UID force_uid = 0);
 
 	private:
-		ModuleResources() { generator.seed(std::random_device{}());	};
+		ModuleResources() : observer_initialized(false) { generator.seed(std::random_device{}());	};
 		~ModuleResources() {};
 		
 		void DeleteResource(UID uid);
@@ -47,6 +47,8 @@ namespace bluefir::modules
 
 		std::unordered_map < UID, resources::Resource*> resources_;
 		resources::AssetsObserver* observer;
+
+		bool observer_initialized = false;
 	};
 }
 

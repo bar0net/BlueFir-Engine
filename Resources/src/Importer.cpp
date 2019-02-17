@@ -12,7 +12,8 @@
 bluefir::resources::Resource* bluefir::resources::Importer::Texture(const char * file_in_assets, UID uid)
 {
 	ASSERT(file_in_assets);
-	std::string file = BF_FILESYSTEM_ASSETSDIR + std::string("/") + file_in_assets;
+	//std::string file = BF_FILESYSTEM_ASSETSDIR + std::string("/") + file_in_assets;
+	std::string file =  file_in_assets;
 	resources::ResourceTexture* resource = nullptr;
 	char* raw_image = nullptr;
 	char* dds_image = nullptr;

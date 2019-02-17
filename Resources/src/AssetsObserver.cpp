@@ -9,6 +9,7 @@ bluefir::resources::AssetsObserver::AssetsObserver() : root(new AssetsFile(BF_FI
 {
 	to_add = new std::vector<std::string>();
 	to_remove = new std::vector<std::string>();
+
 }
 
 bluefir::resources::AssetsObserver::~AssetsObserver()
@@ -58,7 +59,7 @@ void bluefir::resources::AssetsObserver::Run()
 					}
 					else
 					{
-						RegisterAddition(*it + "BRAVO");
+						RegisterAddition(*it);
 						current->contents[*it] = new AssetsFile(it->c_str(), base::FileSystem::FileSize(it->c_str()), base::FileSystem::FileModifiedTime(it->c_str()));
 					}
 				}
@@ -70,8 +71,8 @@ void bluefir::resources::AssetsObserver::Run()
 					// Check if it has the same size and the same "last modified date" as the one registered
 					if (current->contents[*it]->size != base::FileSystem::FileSize(it->c_str()) || current->contents[*it]->last_modified != base::FileSystem::FileModifiedTime(it->c_str()))
 					{
-						RegisterRemoval(*it);
-						RegisterAddition(*it + "ALPHA");
+						//RegisterRemoval(*it);
+						RegisterAddition(*it);
 						current->contents[*it]->size = base::FileSystem::FileSize(it->c_str());
 						current->contents[*it]->last_modified = base::FileSystem::FileModifiedTime(it->c_str());
 					}

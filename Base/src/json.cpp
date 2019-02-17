@@ -120,7 +120,7 @@ void bluefir::base::JSON::SetULongInt(const char * name, unsigned long long int 
 	else document_->AddMember(json_key, rapidjson::Value((uint64_t)value), *allocator_);
 }
 
-unsigned int bluefir::base::JSON::GetULongInt(const char * name) const
+unsigned long long int bluefir::base::JSON::GetULongInt(const char * name) const
 {
 	rapidjson::Value::MemberIterator it = document_->FindMember(name);
 	if (it != document_->MemberEnd()) return it->value.GetUint64();

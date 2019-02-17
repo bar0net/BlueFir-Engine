@@ -68,7 +68,7 @@ bool bluefir::modules::ModuleResources::CleanUp()
 	return true;
 }
 
-bluefir::modules::UpdateState bluefir::modules::ModuleResources::PostUpdate()
+bluefir::modules::UpdateState bluefir::modules::ModuleResources::PreUpdate()
 {
 	std::vector<std::string>* buffer = nullptr;
 	
@@ -77,7 +77,8 @@ bluefir::modules::UpdateState bluefir::modules::ModuleResources::PostUpdate()
 	{
 		for (auto it = buffer->begin(); it != buffer->end(); ++it)
 		{
-			LOGWARNING("IN REMOVE: %s", it->c_str());
+			UID uid = Find(it->c_str());
+			if (uid != 0) DeleteResource(uid);
 		}
 		delete buffer; buffer = nullptr;
 	}
@@ -87,8 +88,9 @@ bluefir::modules::UpdateState bluefir::modules::ModuleResources::PostUpdate()
 	{
 		for (auto it = buffer->begin(); it != buffer->end(); ++it)
 		{
-			LOGWARNING("IN ADD: %s", it->c_str());
+			ImportFile(it->c_str(), observer_initialized);
 		}
+		observer_initialized = true;
 		delete buffer; buffer = nullptr;
 	}
 
@@ -111,18 +113,22 @@ UID bluefir::modules::ModuleResources::ImportFile(const char * file_in_assets, b
 {
 	ASSERT(file_in_assets);
 
-	std::string path = BF_FILESYSTEM_ASSETSDIR + std::string("/") + file_in_assets;
+	//std::string path = BF_FILESYSTEM_ASSETSDIR + std::string("/") + file_in_assets;
+	std::string path = file_in_assets;
 	UID uid = Find(path.c_str());
 	resources::Resource* resource = nullptr;
 
 	if (force || uid == 0)
 	{
+		if (force && uid != 0) DeleteResource(uid);
 		if (uid == 0) uid = GenerateNewUID();
-		if (force) DeleteResource(uid);
 
 		std::string extension = base::FileSystem::GetFileExtension(path.c_str());
 
-		if (extension == "png") resource = resources::Importer::Texture(file_in_assets, uid);
+		if (extension == "png")
+		{
+			resource = resources::Importer::Texture(file_in_assets, uid);
+		}
 
 
 		if (resource == nullptr)
