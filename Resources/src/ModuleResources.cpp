@@ -7,6 +7,7 @@
 #include "Importer.h"
 
 #include "Resource/ResourceTexture.h"
+#include "AssetsObserver.h"
 
 #define IS_IN_ASSETS(x) base::FileSystem::ExistsDir(x)
 
@@ -50,6 +51,8 @@ bool bluefir::modules::ModuleResources::Init()
 		files.erase(files.begin());
 	}
 
+	observer = new resources::AssetsObserver();
+	observer->Start();
 	return true;
 }
 
@@ -61,7 +64,35 @@ bool bluefir::modules::ModuleResources::CleanUp()
 		delete it->second;
 	resources_.clear();
 
+	delete observer;
 	return true;
+}
+
+bluefir::modules::UpdateState bluefir::modules::ModuleResources::PostUpdate()
+{
+	std::vector<std::string>* buffer = nullptr;
+	
+	observer->GetRemovals(&buffer);
+	if (buffer)
+	{
+		for (auto it = buffer->begin(); it != buffer->end(); ++it)
+		{
+			LOGWARNING("IN REMOVE: %s", it->c_str());
+		}
+		delete buffer; buffer = nullptr;
+	}
+
+	observer->GetAdditions(&buffer);
+	if (buffer)
+	{
+		for (auto it = buffer->begin(); it != buffer->end(); ++it)
+		{
+			LOGWARNING("IN ADD: %s", it->c_str());
+		}
+		delete buffer; buffer = nullptr;
+	}
+
+	return UpdateState::Update_Continue;
 }
 
 UID bluefir::modules::ModuleResources::Find(const char * file_in_assets) const

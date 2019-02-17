@@ -13,6 +13,7 @@
 namespace bluefir::resources
 {
 	class Resource;
+	class AssetsObserver;
 }
 
 namespace bluefir::modules
@@ -24,6 +25,7 @@ namespace bluefir::modules
 
 		bool Init() override;
 		bool CleanUp() override;
+		UpdateState PostUpdate() override;
 
 		UID Find(const char* file_in_assets) const;
 		UID ImportFile(const char* file_in_assets, bool force = false);
@@ -44,6 +46,7 @@ namespace bluefir::modules
 		std::mt19937_64 generator;
 
 		std::unordered_map < UID, resources::Resource*> resources_;
+		resources::AssetsObserver* observer;
 	};
 }
 
