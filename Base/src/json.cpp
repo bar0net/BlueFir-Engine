@@ -24,7 +24,7 @@ bluefir::base::JSON::JSON(const char * buffer)
 
 bluefir::base::JSON::~JSON()
 {
-	delete document_; document_ = nullptr;
+	if (document_ != nullptr) { delete document_; document_ = nullptr; }
 }
 
 void bluefir::base::JSON::FillBuffer(char ** buffer)
@@ -41,6 +41,8 @@ void bluefir::base::JSON::FillBuffer(char ** buffer)
 	std::string s = json_buffer->GetString();
 	*buffer = new char[s.size()];
 	std::strcpy(*buffer, s.c_str());
+
+	delete json_buffer;
 }
 
 void bluefir::base::JSON::SetBool(const char * name, bool value)

@@ -1,4 +1,5 @@
 #include "AssetsObserver.h"
+#include "BaseMacros.h"
 
 #include <queue>
 #include <chrono>

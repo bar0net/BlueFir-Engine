@@ -53,6 +53,7 @@ namespace bluefir::resources
 		std::vector<std::string>* to_add = nullptr;
 		std::thread run_thread;
 		std::mutex mutex;
+		bool mutex_violation = false;
 	};
 }
 #endif // !BF_RESOURCES_ASSETSOBSERVER

@@ -9,34 +9,6 @@
 
 namespace bluefir::base
 {
-	// TODO: Check if File is needed
-	struct File
-	{
-		File() {}
-		File(const char* name, const char* path) : name_(name)
-		{
-			std::filesystem::directory_entry entry(path);
-			path_ = entry.path().string();
-			last_write_ = entry.last_write_time();
-			size_ = entry.file_size();
-			is_folder_ = entry.is_directory();
-		}
-
-		bool HasChanged() 
-		{ 
-			std::filesystem::directory_entry entry(path_);
-			return entry.file_size() != size_ || entry.last_write_time() != last_write_;
-		}
-
-		bool is_folder_ = false;
-		unsigned int size_ = 0U;
-		std::string name_;
-		std::string path_;
-		const File* parent_ = nullptr;
-
-		std::filesystem::file_time_type last_write_;
-	};
-
 	class FileSystem
 	{
 	public:
@@ -55,8 +27,8 @@ namespace bluefir::base
 		static inline bool ExistsDir(const char* path)	{ return std::filesystem::exists(path); }
 		static inline bool CreateDir(const char* path)	{ return std::filesystem::create_directory(path); }
 		static inline void DeleteFile(const char* path) { if (std::filesystem::exists(path)) std::filesystem::remove(path); }
-		static inline unsigned int FileSize(const char* path) { return (unsigned int)std::filesystem::file_size(path); }
-		static inline std::filesystem::file_time_type FileModifiedTime(const char* path) { return std::filesystem::last_write_time(path); }
+		static inline unsigned int FileSize(const char* path) { return (std::filesystem::exists(path)) ? (unsigned int)std::filesystem::file_size(path) : 0U; }
+		static inline std::filesystem::file_time_type FileModifiedTime(const char* path) { return (std::filesystem::exists(path)) ? std::filesystem::last_write_time(path) : std::filesystem::file_time_type(); }
 
 	private:
 		FileSystem() = delete;
