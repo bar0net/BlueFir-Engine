@@ -29,7 +29,8 @@ namespace bluefir::resources
 		ResourceTexture(UID id, const char* file, const char* exported_file, bool keep_in_memory = false) : Resource(id, file, exported_file, Type::TEXTURE, keep_in_memory) {}
 		virtual ~ResourceTexture() {}
 
-		bool LoadInMemory() override { return false; };
+		bool LoadInMemory() override;
+		bool UnloadFromMemory(bool force = false) override;
 
 		void Save() const override;
 		void Load() override;

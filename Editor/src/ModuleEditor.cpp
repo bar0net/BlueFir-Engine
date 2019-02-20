@@ -18,6 +18,7 @@
 #include "Panels/PanelConsole.h"
 #include "Panels/PanelTexture.h"
 #include "Panels/PanelEditorView.h"
+#include "Panels/PanelResources.h"
 
 #define GLSL_VERSION "#version 130"
 
@@ -55,6 +56,7 @@ bool bluefir::modules::ModuleEditor::Init()
 	panels_.push_back(new editor::PanelConsole());
 	panels_.push_back(new editor::PanelTexture());
 	panels_.push_back(new editor::PanelEditorView());
+	panels_.push_back(new editor::PanelResources());
 
 	// Init all panels
 	for (auto it = panels_.begin(); it != panels_.end(); ++it)

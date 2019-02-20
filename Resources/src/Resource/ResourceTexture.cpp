@@ -4,6 +4,29 @@
 #include "json.h"
 #include "FileSystem.h"
 
+bool bluefir::resources::ResourceTexture::LoadInMemory()
+{
+	++loaded_;
+
+	// TODO: Load Texture
+
+	return false;
+}
+
+bool bluefir::resources::ResourceTexture::UnloadFromMemory(bool force)
+{
+	--loaded_;
+
+	if (loaded_ > 0) return true;
+	loaded_ = 0;
+
+	if (keep_in_memory_ && !force) return true;
+
+	// TODO: Unload Texture
+
+	return false;
+}
+
 void bluefir::resources::ResourceTexture::Save() const
 {
 	base::JSON json;

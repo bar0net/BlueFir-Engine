@@ -16,6 +16,11 @@ namespace bluefir::resources
 	class AssetsObserver;
 }
 
+namespace bluefir::editor
+{
+	class PanelResources;
+}
+
 namespace bluefir::modules
 {
 	class ModuleResources : public Module
@@ -49,6 +54,8 @@ namespace bluefir::modules
 		resources::AssetsObserver* observer;
 
 		bool observer_initialized = false;
+
+		friend bluefir::editor::PanelResources;
 	};
 }
 
