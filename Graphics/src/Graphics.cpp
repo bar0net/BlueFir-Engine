@@ -1,5 +1,7 @@
 #include "Graphics.h"
 
+#include <algorithm>
+
 #include "GL/glew.h"
 #include "GL/wglew.h"
 #include "SDL.h"
@@ -186,7 +188,22 @@ void bluefir::graphics::Graphics::DrawLines(unsigned int count)
 void bluefir::graphics::Graphics::ImportTexture(TextureBuffer** texture, const char* data, unsigned int size, const char* format)
 {
 	ASSERT(data);
-	ILenum type = IL_PNG; // TODO: Parse type
+	std::string ext(format);
+	std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
+
+	ILenum type = IL_DDS;
+	if (ext == "png") type = IL_PNG;
+	else if (ext == "dds") type = IL_DDS;
+	else if (ext == "jpg" || ext == "jpeg") type = IL_JPG;
+	else if (ext == "bmp") type = IL_BMP;
+	else if (ext == "psd") type = IL_PSD;
+	else if (ext == "gif") type = IL_GIF;
+	else
+	{
+		LOGERROR("Unsupported texture format.");
+		return;
+	}
+
 	if (*texture) 
 	{ 
 		delete *texture; *texture = nullptr; 
@@ -233,10 +250,25 @@ void bluefir::graphics::Graphics::ImportTexture(TextureBuffer** texture, const c
 	ilBindImage(0);
 }
 
-unsigned int bluefir::graphics::Graphics::ConvertTexture(const char * input_data, unsigned int input_size, char ** output_data)
+unsigned int bluefir::graphics::Graphics::ConvertTexture(const char * input_data, unsigned int input_size, char ** output_data, const char* format)
 {
 	ASSERT(input_data);
-	ILenum type = IL_PNG;
+
+	std::string ext(format);
+	std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
+
+	ILenum type = IL_DDS;
+	if (ext == "png") type = IL_PNG;
+	else if (ext == "dds") type = IL_DDS;
+	else if (ext == "jpg" || ext == "jpeg") type = IL_JPG;
+	else if (ext == "bmp") type = IL_BMP;
+	else if (ext == "psd") type = IL_PSD;
+	else if (ext == "gif") type = IL_GIF;
+	else 
+	{
+		LOGERROR("Unsupported texture format.");
+		return 0;
+	}
 
 	unsigned int imageID = 0;
 	ilGenImages(1, &imageID);

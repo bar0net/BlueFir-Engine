@@ -39,7 +39,7 @@ void bluefir::editor::PanelResources::Draw()
 		if (it->second->IsLoadedToMemory())
 			ImGui::TextColored(ImVec4(0.2f, 1.0f, 0.2f, 1.0f), "[%s - %d] %s | %d", resource_type, it->second->GetUID(), it->second->GetFile(), it->second->Count());
 		else
-			ImGui::Text("[%s - %d] %s | %d", resource_type, it->second->GetUID(), it->second->GetFile(), it->second->Count());
+			ImGui::Text("[%s - %s] %s | %d", resource_type, std::to_string(it->second->GetUID()).c_str(), it->second->GetFile(), it->second->Count());
 	}
 
 	ImGui::End();
