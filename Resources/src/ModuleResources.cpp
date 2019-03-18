@@ -15,6 +15,12 @@ bool bluefir::modules::ModuleResources::Init()
 {
 	LOGINFO("Initializing Resource Module.");
 
+	if (!base::FileSystem::ExistsDir(BF_FILESYSTEM_ASSETSDIR))
+		base::FileSystem::CreateDir(BF_FILESYSTEM_ASSETSDIR);
+
+	if (!base::FileSystem::ExistsDir(BF_FILESYSTEM_LIBRARYDIR))
+		base::FileSystem::CreateDir(BF_FILESYSTEM_LIBRARYDIR);
+
 	// Search and load all files in Library Folder
 	std::vector<std::string> files = base::FileSystem::ReadDirectory(BF_FILESYSTEM_LIBRARYDIR);
 	while (!files.empty())

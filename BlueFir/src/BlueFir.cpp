@@ -14,9 +14,9 @@ bluefir::BlueFir::BlueFir()
 	modules_.push_back(renderer = &modules::ModuleRenderer::getInstance());
 	modules_.push_back(input = &modules::ModuleEvents::getInstance());
 	modules_.push_back(time = &modules::ModuleTime::getInstance());
+	modules_.push_back(editor = &modules::ModuleEditor::getInstance());
 	modules_.push_back(resources = &modules::ModuleResources::getInstance());
 	modules_.push_back(scene = &modules::ModuleScene::getInstance());
-	modules_.push_back(editor = &modules::ModuleEditor::getInstance());
 	modules_.push_back(texture = &modules::ModuleTexture::getInstance());
 }
 

@@ -68,6 +68,7 @@ void bluefir::graphics::Graphics::GetWindowSize(WindowData * data, int & width, 
 
 void bluefir::graphics::Graphics::CreateViewport(unsigned int width, unsigned int height, float clear_color[4], float depth)
 {
+	LOGINFO("Creating Viewport.");
 	glewInit();
 	wglewInit();
 

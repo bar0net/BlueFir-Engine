@@ -14,7 +14,7 @@ bluefir::graphics::TextureBuffer::TextureBuffer(unsigned int width, unsigned int
 	}
 	else
 	{
-		GLCall(glTexImage2D(GL_TEXTURE_2D, 0, input_format, width, height, 0, store_format, GL_UNSIGNED_BYTE, 0));
+		GLCall(glTexImage2D(GL_TEXTURE_2D, 0, input_format, width, height, 0, store_format, GL_UNSIGNED_BYTE, NULL));
 	}
 
 	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));

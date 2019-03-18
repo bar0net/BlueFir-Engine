@@ -127,6 +127,12 @@ std::vector<std::string> bluefir::base::FileSystem::ReadDirectory(const char* pa
 	ASSERT(path);
 	std::vector<std::string> directory;
 
+	if (!std::filesystem::exists(path))
+	{
+		LOGERROR("Trying to read %s but it doesn't exist.", path);
+		return std::vector<std::string>();
+	}
+
 	for (const auto &entry : std::filesystem::directory_iterator(path))
 	{
 		directory.emplace_back(entry.path().string());

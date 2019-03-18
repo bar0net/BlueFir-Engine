@@ -57,5 +57,6 @@ void bluefir::graphics::FrameBuffer::SetRenderBuffer(unsigned int renderID, unsi
 void bluefir::graphics::FrameBuffer::SetTexture(unsigned int textureID, unsigned int slot, unsigned int type) const
 {
 	Bind();
-	GLCall(glFramebufferTexture(GL_FRAMEBUFFER, type + slot, textureID, slot));
+	//GLCall(glFramebufferTexture(GL_FRAMEBUFFER, type + slot, textureID, slot));
+	GLCall(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + slot, GL_TEXTURE_2D, textureID, 0));
 }
