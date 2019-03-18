@@ -51,18 +51,6 @@ bool bluefir::modules::ModuleScene::Init()
 	mr_t->SetMaterial(shader_id);
 	*/
 
-	int grid = CreateEmptyGameObject();
-	gameObjects_[grid]->name = "Grid";
-	gameObjects_[grid]->transform->SetPosition(0.0F, 0.0F, 0.0F);
-	gameObjects_[grid]->transform->SetRotation(0.0F, 0.0F, 0.0F);
-	gameObjects_[grid]->transform->SetScale(1.0F, 1.0F, 1.0F);
-
-	// TODO: Check destruction process of go's (we are leaking memory)
-	core::MeshRenderer* mr_g = gameObjects_[grid]->AddComponent<core::MeshRenderer>();
-	int meshg_id = ModuleRenderer::getInstance().CreateMesh(graphics::ModelList::Grid);
-	mr_g->SetMesh(meshg_id);
-	mr_g->SetMaterial(shader_id);
-
 	//bluefir_resources.ImportFile("checkers.png", true);
 
 	return true;

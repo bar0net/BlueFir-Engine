@@ -10,6 +10,7 @@
 #include "GameObject.h"
 #include "Components/Camera.h"
 #include "Components/Transform.h"
+#include "Components/MeshRenderer.h"
 
 #include "Panels/PanelTime.h"
 #include "Panels/PanelRenderer.h"
@@ -48,6 +49,11 @@ bool bluefir::modules::ModuleEditor::Init()
 	go_editor_camera_->transform->SetPosition(0, 1.0F, 10.0F);
 	go_editor_camera_->transform->SetRotation(0, 0.0F, 0);
 
+	go_editor_grid_ = new core::GameObject();
+	core::MeshRenderer* grid_mr = go_editor_grid_->AddComponent<core::MeshRenderer>();
+	grid_mr->SetMesh(bluefir_renderer.CreateMesh(graphics::ModelList::Grid));
+	grid_mr->SetMaterial(0); // TODO: Properly capture material!
+
 	// register all editor panels
 	panels_.push_back(new editor::PanelTime());
 	panels_.push_back(new editor::PanelRenderer());
@@ -68,6 +74,7 @@ bool bluefir::modules::ModuleEditor::Init()
 bluefir::modules::UpdateState bluefir::modules::ModuleEditor::PreUpdate()
 {
 	go_editor_camera_->PreUpdate();
+	go_editor_grid_->PreUpdate();
 
 	return UpdateState::Update_Continue;
 }
@@ -75,6 +82,7 @@ bluefir::modules::UpdateState bluefir::modules::ModuleEditor::PreUpdate()
 bluefir::modules::UpdateState bluefir::modules::ModuleEditor::Update()
 {
 	go_editor_camera_->Update();
+	go_editor_grid_->Update();
 
 	//ModuleRenderer::getInstance().Render();
 	//modules::ModuleRenderer::getInstance().RenderCamera(editor_camera_);
@@ -102,6 +110,7 @@ bluefir::modules::UpdateState bluefir::modules::ModuleEditor::Update()
 bluefir::modules::UpdateState bluefir::modules::ModuleEditor::PostUpdate()
 {
 	go_editor_camera_->PostUpdate();
+	go_editor_grid_->PostUpdate();
 	//modules::ModuleRenderer::getInstance().RenderCamera(editor_camera_);
 
 	// Render Imgui editor
@@ -130,6 +139,7 @@ bool bluefir::modules::ModuleEditor::CleanUp()
 		delete (*it);
 
 	delete go_editor_camera_; go_editor_camera_ = nullptr;
+	delete go_editor_grid_;  go_editor_grid_ = nullptr;
 
 	// Shut down Imgui
 	ImGui_ImplOpenGL3_Shutdown();

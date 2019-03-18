@@ -57,6 +57,7 @@ namespace bluefir::modules
 
 		core::GameObject* go_editor_camera_ = nullptr;
 		core::Camera* editor_camera_ = nullptr;
+		core::GameObject* go_editor_grid_ = nullptr;
 
 		friend editor::PanelInspector;
 		friend editor::PanelEditorView;
