@@ -55,7 +55,7 @@ bluefir::resources::Resource* bluefir::resources::Importer::Texture(const char *
 
 std::string bluefir::resources::Importer::GetSaveFolder(UID uid)
 {
-	std::string save_path = BF_FILESYSTEM_LIBRARYDIR + std::string("/") + std::to_string(uid % 100);
+	std::string save_path = BF_FILESYSTEM_LIBRARYDIR + std::string("/") + std::to_string(uid).substr(0,2);
 	if (!base::FileSystem::ExistsDir(save_path.c_str()))
 	{
 		base::FileSystem::CreateDir(save_path.c_str());

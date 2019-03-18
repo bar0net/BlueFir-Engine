@@ -21,6 +21,9 @@ bool bluefir::modules::ModuleResources::Init()
 	if (!base::FileSystem::ExistsDir(BF_FILESYSTEM_LIBRARYDIR))
 		base::FileSystem::CreateDir(BF_FILESYSTEM_LIBRARYDIR);
 
+	if (!base::FileSystem::ExistsDir(BF_FILESYSTEM_CONFIGDIR))
+		base::FileSystem::CreateDir(BF_FILESYSTEM_CONFIGDIR);
+
 	// Search and load all files in Library Folder
 	std::vector<std::string> files = base::FileSystem::ReadDirectory(BF_FILESYSTEM_LIBRARYDIR);
 	while (!files.empty())
@@ -173,7 +176,7 @@ bluefir::resources::Resource * bluefir::modules::ModuleResources::CreateNewResou
 void bluefir::modules::ModuleResources::DeleteResource(UID uid)
 {
 	std::string file = resources_[uid]->GetExportedFile();
-	std::string meta = file.substr(0, file.find_last_of(".")) + ".meta";
+	std::string meta = base::FileSystem::GetFileMetaPath(uid);
 
 	base::FileSystem::DeleteFile(file.c_str());
 	base::FileSystem::DeleteFile(meta.c_str());
@@ -187,7 +190,11 @@ void bluefir::modules::ModuleResources::DeleteResource(UID uid)
 void bluefir::modules::ModuleResources::DeleteResource(const char * exported_file)
 {
 	std::string file = exported_file;
-	std::string meta = file.substr(0, file.find_last_of(".")) + ".meta";
+	
+	size_t last_bracket = file.find_last_of('/');
+	std::string uid = file.substr(last_bracket, file.find_last_of(".")-last_bracket);
+	std::string meta = base::FileSystem::GetFileMetaPath(uid.c_str());
+
 
 	base::FileSystem::DeleteFile(file.c_str());
 	base::FileSystem::DeleteFile(meta.c_str());

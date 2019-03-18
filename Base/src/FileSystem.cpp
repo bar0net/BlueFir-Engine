@@ -122,6 +122,33 @@ const char * bluefir::base::FileSystem::GetFileExtension(const char * path)
 	return last_dot;
 }
 
+std::string bluefir::base::FileSystem::GetFileMetaPath(long long int uid, bool force_create)
+{
+	// TODO: Check this!
+	std::string str_uid = std::to_string(uid);
+	std::string path = std::string(BF_FILESYSTEM_CONFIGDIR) + std::string("/") + str_uid.substr(0, 2);
+
+	if (force_create && !std::filesystem::exists(path.c_str()))
+		std::filesystem::create_directory(path.c_str());
+
+	path += std::string("/") + str_uid + std::string(".meta");
+	return path;
+}
+
+std::string bluefir::base::FileSystem::GetFileMetaPath(const char * uid, bool force_create)
+{
+	// TODO: Check this!
+	std::string str_uid = std::string(uid);
+	std::string path = std::string(BF_FILESYSTEM_CONFIGDIR) + std::string("/") + str_uid.substr(0, 2);
+
+	if (force_create && !std::filesystem::exists(path.c_str()))
+		std::filesystem::create_directory(path.c_str());
+
+	path += std::string("/") + str_uid + std::string(".meta");
+	return path;
+}
+
+
 std::vector<std::string> bluefir::base::FileSystem::ReadDirectory(const char* path)
 {
 	ASSERT(path);
