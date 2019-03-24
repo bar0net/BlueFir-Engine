@@ -6,6 +6,7 @@
 
 #define BF_FILESYSTEM_ASSETSDIR "Assets"
 #define BF_FILESYSTEM_LIBRARYDIR "Library"
+#define BF_FILESYSTEM_CONFIGDIR "Config"
 
 namespace bluefir::base
 {
@@ -21,14 +22,18 @@ namespace bluefir::base
 		static void ReleaseFile(const char** data);
 
 		static const char* GetFileExtension(const char* path);
+		static std::string GetFileMetaPath(unsigned long long int uid, bool force_create = false);
+		static std::string GetFileMetaPath(const char* uid, bool force_create = false);
 
 		static std::vector<std::string> ReadDirectory(const char* path);
 		static inline bool IsDir(const char* path)		{ return std::filesystem::is_directory(path); }
 		static inline bool ExistsDir(const char* path)	{ return std::filesystem::exists(path); }
 		static inline bool CreateDir(const char* path)	{ return std::filesystem::create_directory(path); }
-		static inline void DeleteFile(const char* path) { if (std::filesystem::exists(path)) std::filesystem::remove(path); }
+		static inline void DeleteFile(const char* path) { if (std::filesystem::exists(path) && !std::filesystem::is_directory(path)) std::filesystem::remove(path); }
 		static inline unsigned int FileSize(const char* path) { return (std::filesystem::exists(path)) ? (unsigned int)std::filesystem::file_size(path) : 0U; }
 		static inline std::filesystem::file_time_type FileModifiedTime(const char* path) { return (std::filesystem::exists(path)) ? std::filesystem::last_write_time(path) : std::filesystem::file_time_type(); }
+		
+		static std::vector<std::string> GetFilesInDir(const char* directory, bool include_directories = false);
 
 	private:
 		FileSystem() = delete;

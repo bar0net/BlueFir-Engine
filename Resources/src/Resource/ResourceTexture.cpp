@@ -3,6 +3,7 @@
 
 #include "json.h"
 #include "FileSystem.h"
+#include "LogSystem.h"
 
 bool bluefir::resources::ResourceTexture::LoadInMemory()
 {
@@ -46,7 +47,7 @@ void bluefir::resources::ResourceTexture::Save() const
 	
 	char* buffer = nullptr;
 	json.FillBuffer(&buffer);
-	std::string path = exported_file_.substr(0, exported_file_.find_last_of('.')) + ".meta";
+	std::string path = base::FileSystem::GetFileMetaPath(uid_);
 	base::FileSystem::ExportFile(path.c_str(), buffer, strlen(buffer));
 }
 
@@ -54,7 +55,22 @@ void bluefir::resources::ResourceTexture::Load()
 {
 	ASSERT(!exported_file_.empty());
 	char* data = nullptr;
-	std::string path = exported_file_.substr(0, exported_file_.find_last_of('.')) + ".meta";
+	
+	size_t last_bracket = exported_file_.find_last_of("\\");
+	if (last_bracket == std::string::npos)
+	{
+		size_t last_bracket = exported_file_.find_last_of("/");
+
+		if (last_bracket == std::string::npos)
+		{
+			LOGERROR("Could not extract filename from %s", exported_file_);
+			return;
+		}
+		else last_bracket += 1;
+	}
+	else last_bracket += 1;
+	std::string str_uid = exported_file_.substr(last_bracket, exported_file_.find_last_of(".") - last_bracket);
+	std::string path = base::FileSystem::GetFileMetaPath(str_uid.c_str(), &path);
 
 	if (!base::FileSystem::ExistsDir(path.c_str())) return;
 

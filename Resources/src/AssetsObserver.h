@@ -2,30 +2,27 @@
 #define BF_RESOURCES_ASSETSOBSERVER
 
 #include <string>
-#include <filesystem>
 #include <vector>
 #include <unordered_map>
 #include <thread>
 #include <mutex>
 
-// TODO: Check why sometimes crashes when removing a file!
+#include "FileSystem.h"
 
 namespace bluefir::resources
 {
 	struct AssetsFile
 	{
 	public:
-		AssetsFile(const char* path) : path(path), isDir(true), checked(true) {}
-		AssetsFile(const char* path, unsigned int size, std::filesystem::file_time_type last_modified) : path(path), isDir(false), size(size), last_modified(last_modified), checked(true) {}
-		virtual ~AssetsFile() { for (auto it = contents.begin(); it != contents.end(); ++it) delete it->second; contents.clear(); }
+		AssetsFile(const char* path) : path(path), checked(false) { last_modified = base::FileSystem::FileModifiedTime(path); }
+		virtual ~AssetsFile() {}
+
+		inline bool HasChanged() const { return last_modified != base::FileSystem::FileModifiedTime(path.c_str()); }
 
 	public:
 		std::string path;
-		bool isDir = false;
-		unsigned int size = 0;
 		std::filesystem::file_time_type last_modified;
-		std::unordered_map<std::string, AssetsFile*> contents;
-		bool checked = true;
+		bool checked = false;
 	};
 
 	class AssetsObserver
@@ -33,21 +30,29 @@ namespace bluefir::resources
 	public:
 		AssetsObserver();
 		virtual ~AssetsObserver();
-		void Start() { run_thread = std::thread(&AssetsObserver::Run, this); }
+		void Start();
 
 		void GetAdditions(std::vector<std::string>** buffer);
 		void GetRemovals(std::vector<std::string>** buffer);
 
+		std::vector<std::string> GetAssetList();
+
 	private:
 		void Run();
-		void DeleteContents(AssetsFile* file);
 		void RegisterAddition(std::string file);
+		inline void RegisterModification(std::string file) { RegisterRemoval(file); RegisterAddition(file); }
 		void RegisterRemoval(std::string file);
+
+		void AddAsset(const char* file);
+		void UpdateAssetList();
 
 	private:
 		bool active = true;
 
 		AssetsFile* root = nullptr;
+
+		std::unordered_map<std::string,AssetsFile*> registered_assets;
+		std::vector<std::string> asset_list;
 
 		std::vector<std::string>* to_remove = nullptr;
 		std::vector<std::string>* to_add = nullptr;

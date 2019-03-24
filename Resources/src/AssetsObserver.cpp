@@ -4,13 +4,10 @@
 #include <queue>
 #include <chrono>
 
-#include "FileSystem.h"
-
 bluefir::resources::AssetsObserver::AssetsObserver() : root(new AssetsFile(BF_FILESYSTEM_ASSETSDIR))
 {
 	to_add = new std::vector<std::string>();
 	to_remove = new std::vector<std::string>();
-
 }
 
 bluefir::resources::AssetsObserver::~AssetsObserver()
@@ -21,6 +18,18 @@ bluefir::resources::AssetsObserver::~AssetsObserver()
 	if (to_add != nullptr) delete to_add;
 	if (to_remove != nullptr) delete to_remove;
 	if (root != nullptr) delete root;
+
+	for (auto it = registered_assets.begin(); it != registered_assets.end(); ++it)
+		delete it->second;
+	registered_assets.clear();
+}
+
+void bluefir::resources::AssetsObserver::Start()
+{
+	asset_list = base::FileSystem::GetFilesInDir(BF_FILESYSTEM_ASSETSDIR, true);
+	for (auto file : asset_list) AddAsset(file.c_str());
+	
+	run_thread = std::thread(&AssetsObserver::Run, this);
 }
 
 
@@ -31,102 +40,73 @@ void bluefir::resources::AssetsObserver::Run()
 
 	while (active)
 	{
-		if (pending.empty())
+		bool modified = false;
+		// Reset checked status
+		for (auto it = registered_assets.begin(); it != registered_assets.end(); ++it) it->second->checked = false;
+
+		// Retrieve list of assets
+		std::vector<std::string> assets = base::FileSystem::GetFilesInDir(BF_FILESYSTEM_ASSETSDIR, true);
+
+		// Check Modifications (and register checks)
+		for (auto it = registered_assets.begin(); it != registered_assets.end(); ++it)
 		{
-			using namespace std::chrono_literals;
-			std::this_thread::sleep_for(10ms);
-			pending.push(root);
-		}
-		current = pending.front();
-		pending.pop();
-
-		if (current->isDir)
-		{
-			std::vector<std::string> hdd_contents = base::FileSystem::ReadDirectory(current->path.c_str());
-			for (auto it = current->contents.begin(); it != current->contents.end(); ++it) it->second->checked = false;
-
-			// Check Additions
-			// Check if there is any file in hdd_contents that was not registered previously
-			// or has changed in size / has been overwritten
-			for (auto it = hdd_contents.begin(); it != hdd_contents.end(); ++it)
+			bool found = false;
+			it->second->checked = true;
+			for (auto jt = assets.begin(); jt != assets.end(); ++jt)
 			{
-				auto stored_content = current->contents.find(*it);
-				if (stored_content == current->contents.end())
+				found = (it->first == *jt);
+				if (found && it->second->HasChanged()) RegisterModification(*jt); 
+				if (found)
 				{
-					// Found a new file!
-					if (base::FileSystem::IsDir(it->c_str()))
-					{
-						current->contents[*it] = new AssetsFile(it->c_str());
-					}
-					else
-					{
-						RegisterAddition(*it);
-						current->contents[*it] = new AssetsFile(it->c_str(), base::FileSystem::FileSize(it->c_str()), base::FileSystem::FileModifiedTime(it->c_str()));
-					}
-				}
-				else 
-				{
-					current->contents[*it]->checked = true;
-					if (current->contents[*it]->isDir) continue;
-					// Found existing file. 
-					// Check if it has the same size and the same "last modified date" as the one registered
-					if (current->contents[*it]->size != base::FileSystem::FileSize(it->c_str()) || current->contents[*it]->last_modified != base::FileSystem::FileModifiedTime(it->c_str()))
-					{
-						//RegisterRemoval(*it);
-						RegisterAddition(*it);
-						current->contents[*it]->size = base::FileSystem::FileSize(it->c_str());
-						current->contents[*it]->last_modified = base::FileSystem::FileModifiedTime(it->c_str());
-					}
-				}
-			}
-
-			// Check Deletions
-			// Check 
-			for (auto it = current->contents.cbegin(); it != current->contents.cend();)
-			{
-				if (!it->second->checked)
-				{
-					DeleteContents(it->second);
-					delete it->second;
-					current->contents.erase(it++);
-				}
-				else
-				{
-					if (it->second->checked && it->second->isDir) pending.push(it->second);
-					++it;
+					assets.erase(jt); // delete file from discovered assets
+					break;
 				}
 			}
 		}
-	}
-}
 
-void bluefir::resources::AssetsObserver::DeleteContents(AssetsFile * file)
-{
-	if (file->isDir)
-	{
-		for (auto it = file->contents.begin(); it != file->contents.end(); ++it)
+		// Remove unchecked assets
+		for (auto it = registered_assets.begin(); it != registered_assets.end(); ++it)
 		{
-			DeleteContents(it->second);
-			delete it->second;
+			if (!it->second->checked) { RegisterRemoval(it->first); modified = true; }
 		}
-		file->contents.clear();
-	}
-	else
-	{
-		RegisterRemoval(file->path);
+
+		// Add remaining discovered assets
+		for (auto jt = assets.begin(); jt != assets.end(); ++jt) { RegisterAddition(*jt); modified = true; }
+
+		if (modified) UpdateAssetList();
+		assets.clear();
 	}
 }
 
 void bluefir::resources::AssetsObserver::RegisterAddition(std::string file)
 {
 	std::lock_guard<std::mutex> lock{ mutex };
+	registered_assets[file] = new AssetsFile(file.c_str());
 	to_add->push_back(file);
 }
 
 void bluefir::resources::AssetsObserver::RegisterRemoval(std::string file)
 {
 	std::lock_guard<std::mutex> lock{ mutex };
+	delete registered_assets[file]; registered_assets.erase(file);
 	to_remove->push_back(file);
+}
+
+void bluefir::resources::AssetsObserver::AddAsset(const char * file)
+{
+	registered_assets[file] = new AssetsFile(file);
+}
+
+void bluefir::resources::AssetsObserver::UpdateAssetList()
+{
+	std::lock_guard<std::mutex> lock{ mutex };
+	asset_list = base::FileSystem::GetFilesInDir(BF_FILESYSTEM_ASSETSDIR, true);
+}
+
+std::vector<std::string> bluefir::resources::AssetsObserver::GetAssetList()
+{
+	std::lock_guard<std::mutex> lock{ mutex };
+	return asset_list;
 }
 
 void bluefir::resources::AssetsObserver::GetAdditions(std::vector<std::string>** buffer)

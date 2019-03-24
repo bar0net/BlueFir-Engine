@@ -3,6 +3,7 @@
 
 #include <vector>
 
+#include "json.h"
 #include "FileSystem.h"
 #include "Importer.h"
 
@@ -14,50 +15,45 @@
 bool bluefir::modules::ModuleResources::Init()
 {
 	LOGINFO("Initializing Resource Module.");
-
-	if (!base::FileSystem::ExistsDir(BF_FILESYSTEM_ASSETSDIR))
-		base::FileSystem::CreateDir(BF_FILESYSTEM_ASSETSDIR);
-
-	if (!base::FileSystem::ExistsDir(BF_FILESYSTEM_LIBRARYDIR))
-		base::FileSystem::CreateDir(BF_FILESYSTEM_LIBRARYDIR);
-
-	// Search and load all files in Library Folder
-	std::vector<std::string> files = base::FileSystem::ReadDirectory(BF_FILESYSTEM_LIBRARYDIR);
-	while (!files.empty())
-	{
-		std::string current_file = files[0];
-		if (base::FileSystem::IsDir(current_file.c_str()))
-		{
-			std::vector<std::string> new_files = base::FileSystem::ReadDirectory(current_file.c_str());
-			files.insert(files.end(), new_files.begin(), new_files.end());
-		}
-		else
-		{
-			std::string extension = base::FileSystem::GetFileExtension(current_file.c_str());
-			resources::Resource* resource = nullptr;
-
-			if (extension == "dds") resource = new resources::ResourceTexture(current_file.c_str());
-
-			if (resource != nullptr)
-			{
-				// Check if this file is still in assets
-				// if no meta file was found, GetFile returns 'INVALID_PATH'.
-				if (IS_IN_ASSETS(resource->GetFile()))
-				{
-					LOGINFO("Resource found in library: %s", resource->GetFile());
-					resources_[resource->GetUID()] = resource;
-				}
-				else 
-				{
-					this->DeleteResource(resource->GetUID());
-					delete resource;
-				}
-			}
-		}
-		files.erase(files.begin());
-	}
-
 	observer = new resources::AssetsObserver();
+
+	// Create directories if they don't exist 
+	if (!base::FileSystem::ExistsDir(BF_FILESYSTEM_ASSETSDIR))  base::FileSystem::CreateDir(BF_FILESYSTEM_ASSETSDIR);
+	if (!base::FileSystem::ExistsDir(BF_FILESYSTEM_LIBRARYDIR)) base::FileSystem::CreateDir(BF_FILESYSTEM_LIBRARYDIR);
+	if (!base::FileSystem::ExistsDir(BF_FILESYSTEM_CONFIGDIR))	base::FileSystem::CreateDir(BF_FILESYSTEM_CONFIGDIR);
+
+	// Retrieve the list of files in each directory
+	std::vector<std::string> assets  = base::FileSystem::GetFilesInDir(BF_FILESYSTEM_ASSETSDIR);
+	std::vector<std::string> meta    = base::FileSystem::GetFilesInDir(BF_FILESYSTEM_CONFIGDIR);
+	std::vector<std::string> library = base::FileSystem::GetFilesInDir(BF_FILESYSTEM_LIBRARYDIR);
+
+	// Load meta Files
+	for (auto it : meta) LoadMetaFile(it.c_str());
+
+	// Erase unregistered library files
+	for (auto it = resources_.begin(); it != resources_.end(); ++it)
+	{
+		auto jt = library.end();
+		while (jt > library.begin())
+		{
+			--jt;
+			if (std::strcmp(it->second->GetExportedFile(), jt->c_str()) == 0) {jt = library.erase(jt); break;}
+		}
+	}
+	for (auto jt : library) base::FileSystem::DeleteFile(jt.c_str());
+
+	// Add new assets
+	for (auto it = resources_.begin(); it != resources_.end(); ++it)
+	{
+		auto jt = assets.end();
+		while (jt > assets.begin())
+		{
+			--jt;
+			if (std::strcmp(it->second->GetExportedFile(), jt->c_str()) == 0) {jt = assets.erase(jt); break;}
+		}
+	}
+	for (auto jt : assets) ImportFile(jt.c_str());
+
 	observer->Start();
 	return true;
 }
@@ -173,7 +169,7 @@ bluefir::resources::Resource * bluefir::modules::ModuleResources::CreateNewResou
 void bluefir::modules::ModuleResources::DeleteResource(UID uid)
 {
 	std::string file = resources_[uid]->GetExportedFile();
-	std::string meta = file.substr(0, file.find_last_of(".")) + ".meta";
+	std::string meta = base::FileSystem::GetFileMetaPath(uid);
 
 	base::FileSystem::DeleteFile(file.c_str());
 	base::FileSystem::DeleteFile(meta.c_str());
@@ -187,8 +183,29 @@ void bluefir::modules::ModuleResources::DeleteResource(UID uid)
 void bluefir::modules::ModuleResources::DeleteResource(const char * exported_file)
 {
 	std::string file = exported_file;
-	std::string meta = file.substr(0, file.find_last_of(".")) + ".meta";
-
+	
+	size_t last_bracket = file.find_last_of('/');
+	std::string uid = file.substr(last_bracket, file.find_last_of(".")-last_bracket);
+	std::string meta = base::FileSystem::GetFileMetaPath(uid.c_str());
+	
 	base::FileSystem::DeleteFile(file.c_str());
 	base::FileSystem::DeleteFile(meta.c_str());
+}
+
+bool bluefir::modules::ModuleResources::LoadMetaFile(const char * file)
+{
+	// Sanity Check
+	if (!base::FileSystem::ExistsDir(file))	return false;
+	if (std::strcmp(base::FileSystem::GetFileExtension(file), "meta") != 0) return false;
+
+	// Import resource from json
+	char* data = nullptr;
+	base::FileSystem::ImportFile(file, &data);
+	base::JSON* json = new base::JSON(data);
+	resources::Resource* resource = resources::Importer::Import(json->GetString("file").c_str(), json->GetULongInt("uid"), json->GetInt("type"));
+	if (resource == nullptr) return false;
+
+	// Register resource
+	resources_[json->GetULongInt("uid")] = resource;
+	return true;
 }

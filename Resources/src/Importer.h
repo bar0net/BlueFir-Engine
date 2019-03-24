@@ -12,6 +12,7 @@ namespace bluefir::resources
 	class Importer
 	{
 	public:
+		static Resource* Import(const char* file_in_assets, UID uid, unsigned int type);
 		static Resource* Texture(const char* file_in_assets, UID uid);
 
 	private:
