@@ -14,6 +14,8 @@ namespace bluefir::editor
 		virtual void Init() override;
 		virtual void Draw() override;
 
+	private:
+		std::string selected_asset;
 	};
 }
 #endif // !BF_EDITORPANELS_RESOURCES

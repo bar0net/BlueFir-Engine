@@ -4,6 +4,8 @@
 #include "Module.h"
 #include <unordered_map>
 
+#include "AssetsObserver.h"
+
 // TODO: Maybe use something more sophisticated than random!
 #include <random>
 
@@ -46,13 +48,15 @@ namespace bluefir::modules
 		void DeleteResource(UID uid);
 		void DeleteResource(const char* exported_file);
 
+		bool LoadMetaFile(const char* file);
+
 	private:
 		UID last_uid_ = 1;
 		std::mt19937_64 generator;
 
 		std::unordered_map < UID, resources::Resource*> resources_;
+		
 		resources::AssetsObserver* observer;
-
 		bool observer_initialized = false;
 
 		friend bluefir::editor::PanelResources;

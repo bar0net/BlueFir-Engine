@@ -9,6 +9,20 @@
 #include "Resource.h"
 #include "Resource/ResourceTexture.h"
 
+bluefir::resources::Resource * bluefir::resources::Importer::Import(const char * file_in_assets, UID uid, unsigned int type)
+{
+	switch ((resources::Type)type)
+	{
+	case resources::Type::TEXTURE:
+		return Texture(file_in_assets, uid);
+		break;
+
+	default:
+		break;
+	}
+	return nullptr;
+}
+
 bluefir::resources::Resource* bluefir::resources::Importer::Texture(const char * file_in_assets, UID uid)
 {
 	ASSERT(file_in_assets);

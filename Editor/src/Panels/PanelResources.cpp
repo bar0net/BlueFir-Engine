@@ -2,8 +2,13 @@
 
 #include "../../Vendor/imgui-docking/imgui.h"
 
+#include "AssetsObserver.h"
 #include "ModuleResources.h"
 #include "Resource.h"
+
+#include <string>
+#include <vector>
+#include <stack>
 
 void bluefir::editor::PanelResources::Init()
 {
@@ -14,32 +19,61 @@ void bluefir::editor::PanelResources::Draw()
 	if (!enabled_) return;
 	ImGui::Begin(name_.c_str(), &enabled_);
 
-	for (auto it = bluefir_resources.resources_.begin(); it != bluefir_resources.resources_.end(); ++it)
+	std::vector<std::string> asset_list = bluefir_resources.observer->GetAssetList();
+
+	if (ImGui::TreeNode("Assets"))
 	{
-		const char* resource_type = nullptr;
-		switch (it->second->GetType())
+		std::stack<std::string> asset_container;
+		std::stack<bool> node_open;
+		asset_container.push(BF_FILESYSTEM_ASSETSDIR);
+		node_open.push(true);
+
+		for (std::string it : asset_list)
 		{
-		case bluefir::resources::Type::TEXTURE:
-			resource_type = "Texture";
-			break;
+			while (!asset_container.empty() && it.find(asset_container.top()) == it.npos)
+			{
+				if (asset_container.empty()) break;
+				asset_container.pop();
+				if (node_open.top()) ImGui::TreePop();
+				node_open.pop();
+			}
 
-		case bluefir::resources::Type::MESH:
-			resource_type = "Mesh";
-			break;
+			size_t length = asset_container.top().length();
+			std::string name = it.substr(length+1, it.npos);
 
-		case bluefir::resources::Type::UNKNOWN:
-			resource_type = "None";
-			break;
-
-		default:
-			resource_type = "None";
-			break;
+			if (base::FileSystem::IsDir(it.c_str())) 
+			{
+				asset_container.push(it);
+				node_open.push(ImGui::TreeNode(name.c_str()));
+			}
+			else
+			{
+				if (node_open.top())
+				{
+					bool selected = (it == selected_asset);
+					if (ImGui::Selectable(name.c_str(), &selected))	selected_asset = it;
+				}
+				//if (ImGui::TreeNode(name.c_str())) ImGui::TreePop();
+			}
 		}
 
-		if (it->second->IsLoadedToMemory())
-			ImGui::TextColored(ImVec4(0.2f, 1.0f, 0.2f, 1.0f), "[%s - %d] %s | %d", resource_type, it->second->GetUID(), it->second->GetFile(), it->second->Count());
-		else
-			ImGui::Text("[%s - %s] %s | %d", resource_type, std::to_string(it->second->GetUID()).c_str(), it->second->GetFile(), it->second->Count());
+		while (!node_open.empty()) 
+		{ 
+			if (node_open.top()) ImGui::TreePop();
+			node_open.pop();
+		}
+	}
+
+
+	ImGui::Separator();
+
+	ImGui::Text("Selected Resource:");
+	UID uid = bluefir_resources.Find(selected_asset.c_str());
+
+	if (uid != 0)
+	{
+		const resources::Resource* resource = bluefir_resources.Get(uid);
+		ImGui::Text("%s | %s | %d", std::to_string(resource->GetUID()).c_str(), resource->GetFile(), (unsigned)resource->GetType());
 	}
 
 	ImGui::End();

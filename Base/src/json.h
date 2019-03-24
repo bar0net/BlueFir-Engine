@@ -30,12 +30,6 @@ namespace bluefir::base
 		void SetString(const char* name, const char* value);
 		std::string GetString(const char* name) const;
 
-
-		//void Add(const char* name, unsigned int value);
-		//void Add(const char* name, const char* value);
-
-
-
 	private:
 		rapidjson::Document* document_ = nullptr;
 		rapidjson::Document::AllocatorType* allocator_ = nullptr;

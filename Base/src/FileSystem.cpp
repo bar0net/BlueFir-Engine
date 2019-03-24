@@ -122,13 +122,13 @@ const char * bluefir::base::FileSystem::GetFileExtension(const char * path)
 	return last_dot;
 }
 
-std::string bluefir::base::FileSystem::GetFileMetaPath(long long int uid, bool force_create)
+std::string bluefir::base::FileSystem::GetFileMetaPath(unsigned long long int uid, bool force_create)
 {
 	// TODO: Check this!
 	std::string str_uid = std::to_string(uid);
 	std::string path = std::string(BF_FILESYSTEM_CONFIGDIR) + std::string("/") + str_uid.substr(0, 2);
 
-	if (force_create && !std::filesystem::exists(path.c_str()))
+	if (force_create || !std::filesystem::exists(path.c_str()))
 		std::filesystem::create_directory(path.c_str());
 
 	path += std::string("/") + str_uid + std::string(".meta");
@@ -162,8 +162,52 @@ std::vector<std::string> bluefir::base::FileSystem::ReadDirectory(const char* pa
 
 	for (const auto &entry : std::filesystem::directory_iterator(path))
 	{
-		directory.emplace_back(entry.path().string());
+		std::string s = entry.path().string();
+
+		/*bool b = std::string("a\\b") == std::string("a/b");
+
+		size_t it = s.find("\\");
+		while (it != s.npos)
+		{
+			s.replace(it,1,"/");
+			size_t it = s.find_first_of("\\");
+		}*/
+		std::replace(s.begin(), s.end(), '\\', '/');
+
+		directory.emplace_back(s);
 	}
 
 	return directory;
+}
+
+std::vector<std::string> bluefir::base::FileSystem::GetFilesInDir(const char * directory, bool include_directories)
+{
+	ASSERT(directory);
+	std::vector<std::string> files;
+
+	if (!ExistsDir(directory))
+	{
+		LOGERROR("Could not acces %s.", directory);
+		return files;
+	}
+
+	std::vector<std::string> explore = ReadDirectory(directory);
+
+	while (!explore.empty())
+	{
+		std::string current = explore.front();
+		if ( IsDir(current.c_str()) )
+		{
+			if (include_directories) files.push_back(current);
+			std::vector<std::string> new_files = ReadDirectory(current.c_str());
+			explore.insert(explore.begin()+1, new_files.begin(), new_files.end());
+		}
+		else
+		{
+			files.push_back(current);
+		}
+		explore.erase(explore.begin());
+	}
+
+	return files;
 }
