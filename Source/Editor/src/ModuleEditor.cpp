@@ -1,8 +1,8 @@
 #include "ModuleEditor.h"
 
-#include "../Vendor/imgui-docking/imgui.h"
-#include "../Vendor/imgui-docking/imgui_impl_sdl.h"
-#include "../Vendor/imgui-docking/imgui_impl_opengl3.h"
+#include "imgui.h"
+#include "imgui_impl_sdl.h"
+#include "imgui_impl_opengl3.h"
 
 #include "Graphics.h"
 #include "EditorPanel.h"

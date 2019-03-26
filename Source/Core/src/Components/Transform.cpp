@@ -1,10 +1,10 @@
 #include "Transform.h"
 
 #include "BaseMacros.h"
-#include "../../Vendor/MathGeoLib/Math/float3.h"
-#include "../../Vendor/MathGeoLib/Math/Quat.h"
-#include "../../Vendor/MathGeoLib/Math/float4x4.h"
-#include "../../Vendor/MathGeoLib/Math/MathConstants.h"
+#include "Math/float3.h"
+#include "Math/Quat.h"
+#include "Math/float4x4.h"
+#include "Math/MathConstants.h"
 
 #include "../GameObject.h"
 

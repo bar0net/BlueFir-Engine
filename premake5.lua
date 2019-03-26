@@ -17,7 +17,7 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 -- ================================= PROJECT BLUEFIR =================================
 -- ===================================================================================
 project "BlueFir"
-	location "BlueFir"
+	location "Source/BlueFir"
 	kind "ConsoleApp"
 	language "C++"
 	
@@ -27,21 +27,21 @@ project "BlueFir"
 	
 	files
 	{
-		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
+		"Source/%{prj.name}/src/**.h",
+		"Source/%{prj.name}/src/**.cpp"
 	}
 	
 	includedirs
 	{
-		"Base/src",
-		"Graphics/src",
-		"Core/src",
-		"Renderer/src",
-		"Input/src",
-		"Scene/src",
-		"Time/src",
-		"Editor/src",
-		"Resources/src"
+		"Source/Base/src",
+		"Source/Graphics/src",
+		"Source/Core/src",
+		"Source/Renderer/src",
+		"Source/Input/src",
+		"Source/Scene/src",
+		"Source/Time/src",
+		"Source/Editor/src",
+		"Source/Resources/src"
 	}
 	
 	links
@@ -85,7 +85,7 @@ project "BlueFir"
 -- ================================== PROJECT BASE ===================================
 -- ===================================================================================
 project "Base"
-	location "Base"
+	location "Source/Base"
 	kind "StaticLib"
 	language "C++"
 	
@@ -95,8 +95,8 @@ project "Base"
 	
 	files
 	{
-		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
+		"Source/%{prj.name}/src/**.h",
+		"Source/%{prj.name}/src/**.cpp"
 	}
 	
 	includedirs
@@ -138,12 +138,11 @@ project "Base"
 		defines "BF_RELEASE"
 		optimize "On"
 
-
 -- ===================================================================================
 -- ================================ PROJECT GRAPHICS =================================
 -- ===================================================================================
 project "Graphics"
-	location "Graphics"
+	location "Source/Graphics"
 	kind "StaticLib"
 	language "C++"
 	
@@ -153,13 +152,13 @@ project "Graphics"
 	
 	files
 	{
-		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
+		"Source/%{prj.name}/src/**.h",
+		"Source/%{prj.name}/src/**.cpp"
 	}
 	
 	includedirs
 	{
-		"Base/src",
+		"Source/Base/src",
 		"Vendor/glew-2.1.0/include/",
 		"Vendor/SDL2-2.0.8/include/",
 		"Vendor/DevIL/include"
@@ -205,6 +204,13 @@ project "Graphics"
 	filter "configurations:Release"
 		defines "BF_RELEASE"
 		optimize "On"
+
+-- ===================================================================================
+-- ################################## GROUP VENDOR ###################################
+-- ===================================================================================
+		
+group "Vendor"
+dofile("Vendor/premake5.lua")
 		
 -- ===================================================================================
 -- ################################# GROUP MODULES ###################################
@@ -215,7 +221,7 @@ group "Modules"
 -- ================================== PROJECT CORE ===================================
 -- ===================================================================================
 project "Core"
-	location "Core"
+	location "Source/Core"
 	kind "StaticLib"
 	language "C++"
 	
@@ -225,16 +231,15 @@ project "Core"
 	
 	files
 	{
-		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp",
-		
-		"%{prj.name}/Vendor/**/**.h",
-		"%{prj.name}/Vendor/**/**.cpp"
+		"Source/%{prj.name}/src/**.h",
+		"Source/%{prj.name}/src/**.cpp"
 	}
 	
 	includedirs
 	{
-		"Base/src"
+		"Source/Base/src",
+		
+		"Vendor/MathGeoLib/"
 	}
 	
 	libdirs
@@ -244,7 +249,8 @@ project "Core"
 	
 	links
 	{
-		"Base"
+		"Base",
+		"MathGeoLib"
 	}
 	
 	filter "system:windows"
@@ -274,7 +280,7 @@ project "Core"
 -- ================================ PROJECT RENDERER =================================
 -- ===================================================================================
 project "Renderer"
-	location "Renderer"
+	location "Source/Renderer"
 	kind "StaticLib"
 	language "C++"
 	
@@ -284,18 +290,16 @@ project "Renderer"
 	
 	files
 	{
-		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp",
-		
-		"%{prj.name}/Vendor/**/**.h",
-		"%{prj.name}/Vendor/**/**.cpp"
+		"Source/%{prj.name}/src/**.h",
+		"Source/%{prj.name}/src/**.cpp"
 	}
 	
 	includedirs
 	{
-		"Base/src",
-		"Core/src",
-		"Graphics/src"
+		"Source/Base/src",
+		"Source/Core/src",
+		"Source/Graphics/src",
+		"Vendor/MathGeoLib/"
 	}
 	
 	libdirs
@@ -307,7 +311,8 @@ project "Renderer"
 	{
 		"Base",
 		"Core",
-		"Graphics"
+		"Graphics",
+		"MathGeoLib"
 	}
 	
 	filter "system:windows"
@@ -337,7 +342,7 @@ project "Renderer"
 -- ================================== PROJECT SCENE ===================================
 -- ===================================================================================
 project "Scene"
-	location "Scene"
+	location "Source/Scene"
 	kind "StaticLib"
 	language "C++"
 	
@@ -347,19 +352,16 @@ project "Scene"
 	
 	files
 	{
-		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp",
-		
-		"%{prj.name}/Vendor/**/**.h",
-		"%{prj.name}/Vendor/**/**.cpp"
+		"Source/%{prj.name}/src/**.h",
+		"Source/%{prj.name}/src/**.cpp"
 	}
 	
 	includedirs
 	{
-		"Base/src",
-		"Core/src",
-		"Renderer/src",
-		"Resources/src"
+		"Source/Base/src",
+		"Source/Core/src",
+		"Source/Renderer/src",
+		"Source/Resources/src"
 	}
 	
 	libdirs
@@ -402,7 +404,7 @@ project "Scene"
 -- ================================== PROJECT INPUT ==================================
 -- ===================================================================================
 project "Input"
-	location "Input"
+	location "Source/Input"
 	kind "StaticLib"
 	language "C++"
 	
@@ -412,16 +414,16 @@ project "Input"
 	
 	files
 	{
-		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
+		"Source/%{prj.name}/src/**.h",
+		"Source/%{prj.name}/src/**.cpp"
 	}
 	
 	includedirs
 	{
-		"Base/src",
-		"Core/src",
-		"Renderer/src",
-		"Editor/src",
+		"Source/Base/src",
+		"Source/Core/src",
+		"Source/Renderer/src",
+		"Source/Editor/src",
 		"Vendor/SDL2-2.0.8/include/"
 	}
 	
@@ -466,7 +468,7 @@ project "Input"
 -- ================================= PROJECT TIME ==================================
 -- ===================================================================================
 project "Time"
-	location "Time"
+	location "Source/Time"
 	kind "StaticLib"
 	language "C++"
 	
@@ -476,14 +478,14 @@ project "Time"
 	
 	files
 	{
-		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
+		"Source/%{prj.name}/src/**.h",
+		"Source/%{prj.name}/src/**.cpp"
 	}
 	
 	includedirs
 	{
-		"Base/src",
-		"Core/src"
+		"Source/Base/src",
+		"Source/Core/src"
 	}
 	
 	libdirs
@@ -524,7 +526,7 @@ project "Time"
 -- ================================= PROJECT EDITOR ==================================
 -- ===================================================================================
 project "Editor"
-	location "Editor"
+	location "Source/Editor"
 	kind "StaticLib"
 	language "C++"
 	
@@ -534,25 +536,23 @@ project "Editor"
 	
 	files
 	{
-		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp",
-		
-		"%{prj.name}/Vendor/**/**.h",
-		"%{prj.name}/Vendor/**/**.cpp"
+		"Source/%{prj.name}/src/**.h",
+		"Source/%{prj.name}/src/**.cpp"
 	}
 	
 	includedirs
 	{
-		"Base/src",
-		"Core/src",
-		"Graphics/src",
-		"Renderer/src",
-		"Time/src",
-		"Scene/src",
-		"Resources/src",
+		"Source/Base/src",
+		"Source/Core/src",
+		"Source/Graphics/src",
+		"Source/Renderer/src",
+		"Source/Time/src",
+		"Source/Scene/src",
+		"Source/Resources/src",
 		
 		"Vendor/glew-2.1.0/include/",
-		"Vendor/SDL2-2.0.8/include/"
+		"Vendor/SDL2-2.0.8/include/",
+		"Vendor/imgui-docking/"
 	}
 	
 	libdirs
@@ -571,6 +571,7 @@ project "Editor"
 		"Scene",
 		"Resources",
 		
+		"ImGui",
 		"glew32",
 		"OpenGL32",
 		"SDL2"
@@ -603,7 +604,7 @@ project "Editor"
 -- ================================ PROJECT RESOURCES ==================================
 -- ===================================================================================
 project "Resources"
-	location "Resources"
+	location "Source/Resources"
 	kind "StaticLib"
 	language "C++"
 	
@@ -613,25 +614,23 @@ project "Resources"
 	
 	files
 	{
-		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp",
-		
-		"%{prj.name}/Vendor/**/**.h",
-		"%{prj.name}/Vendor/**/**.cpp"
+		"Source/%{prj.name}/src/**.h",
+		"Source/%{prj.name}/src/**.cpp"
 	}
 	
 	includedirs
 	{
-		"Base/src",
-		"Core/src",
-		"Graphics/src",
-		"Renderer/src",
-		"Resources/Vendor/Assimp/include"
+		"Source/Base/src",
+		"Source/Core/src",
+		"Source/Graphics/src",
+		"Source/Renderer/src",
+		
+		"Vendor/assimp/include"
 	}
 	
 	libdirs
 	{
-		"Resources/Vendor/Assimp/lib/x64"
+		"Vendor/assimp/lib/x64"
 	}
 	
 	links

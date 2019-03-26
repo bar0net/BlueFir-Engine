@@ -7,15 +7,17 @@
 #include "Mesh.h"
 #include "Material.h"
 
-#include "../Vendor/Assimp/include/assimp/cimport.h"
-#include "../Vendor/Assimp/include/assimp/postprocess.h"
-#include "../Vendor/Assimp/include/assimp/scene.h"
-#include "../Vendor/Assimp/include/assimp/material.h"
-#include "../Vendor/Assimp/include/assimp/mesh.h"
+#include "assimp/cimport.h"
+#include "assimp/postprocess.h"
+#include "assimp/scene.h"
+#include "assimp/material.h"
+#include "assimp/mesh.h"
+#include "assimp/matrix4x4.h"
 
 #include "ModuleTexture.h"
 #include "BufferLayout.h"
 #include "ModuleRenderer.h"
+
 
 // TODO: think how to properly import textures from here!
 // maybe return a vector with all the paths
@@ -40,7 +42,7 @@ bool bluefir::core::ModelLoader::Load(const char * data, unsigned int size, std:
 	meshes.reserve(scene->mNumMeshes);
 
 	LOGINFO("Loading 3D model.");
-	ParseNode(scene->mRootNode, aiMatrix4x4(), scene, meshes);
+	ParseNode(scene->mRootNode, (Matrix4x4*)(&aiMatrix4x4()), scene, meshes);
 	LOGINFO("Loading 3D model complete.");
 
 	LOGINFO("Loading model textures.");
@@ -59,14 +61,14 @@ bool bluefir::core::ModelLoader::Load(const char * data, unsigned int size, std:
 	return true;
 }
 
-void bluefir::core::ModelLoader::ParseNode(const aiNode* const node, aiMatrix4x4 transform, const aiScene* const scene, std::vector<int>& meshes)
+void bluefir::core::ModelLoader::ParseNode(const aiNode* const node, Matrix4x4* transform, const aiScene* const scene, std::vector<int>& meshes)
 {
 	
 	ASSERT(scene);
 
 	if (node == nullptr) return;
 
-	transform = transform * node->mTransformation;
+	*((aiMatrix4x4*)transform) = *((aiMatrix4x4*)transform) * node->mTransformation;
 	for (unsigned int i = 0U; i < node->mNumChildren; i++)
 	{
 		ParseNode(node->mChildren[i], transform, scene, meshes);
@@ -96,11 +98,11 @@ void bluefir::core::ModelLoader::ParseNode(const aiNode* const node, aiMatrix4x4
 		}
 
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-		meshes.emplace_back(bluefir_renderer.CreateMesh(CreateMesh(mesh, &transform)));
+		meshes.emplace_back(bluefir_renderer.CreateMesh(CreateMesh(mesh, transform)  ));
 	}
 }
 
-bluefir::graphics::Mesh* bluefir::core::ModelLoader::CreateMesh(const aiMesh* const mesh, const aiMatrix4x4* transform)
+bluefir::graphics::Mesh* bluefir::core::ModelLoader::CreateMesh(const aiMesh* const mesh, const Matrix4x4* transform)
 {
 	ASSERT(mesh);
 
@@ -115,7 +117,7 @@ bluefir::graphics::Mesh* bluefir::core::ModelLoader::CreateMesh(const aiMesh* co
 
 	for (unsigned int j = 0U; j < mesh->mNumVertices; ++j)
 	{
-		aiVector3D v = *transform * mesh->mVertices[j];
+		aiVector3D v = *((aiMatrix4x4*)transform) * mesh->mVertices[j];
 
 		float* vertex = (float*)&v;
 		for (unsigned int k = 0U; k < 3U; ++k)

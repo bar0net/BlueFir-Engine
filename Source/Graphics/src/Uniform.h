@@ -3,8 +3,6 @@
 
 #include <vector>
 
-#include "../../Vendor/glew-2.1.0/include/GL/glew.h"
-
 #include "LogSystem.h"
 #include "Graphics.h"
 

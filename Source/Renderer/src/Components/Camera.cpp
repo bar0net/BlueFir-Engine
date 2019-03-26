@@ -1,9 +1,10 @@
 #include "Camera.h"
 
-#include "../Vendor/MathGeoLib/Geometry/Frustum.h"
-#include "../Vendor/MathGeoLib/Math/MathConstants.h"
-#include "../Vendor/MathGeoLib/Math/float4x4.h"
-#include "../Vendor/MathGeoLib/Math/float3.h"
+#include "Geometry/Frustum.h"
+#include "Math/MathConstants.h"
+#include "Math/float4x4.h"
+#include "Math/float3.h"
+
 
 #include "../ModuleRenderer.h"
 

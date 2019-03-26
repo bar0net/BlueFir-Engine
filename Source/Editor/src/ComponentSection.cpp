@@ -1,6 +1,6 @@
 #include "ComponentSection.h"
 
-#include "../Vendor/imgui-docking/imgui.h"
+#include "imgui.h"
 
 #include "Component.h"
 #include "Components/Transform.h"

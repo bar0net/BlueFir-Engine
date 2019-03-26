@@ -1,22 +1,25 @@
 #include "json.h"
 
-#include <string>
+#include <string.h>
+#include "rapidjson/document.h"
 
 #include "BaseMacros.h"
 #include "LogSystem.h"
 #include "rapidjson/stringbuffer.h"
 #include "rapidjson/writer.h"
 
+#define document_ ((rapidjson::Document*)document_ptr_)
+
 bluefir::base::JSON::JSON()
 {
-	document_ = new rapidjson::Document();
+	document_ptr_ = (void*)(new rapidjson::Document());
 	document_->SetObject();
 	allocator_ = &document_->GetAllocator();
 }
 
 bluefir::base::JSON::JSON(const char * buffer)
 {
-	document_ = new rapidjson::Document();
+	document_ptr_ = new rapidjson::Document();
 	document_->SetObject();
 	document_->Parse(buffer);
 	allocator_ = &document_->GetAllocator();
@@ -24,7 +27,7 @@ bluefir::base::JSON::JSON(const char * buffer)
 
 bluefir::base::JSON::~JSON()
 {
-	if (document_ != nullptr) { delete document_; document_ = nullptr; }
+	if (document_ != nullptr) { delete document_; document_ptr_ = nullptr; }
 }
 
 void bluefir::base::JSON::FillBuffer(char ** buffer)
@@ -40,7 +43,7 @@ void bluefir::base::JSON::FillBuffer(char ** buffer)
 
 	std::string s = json_buffer->GetString();
 	*buffer = new char[s.size()];
-	std::strcpy(*buffer, s.c_str());
+	strcpy_s(*buffer, s.size(), s.c_str());
 
 	delete json_buffer;
 }
@@ -49,11 +52,11 @@ void bluefir::base::JSON::SetBool(const char * name, bool value)
 {
 	ASSERT(name);
 
-	rapidjson::Value json_key(name, std::strlen(name), *allocator_);
+	rapidjson::Value json_key(name, (rapidjson::SizeType)std::strlen(name), *(rapidjson::Document::AllocatorType*)(allocator_));
 	rapidjson::Value::MemberIterator it = document_->FindMember(name);
 
 	if (it != document_->MemberEnd()) it->value = rapidjson::Value(value);
-	else document_->AddMember(json_key, rapidjson::Value(value), *allocator_);
+	else document_->AddMember(json_key, rapidjson::Value(value), *(rapidjson::Document::AllocatorType*)(allocator_));
 }
 
 bool bluefir::base::JSON::GetBool(const char * name) const
@@ -71,11 +74,11 @@ void bluefir::base::JSON::SetInt(const char * name, int value)
 {
 	ASSERT(name);
 
-	rapidjson::Value json_key(name, std::strlen(name), *allocator_);
+	rapidjson::Value json_key(name, (rapidjson::SizeType)std::strlen(name), *(rapidjson::Document::AllocatorType*)(allocator_));
 	rapidjson::Value::MemberIterator it = document_->FindMember(name);
 
 	if (it != document_->MemberEnd()) it->value = rapidjson::Value(value);
-	else document_->AddMember(json_key, rapidjson::Value(value), *allocator_);
+	else document_->AddMember(json_key, rapidjson::Value(value), *(rapidjson::Document::AllocatorType*)(allocator_));
 }
 
 int bluefir::base::JSON::GetInt(const char * name) const
@@ -93,11 +96,11 @@ void bluefir::base::JSON::SetUInt(const char * name, unsigned int value)
 {
 	ASSERT(name);
 
-	rapidjson::Value json_key(name, std::strlen(name), *allocator_);
+	rapidjson::Value json_key(name, (rapidjson::SizeType)std::strlen(name), *(rapidjson::Document::AllocatorType*)(allocator_));
 	rapidjson::Value::MemberIterator it = document_->FindMember(name);
 
 	if (it != document_->MemberEnd()) it->value = rapidjson::Value(value);
-	else document_->AddMember(json_key, rapidjson::Value(value), *allocator_);
+	else document_->AddMember(json_key, rapidjson::Value(value), *(rapidjson::Document::AllocatorType*)(allocator_));
 }
 
 unsigned int bluefir::base::JSON::GetUInt(const char * name) const
@@ -115,11 +118,11 @@ void bluefir::base::JSON::SetULongInt(const char * name, unsigned long long int 
 {
 	ASSERT(name);
 
-	rapidjson::Value json_key(name, std::strlen(name), *allocator_);
+	rapidjson::Value json_key(name, (rapidjson::SizeType)std::strlen(name), *(rapidjson::Document::AllocatorType*)(allocator_));
 	rapidjson::Value::MemberIterator it = document_->FindMember(name);
 
 	if (it != document_->MemberEnd()) it->value = rapidjson::Value((uint64_t)value);
-	else document_->AddMember(json_key, rapidjson::Value((uint64_t)value), *allocator_);
+	else document_->AddMember(json_key, rapidjson::Value((uint64_t)value), *(rapidjson::Document::AllocatorType*)(allocator_));
 }
 
 unsigned long long int bluefir::base::JSON::GetULongInt(const char * name) const
@@ -135,11 +138,11 @@ void bluefir::base::JSON::SetString(const char * name, const char* value)
 {
 	ASSERT(name);
 
-	rapidjson::Value json_key(name, std::strlen(name), *allocator_);
+	rapidjson::Value json_key(name, (rapidjson::SizeType)std::strlen(name), *(rapidjson::Document::AllocatorType*)(allocator_));
 	rapidjson::Value::MemberIterator it = document_->FindMember(name);
 
-	if (it != document_->MemberEnd()) it->value = rapidjson::Value(value, strlen(value));
-	else document_->AddMember(json_key, rapidjson::Value(value, strlen(value)), *allocator_);
+	if (it != document_->MemberEnd()) it->value = rapidjson::Value(value, (rapidjson::SizeType)std::strlen(value));
+	else document_->AddMember(json_key, rapidjson::Value(value, (rapidjson::SizeType)std::strlen(value)), *(rapidjson::Document::AllocatorType*)(allocator_));
 }
 
 std::string bluefir::base::JSON::GetString(const char * name) const

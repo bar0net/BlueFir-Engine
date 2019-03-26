@@ -1,7 +1,6 @@
 #ifndef BLUEFIR_BASE_JSON_H
 #define BLUEFIR_BASE_JSON_H
 
-#include "../../Vendor/rapidjson/include/rapidjson/document.h"
 #include <string>
 
 namespace bluefir::base
@@ -31,8 +30,8 @@ namespace bluefir::base
 		std::string GetString(const char* name) const;
 
 	private:
-		rapidjson::Document* document_ = nullptr;
-		rapidjson::Document::AllocatorType* allocator_ = nullptr;
+		void* document_ptr_ = nullptr; //rapidjson::Document
+		void* allocator_ = nullptr; //rapidjson::Document::AllocatorType
 
 	};
 }
