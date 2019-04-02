@@ -4,6 +4,8 @@
 #include "Module.h"
 #include <vector>
 
+#define bluefir_editor bluefir::modules::ModuleEditor::getInstance()
+
 namespace bluefir::editor
 {
 	class EditorPanel;
@@ -44,6 +46,8 @@ namespace bluefir::modules
 		bool MainMenu();
 		void CreateDockingSpace();
 
+	public:
+		editor::EditorPanel* resource_preview_ = nullptr;
 
 	private:
 		std::vector<editor::EditorPanel*> panels_;

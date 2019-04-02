@@ -5,13 +5,34 @@
 #include "FileSystem.h"
 #include "LogSystem.h"
 
+#include "Buffer/TextureBuffer.h"
+#include "../Importer.h"
+
+bluefir::resources::ResourceTexture::~ResourceTexture()
+{
+	gpu_id = 0;
+	delete buffer_; buffer_ = nullptr;
+}
+
 bool bluefir::resources::ResourceTexture::LoadInMemory()
 {
+	if (loaded_ == 0)
+	{
+		if (!base::FileSystem::ExistsDir(exported_file_.c_str()))
+		{
+			LOGERROR("Could not find file in library."); // TODO: Try to import when fails
+			return false;
+		}
+
+		char* data = nullptr;
+		int size = base::FileSystem::ImportFile(exported_file_.c_str(), &data);
+		graphics::Graphics::ImportTexture(&buffer_, data, size, "dds");
+		gpu_id = buffer_->ID();
+		base::FileSystem::ReleaseFile(&data);
+	}
+
 	++loaded_;
-
-	// TODO: Load Texture
-
-	return false;
+	return true;
 }
 
 bool bluefir::resources::ResourceTexture::UnloadFromMemory(bool force)
@@ -23,9 +44,10 @@ bool bluefir::resources::ResourceTexture::UnloadFromMemory(bool force)
 
 	if (keep_in_memory_ && !force) return true;
 
-	// TODO: Unload Texture
+	gpu_id = 0;
+	delete buffer_; buffer_ = nullptr;
 
-	return false;
+	return true;
 }
 
 void bluefir::resources::ResourceTexture::Save() const
@@ -54,6 +76,7 @@ void bluefir::resources::ResourceTexture::Save() const
 void bluefir::resources::ResourceTexture::Load()
 {
 	ASSERT(!exported_file_.empty());
+	if (loaded_ != 0) return;
 	char* data = nullptr;
 	
 	size_t last_bracket = exported_file_.find_last_of("\\");
@@ -89,6 +112,8 @@ void bluefir::resources::ResourceTexture::Load()
 	mips = json.GetInt("mips");
 	bytes = json.GetInt("bytes");
 	format = (resources::TextureFormat)json.GetInt("format");
+
+	if (keep_in_memory_) Load();
 }
 
 void bluefir::resources::ResourceTexture::Set(unsigned int width, unsigned int height, unsigned int depth, unsigned int mips, unsigned int bytes, int format)

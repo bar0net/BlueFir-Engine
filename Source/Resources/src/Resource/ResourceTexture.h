@@ -3,6 +3,11 @@
 
 #include "../Resource.h"
 
+namespace bluefir::graphics
+{
+	class TextureBuffer;
+}
+
 namespace bluefir::resources
 {
 	// Using same format codes from DevIL "il.h"
@@ -27,7 +32,7 @@ namespace bluefir::resources
 		// TODO: Solve if meta has been erased previous to load.
 		ResourceTexture(const char* exported_file) : Resource(exported_file) { this->Load(); }
 		ResourceTexture(UID id, const char* file, const char* exported_file, bool keep_in_memory = false) : Resource(id, file, exported_file, Type::TEXTURE, keep_in_memory) {}
-		virtual ~ResourceTexture() {}
+		~ResourceTexture();
 
 		bool LoadInMemory() override;
 		bool UnloadFromMemory(bool force = false) override;
@@ -45,6 +50,8 @@ namespace bluefir::resources
 		unsigned int gpu_id = 0;
 		TextureFormat format = TextureFormat::UNKNOWN;
 
+	private:
+		graphics::TextureBuffer* buffer_ = nullptr;
 	};
 }
 

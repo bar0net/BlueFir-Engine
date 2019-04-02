@@ -38,6 +38,7 @@ int bluefir::modules::ModuleTexture::LoadTexture(const char * filename)
 	int size = base::FileSystem::ImportFile(filename, &data);
 	if (size == 0)
 	{
+		base::FileSystem::ReleaseFile(&data);
 		LOGERROR("Could not import file: %s", filename);
 		return -1;
 	}
@@ -46,6 +47,7 @@ int bluefir::modules::ModuleTexture::LoadTexture(const char * filename)
 
 	// TODO: dynamically check texture format
 	graphics::Graphics::ImportTexture(&texture, data, size, "png");
+	base::FileSystem::ReleaseFile(&data);
 
 	if (!texture)
 	{
@@ -55,7 +57,6 @@ int bluefir::modules::ModuleTexture::LoadTexture(const char * filename)
 
 	textures_[texture->ID()] = texture;
 	texture_names_[std::string(filename)] = texture->ID();
-	base::FileSystem::ReleaseFile(&data);
 
 	return texture->ID();
 }

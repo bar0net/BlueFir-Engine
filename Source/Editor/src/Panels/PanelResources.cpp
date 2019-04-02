@@ -6,6 +6,9 @@
 #include "ModuleResources.h"
 #include "Resource.h"
 
+#include "../ModuleEditor.h"
+#include "PanelResourcePreview.h"
+
 #include <string>
 #include <vector>
 #include <stack>
@@ -51,7 +54,13 @@ void bluefir::editor::PanelResources::Draw()
 				if (node_open.top())
 				{
 					bool selected = (it == selected_asset);
-					if (ImGui::Selectable(name.c_str(), &selected))	selected_asset = it;
+					if (ImGui::Selectable(name.c_str(), &selected))
+					{
+						if (selected_uid != 0) ((PanelResourcePreview*)bluefir_editor.resource_preview_)->Release();
+						selected_asset = it;
+						selected_uid = bluefir_resources.Find(selected_asset.c_str());
+						((PanelResourcePreview*)bluefir_editor.resource_preview_)->Set(selected_uid);
+					}
 				}
 				//if (ImGui::TreeNode(name.c_str())) ImGui::TreePop();
 			}
@@ -73,7 +82,7 @@ void bluefir::editor::PanelResources::Draw()
 	if (uid != 0)
 	{
 		const resources::Resource* resource = bluefir_resources.Get(uid);
-		ImGui::Text("%s | %s | %d", std::to_string(resource->GetUID()).c_str(), resource->GetFile(), (unsigned)resource->GetType());
+		ImGui::Text("UID: %s\nFile: %s\nType: %d\nInstances: %d", std::to_string(resource->GetUID()).c_str(), resource->GetFile(), (unsigned)resource->GetType(), resource->Count());
 	}
 
 	ImGui::End();
