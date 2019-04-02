@@ -30,7 +30,7 @@ void bluefir::editor::PanelResourcePreview::Draw()
 	ImGui::End();
 }
 
-void bluefir::editor::PanelResourcePreview::Set(unsigned long long int uid)
+void bluefir::editor::PanelResourcePreview::Set(UID uid)
 {
 	resource = bluefir_resources.Get(uid);
 	if (!resource) return; 

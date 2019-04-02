@@ -202,6 +202,8 @@ bool bluefir::modules::ModuleResources::LoadMetaFile(const char * file)
 	char* data = nullptr;
 	base::FileSystem::ImportFile(file, &data);
 	base::JSON* json = new base::JSON(data);
+	base::FileSystem::ReleaseFile(&data);
+
 	resources::Resource* resource = resources::Importer::Import(json->GetString("file").c_str(), json->GetULongInt("uid"), json->GetInt("type"));
 	if (resource == nullptr) return false;
 

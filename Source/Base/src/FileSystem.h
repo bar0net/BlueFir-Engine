@@ -4,6 +4,8 @@
 #include <filesystem>
 #include <vector>
 
+#include "BaseMacros.h"
+
 #define BF_FILESYSTEM_ASSETSDIR "Assets"
 #define BF_FILESYSTEM_LIBRARYDIR "Library"
 #define BF_FILESYSTEM_CONFIGDIR "Config"
@@ -22,7 +24,7 @@ namespace bluefir::base
 		static void ReleaseFile(const char** data);
 
 		static const char* GetFileExtension(const char* path);
-		static std::string GetFileMetaPath(unsigned long long int uid, bool force_create = false);
+		static std::string GetFileMetaPath(UID uid, bool force_create = false);
 		static std::string GetFileMetaPath(const char* uid, bool force_create = false);
 
 		static std::vector<std::string> ReadDirectory(const char* path);

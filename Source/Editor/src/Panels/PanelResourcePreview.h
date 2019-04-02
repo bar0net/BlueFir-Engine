@@ -2,6 +2,7 @@
 #define BF_EDITOR_PANEL_RESOURCE_PREVIEW
 
 #include "../EditorPanel.h"
+#include "BaseMacros.h"
 
 namespace bluefir::resources
 {
@@ -21,7 +22,7 @@ namespace bluefir::editor
 		virtual void CleanUp() {}
 		virtual void Inspect() const {}
 
-		void Set(unsigned long long int uid);
+		void Set(UID uid);
 		void Release();
 
 	private:

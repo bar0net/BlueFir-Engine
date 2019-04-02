@@ -98,12 +98,13 @@ int bluefir::modules::ModuleScene::CreateEmptyGameObject(core::GameObject* paren
 bool bluefir::modules::ModuleScene::ImportModel(const char * filename)
 {
 
-	char* data = nullptr;
-	int size = base::FileSystem::ImportAsset(filename, &data);
-
 	std::vector<int> meshes;
 	std::vector<int> materials;
+	char* data = nullptr;
+
+	int size = base::FileSystem::ImportAsset(filename, &data);
 	core::ModelLoader::Load(data, size, meshes, materials);
+	base::FileSystem::ReleaseFile(&data);
 
 	int parent = CreateEmptyGameObject();
 	gameObjects_[parent]->name = "GameObject";
@@ -119,6 +120,5 @@ bool bluefir::modules::ModuleScene::ImportModel(const char * filename)
 		mr->SetMaterial(0);
 	}
 
-	delete data; data = nullptr;
 	return false;
 }

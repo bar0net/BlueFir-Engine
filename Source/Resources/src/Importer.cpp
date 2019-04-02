@@ -36,6 +36,7 @@ bluefir::resources::Resource* bluefir::resources::Importer::Texture(const char *
 	unsigned int size = bluefir::base::FileSystem::ImportFile(file.c_str(), &raw_image);
 	if (size == 0)
 	{
+		base::FileSystem::ReleaseFile(&raw_image);
 		LOGERROR("An error has occurred while importing %s", std::string(file_in_assets));
 		return nullptr;
 	}

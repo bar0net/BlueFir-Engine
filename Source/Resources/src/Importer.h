@@ -3,7 +3,7 @@
 
 #include <string>
 
-#define UID unsigned long long int
+#include "BaseMacros.h"
 
 namespace bluefir::resources
 {

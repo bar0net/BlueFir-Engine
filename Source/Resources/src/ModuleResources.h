@@ -5,12 +5,12 @@
 #include <unordered_map>
 
 #include "AssetsObserver.h"
+#include "BaseMacros.h"
 
 // TODO: Maybe use something more sophisticated than random!
 #include <random>
 
 #define bluefir_resources bluefir::modules::ModuleResources::getInstance()
-#define UID unsigned long long
 
 namespace bluefir::resources
 {

@@ -2,6 +2,7 @@
 #define BF_EDITORPANELS_RESOURCES
 
 #include "../EditorPanel.h"
+#include "BaseMacros.h"
 
 namespace bluefir::editor
 {
@@ -16,7 +17,7 @@ namespace bluefir::editor
 
 	private:
 		std::string selected_asset;
-		unsigned long long int selected_uid = 0;
+		UID selected_uid = 0;
 	};
 }
 #endif // !BF_EDITORPANELS_RESOURCES

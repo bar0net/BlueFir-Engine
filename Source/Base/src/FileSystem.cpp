@@ -2,11 +2,10 @@
 
 #include "LogSystem.h"
 
-// TODO: Migrate to PhysFX
+// TODO: Migrate to PhysFX?
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "BaseMacros.h"
 
 const char* bluefir::base::FileSystem::ReadFile(const char* filename)
 {
@@ -122,7 +121,7 @@ const char * bluefir::base::FileSystem::GetFileExtension(const char * path)
 	return last_dot;
 }
 
-std::string bluefir::base::FileSystem::GetFileMetaPath(unsigned long long int uid, bool force_create)
+std::string bluefir::base::FileSystem::GetFileMetaPath(UID uid, bool force_create)
 {
 	// TODO: Check this!
 	std::string str_uid = std::to_string(uid);

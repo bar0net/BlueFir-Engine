@@ -9,5 +9,7 @@
 
 #endif
 
+#define UID unsigned long long
+
 #endif // !BF_BASE_MACROS
 
